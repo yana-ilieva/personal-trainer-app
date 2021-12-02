@@ -1,0 +1,21 @@
+fitbook-spring/HELP.md
+fitbook-spring/target/
+!fitbook-spring/.mvn/wrapper/maven-wrapper.jar
+!fitbook-spring/**/src/main/**/target/
+!fitbook-spring/**/src/test/**/target/
+
+### STS ###
+fitbook-spring/.apt_generated
+fitbook-spring/.classpath
+fitbook-spring/.factorypath
+fitbook-spring/.project
+fitbook-spring/.settings
+fitbook-spring/.springBeans
+fitbook-spring/.sts4-cache
+
+### IntelliJ IDEA ###
+fitbook-spring/.idea
+fitbook-spring/*.iws
+fitbook-spring/*.iml
+fitbook-spring/*.ipr
+fitbook-spring//target/**
