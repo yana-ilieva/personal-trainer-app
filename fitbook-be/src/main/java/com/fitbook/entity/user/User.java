@@ -1,10 +1,7 @@
 package com.fitbook.entity.user;
 
 import com.fitbook.entity.user.Role;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
@@ -13,7 +10,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(schema = "users", name = "user")
+@Table(name = "users")
 @Entity
 public class User {
 
@@ -27,13 +24,8 @@ public class User {
 
     private String password;
 
-    @ManyToMany
-    @JoinTable(
-            name = "user_role",
-            joinColumns = @JoinColumn(name = "user_id"),
-            inverseJoinColumns = @JoinColumn(name = "role_id")
-    )
-    private List<Role> roles;
+    @ManyToOne
+    private Role role;
 
     private Boolean deleted;
 }

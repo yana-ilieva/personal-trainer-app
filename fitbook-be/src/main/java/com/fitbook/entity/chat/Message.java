@@ -11,7 +11,7 @@ import javax.persistence.*;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-@Table(name = "message")
+@Table(name = "messages")
 @Entity
 public class Message {
 
