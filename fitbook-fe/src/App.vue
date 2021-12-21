@@ -1,10 +1,18 @@
 <template>
-  <div id="nav">
+  <registration></registration>
+  <!-- <div id="nav">
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link>
   </div>
-  <router-view />
+  <router-view /> -->
 </template>
+
+<script>
+import Registration from './components/Registration.vue';
+export default {
+  components: { Registration },
+};
+</script>
 
 <style>
 #app {
