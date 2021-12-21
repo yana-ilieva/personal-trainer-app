@@ -1,10 +1,8 @@
 package com.fitbook.entity.user;
 
-import com.fitbook.entity.user.Role;
 import lombok.*;
 
 import javax.persistence.*;
-import java.util.List;
 
 @Data
 @AllArgsConstructor

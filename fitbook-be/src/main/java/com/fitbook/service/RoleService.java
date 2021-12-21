@@ -26,8 +26,4 @@ public class RoleService {
         return roleRepository.findByName(name)
                 .orElseThrow(() -> new ResourceNotFoundException("Role with name: " + name + " does not exist."));
     }
-
-    public Role save(Role role) {
-        return roleRepository.save(role);
-    }
 }

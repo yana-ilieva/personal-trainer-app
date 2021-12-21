@@ -1,6 +1,7 @@
 package com.fitbook.entity.trainer;
 
 import com.fitbook.entity.client.Client;
+import com.fitbook.entity.user.User;
 import com.fitbook.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -33,6 +34,14 @@ public class Trainer {
 
     private String description;
 
+    private String city;
+
+    private String neighborhood;
+
     @OneToMany
     private List<Client> clients;
+
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 }

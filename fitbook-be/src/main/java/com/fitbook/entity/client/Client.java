@@ -1,6 +1,7 @@
 package com.fitbook.entity.client;
 
 import com.fitbook.entity.trainer.Trainer;
+import com.fitbook.entity.user.User;
 import com.fitbook.enums.Gender;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -40,4 +41,8 @@ public class Client {
 
     @OneToMany
     private List<Trainer> chatHistory;
+
+    @OneToOne
+    @JoinColumn(name = "user_id", referencedColumnName = "id")
+    private User user;
 }
