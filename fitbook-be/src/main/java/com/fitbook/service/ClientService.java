@@ -40,4 +40,12 @@ public class ClientService {
 
         return mapper.map(clientRepository.save(clientOpt.get()));
     }
+
+    public Client findById(Long id) {
+        Optional<Client> clientOpt = clientRepository.findById(id);
+        if (clientOpt.isEmpty()) {
+            throw new ResourceNotFoundException(String.format("Client with id %d not found", id));
+        }
+        return clientOpt.get();
+    }
 }

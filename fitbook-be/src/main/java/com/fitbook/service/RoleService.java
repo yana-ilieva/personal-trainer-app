@@ -3,6 +3,7 @@ package com.fitbook.service;
 import com.fitbook.entity.user.Role;
 import com.fitbook.exception.ResourceNotFoundException;
 import com.fitbook.repository.RoleRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
@@ -13,6 +14,7 @@ public class RoleService {
 
     private final RoleRepository roleRepository;
 
+    @Autowired
     public RoleService(RoleRepository roleRepository) {
         this.roleRepository = roleRepository;
     }

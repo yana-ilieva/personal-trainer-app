@@ -1,20 +1,30 @@
 package com.fitbook.controller;
 
+import com.fitbook.dto.ClientDto;
 import com.fitbook.dto.SearchDto;
 import com.fitbook.dto.TrainerDto;
 import com.fitbook.service.TrainerService;
+import com.fitbook.service.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;
 
+import java.security.Principal;
 import java.util.List;
 
 @RestController
 @RequestMapping("/api/trainer")
 public class TrainerController {
 
+    private final TrainerService trainerService;
+
+    private final Validator validator;
+
     @Autowired
-    private TrainerService trainerService;
+    public TrainerController(TrainerService trainerService, Validator validator) {
+        this.trainerService = trainerService;
+        this.validator = validator;
+    }
 
     @GetMapping("/{id}")
     @Secured("ROLE_CLIENT")
@@ -22,11 +32,25 @@ public class TrainerController {
         return trainerService.findTrainer(id);
     }
 
+    @GetMapping("/{id}/clients")
+    @Secured("ROLE_TRAINER")
+    public List<ClientDto> findClientsByTrainer(@PathVariable("id") Long id, Principal principal) {
+        validator.checkAccessRights(id, principal);
+        return trainerService.findClientsByTrainer(id);
+    }
+
     @PostMapping
     @Secured("ROLE_CLIENT")
     public List<TrainerDto> findTrainers(@RequestBody SearchDto searchDto,
                                          @RequestParam("page") int page, @RequestParam("size") int size) {
         return trainerService.findTrainers(searchDto, page, size);
+    }
+
+    @GetMapping("/{trainer_id}/request/{client_id}")
+    @Secured("ROLE_CLIENT")
+    public Boolean sendRequest(@PathVariable("trainer_id") Long trainerId,
+                               @PathVariable("client_id") Long clientId) {
+        return trainerService.sendRequest(trainerId, clientId);
     }
 
     @PutMapping("/{id}")

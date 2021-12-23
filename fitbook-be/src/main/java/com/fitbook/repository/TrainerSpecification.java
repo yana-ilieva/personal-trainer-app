@@ -21,11 +21,11 @@ public class TrainerSpecification {
                 predicates.add(criteriaBuilder.equal(root.get("gender"), searchDto.getGender()));
             }
 
-            if (searchDto.getCity() != null) {
+            if (searchDto.getCity() != null && !searchDto.getName().equals("")) {
                 predicates.add(criteriaBuilder.equal(root.get("city"), searchDto.getCity()));
             }
 
-            if (searchDto.getNeighborhood() != null) {
+            if (searchDto.getNeighborhood() != null && !searchDto.getName().equals("")) {
                 predicates.add(criteriaBuilder.equal(root.get("neighborhood"), searchDto.getNeighborhood()));
             }
             return criteriaBuilder.and(predicates.toArray(Predicate[]::new));
