@@ -23,7 +23,7 @@ public class ChatController {
 
     @MessageMapping("/chat.message")
     public void sendSpecific(@Payload Message message, Principal user, @Header("simpSessionId") String sessionId) {
-        message.setTimestamp(DateUtil.now());
+        message.setCreatedTime(DateUtil.now());
         simpMessagingTemplate.convertAndSend("/user/" + user.getName() + "/exchange/amq.direct/chat.message", message);
     }
 }

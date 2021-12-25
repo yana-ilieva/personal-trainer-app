@@ -1,5 +1,6 @@
 package com.fitbook.entity.client;
 
+import com.fitbook.entity.program.Program;
 import com.fitbook.entity.trainer.Trainer;
 import com.fitbook.entity.user.User;
 import com.fitbook.enums.Gender;
@@ -30,6 +31,7 @@ public class Client {
 
     private LocalDate birthDate;
 
+    @Enumerated(value = EnumType.STRING)
     private Gender gender;
 
     private Integer height;
@@ -45,4 +47,8 @@ public class Client {
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
+    @OneToOne
+    @JoinColumn(name = "program_id", referencedColumnName = "id")
+    private Program program;
 }

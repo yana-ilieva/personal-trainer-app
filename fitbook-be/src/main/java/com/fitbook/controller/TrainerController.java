@@ -4,7 +4,7 @@ import com.fitbook.dto.ClientDto;
 import com.fitbook.dto.SearchDto;
 import com.fitbook.dto.TrainerDto;
 import com.fitbook.service.TrainerService;
-import com.fitbook.service.Validator;
+import com.fitbook.service.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.web.bind.annotation.*;

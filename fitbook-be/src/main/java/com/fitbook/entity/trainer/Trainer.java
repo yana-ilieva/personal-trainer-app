@@ -30,6 +30,7 @@ public class Trainer {
 
     private LocalDate birthDate;
 
+    @Enumerated(value = EnumType.STRING)
     private Gender gender;
 
     private String description;

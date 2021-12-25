@@ -1,4 +1,4 @@
-package com.fitbook.service;
+package com.fitbook.service.validation;
 
 import com.fitbook.exception.AccessViolationException;
 import com.fitbook.repository.TrainerRepository;
