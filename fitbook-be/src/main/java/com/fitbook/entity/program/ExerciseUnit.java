@@ -6,7 +6,7 @@ import lombok.NoArgsConstructor;
 import javax.persistence.*;
 
 @Entity
-@Table(name = "exercise_unit")
+@Table(name = "exercise_units")
 @Data
 @NoArgsConstructor
 public class ExerciseUnit {
@@ -16,6 +16,10 @@ public class ExerciseUnit {
     private Long id;
 
     private Integer repetitions;
+
+    @ManyToOne
+    @JoinColumn(name = "program_part_id")
+    private ProgramPart programPart;
 
     @OneToOne
     private Exercise exercise;

@@ -51,4 +51,7 @@ public class Client {
     @OneToOne
     @JoinColumn(name = "program_id", referencedColumnName = "id")
     private Program program;
+
+    @OneToMany
+    private List<Progress> progresses;
 }

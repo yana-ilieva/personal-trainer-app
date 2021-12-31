@@ -40,6 +40,8 @@ public class ProgramPartUtilTest {
     }
 
     private ProgramPart programPart(WeekDay weekDay) {
-        return ProgramPart.builder().weekDay(weekDay).build();
+        ProgramPart programPart = new ProgramPart();
+        programPart.setWeekDay(weekDay);
+        return programPart;
     }
 }

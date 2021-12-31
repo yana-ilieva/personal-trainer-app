@@ -3,6 +3,7 @@ package com.fitbook.util;
 import com.fitbook.entity.program.Program;
 import com.fitbook.entity.program.ProgramPart;
 import com.fitbook.enums.WeekDay;
+import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;
@@ -44,7 +45,9 @@ public class ProgramPartUtil {
     }
 
     private ProgramPart programPart(WeekDay weekDay) {
-        return ProgramPart.builder().weekDay(weekDay).build();
+        ProgramPart programPart = new ProgramPart();
+        programPart.setWeekDay(weekDay);
+        return programPart;
     }
 
     private WeekDay weekDay(int i) {

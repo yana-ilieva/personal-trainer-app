@@ -12,7 +12,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Table(name = "program_parts")
 @Entity
 public class ProgramPart {
@@ -25,6 +24,10 @@ public class ProgramPart {
 
     private Integer restBetweenExercises;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy = "programPart", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<ExerciseUnit> exerciseUnits;
+
+    @ManyToOne
+    @JoinColumn(name = "program_id")
+    private Program program;
 }

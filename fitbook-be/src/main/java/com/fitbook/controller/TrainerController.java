@@ -35,7 +35,7 @@ public class TrainerController {
     @GetMapping("/{id}/clients")
     @Secured("ROLE_TRAINER")
     public List<ClientDto> findClientsByTrainer(@PathVariable("id") Long id, Principal principal) {
-        validator.checkAccessRights(id, principal);
+        validator.checkTrainerAccessRights(id, principal);
         return trainerService.findClientsByTrainer(id);
     }
 

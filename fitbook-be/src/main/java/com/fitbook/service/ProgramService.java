@@ -53,8 +53,11 @@ public class ProgramService {
             throw new ResourceNotFoundException(String.format("Failed to find program with id %d", id));
         }
 
-        programRepository.save(programOpt.get());
+        Program program = programOpt.get();
+        mapper.map(programDto, program);
+        program.setId(id);
 
-        return new ProgramDto(); // todo: set up Orika mapper and return converted ProgramDto
+        program = programRepository.save(program);
+        return mapper.map(program);
     }
 }

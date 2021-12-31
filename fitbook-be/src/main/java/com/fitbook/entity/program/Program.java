@@ -11,7 +11,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Table(name = "programs")
 @Entity
 public class Program {
@@ -20,7 +19,7 @@ public class Program {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @OneToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @OneToMany(mappedBy = "program", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<ProgramPart> programParts;
 
     private String description;
