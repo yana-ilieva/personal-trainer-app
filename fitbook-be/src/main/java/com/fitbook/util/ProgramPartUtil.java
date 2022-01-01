@@ -1,9 +1,7 @@
 package com.fitbook.util;
 
-import com.fitbook.entity.program.Program;
 import com.fitbook.entity.program.ProgramPart;
 import com.fitbook.enums.WeekDay;
-import org.springframework.security.core.parameters.P;
 import org.springframework.stereotype.Component;
 
 import java.util.Arrays;

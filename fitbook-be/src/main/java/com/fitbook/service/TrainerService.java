@@ -1,12 +1,11 @@
 package com.fitbook.service;
 
-import com.fitbook.dto.ClientDto;
-import com.fitbook.dto.SearchDto;
-import com.fitbook.dto.TrainerDto;
+import com.fitbook.dto.*;
 import com.fitbook.entity.client.Client;
 import com.fitbook.entity.trainer.Request;
 import com.fitbook.entity.trainer.Trainer;
 import com.fitbook.entity.user.User;
+import com.fitbook.enums.NotificationType;
 import com.fitbook.exception.ResourceNotFoundException;
 import com.fitbook.repository.RequestRepository;
 import com.fitbook.repository.TrainerRepository;
@@ -32,12 +31,15 @@ public class TrainerService {
 
     private final ClientService clientService;
 
+    private final NotificationService notificationService;
+
     @Autowired
-    public TrainerService(TrainerRepository trainerRepository, Mapper mapper, RequestRepository requestRepository, ClientService clientService) {
+    public TrainerService(TrainerRepository trainerRepository, Mapper mapper, RequestRepository requestRepository, ClientService clientService, NotificationService notificationService) {
         this.trainerRepository = trainerRepository;
         this.mapper = mapper;
         this.requestRepository = requestRepository;
         this.clientService = clientService;
+        this.notificationService = notificationService;
     }
 
     public TrainerDto findTrainer(Long id) {
@@ -78,14 +80,25 @@ public class TrainerService {
 
         try {
             requestRepository.save(request);
-            // todo: make notification
+            notificationService.sendNotification(trainer.getUser().getEmail(), notificationDto(client, trainer));
             return true;
         } catch (Exception e) {
             return false;
         }
     }
+    
+    private NotificationDto notificationDto(Client client, Trainer trainer) {
+        NotificationDto dto = new NotificationDto();
+        dto.setNotificationType(NotificationType.REQUEST_SENT);
+        dto.setCreatedTimeStamp(DateUtil.now());
+        dto.setTrainerId(trainer.getId());
+        dto.setClientId(client.getId());
+        dto.setTrainerName(trainer.getFirstName() + " " + trainer.getLastName());
+        dto.setClientName(client.getFirstName() + " " + trainer.getLastName());
+        return dto;
+    }
 
-    private Trainer findById(Long id) {
+    public Trainer findById(Long id) {
         Optional<Trainer> trainerOpt = trainerRepository.findById(id);
         if (trainerOpt.isEmpty()) {
             throw new ResourceNotFoundException(String.format("Trainer with id %d not found.", id));
@@ -109,5 +122,14 @@ public class TrainerService {
         mapper.map(trainerOpt.get(), trainerDto);
 
         return mapper.map(trainerRepository.save(trainerOpt.get()));
+    }
+
+    public List<ChatDto> getChats(Long id) {
+        Optional<Trainer> trainerOpt = trainerRepository.findById(id);
+        if (trainerOpt.isEmpty()) {
+            throw new ResourceNotFoundException(String.format("Trainer with id %d not found.", id));
+        }
+
+        return trainerOpt.get().getChats().stream().map(mapper::map).collect(Collectors.toList());
     }
 }

@@ -1,10 +1,10 @@
 package com.fitbook.entity.trainer;
 
+import com.fitbook.entity.chat.Chat;
 import com.fitbook.entity.client.Client;
 import com.fitbook.entity.user.User;
 import com.fitbook.enums.Gender;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -15,7 +15,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Table(name = "trainers")
 @Entity
 public class Trainer {
@@ -45,4 +44,7 @@ public class Trainer {
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
+
+    @OneToMany(mappedBy = "trainer")
+    private List<Chat> chats;
 }

@@ -4,18 +4,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
-
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class ProgramDto {
+@NoArgsConstructor
+public class TrainerShortDto {
 
     private Long id;
 
-    private String description;
-
     private String name;
-
-    private List<ProgramPartDto> programParts;
 }

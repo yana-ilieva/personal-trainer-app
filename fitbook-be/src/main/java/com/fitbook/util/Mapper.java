@@ -1,16 +1,15 @@
 package com.fitbook.util;
 
 import com.fitbook.dto.*;
+import com.fitbook.entity.chat.Chat;
+import com.fitbook.entity.chat.Message;
 import com.fitbook.entity.client.Client;
 import com.fitbook.entity.client.Progress;
-import com.fitbook.entity.program.Exercise;
-import com.fitbook.entity.program.ExerciseUnit;
-import com.fitbook.entity.program.Program;
-import com.fitbook.entity.program.ProgramPart;
+import com.fitbook.entity.program.*;
 import com.fitbook.entity.trainer.Trainer;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -101,6 +100,7 @@ public class Mapper {
         ProgramDto programDto = new ProgramDto();
         programDto.setId(program.getId());
         programDto.setDescription(program.getDescription());
+        programDto.setName(program.getName());
         if (program.getProgramParts() != null) {
             programDto.setProgramParts(program.getProgramParts().stream().map(this::map).collect(Collectors.toList()));
         }
@@ -145,30 +145,106 @@ public class Mapper {
     public void map(ProgramDto programDto, Program program) {
         program.setId(programDto.getId());
         program.setDescription(programDto.getDescription());
+        program.setName(programDto.getName());
         if (programDto.getProgramParts() != null) {
             program.setProgramParts(programDto.getProgramParts().stream().map(this::map).collect(Collectors.toList()));
         }
     }
 
-    private void map(ProgramPartDto programPartDto, ProgramPart programPart) {
-        programPart.setId(programPartDto.getId());
-        programPart.setWeekDay(programPartDto.getWeekDay());
-        programPart.setRestBetweenExercises(programPartDto.getRestBetweenExercises());
-        if (programPartDto.getExerciseUnits() != null) {
-            programPart.setExerciseUnits(programPartDto.getExerciseUnits().stream().map(this::map).collect(Collectors.toList()));
-        }
+    public NutritionPlan map(NutritionPlanDto nutritionPlanDto) {
+        NutritionPlan nutritionPlan = new NutritionPlan();
+        nutritionPlan.setName(nutritionPlanDto.getName());
+        nutritionPlan.setDescription(nutritionPlanDto.getDescription());
+        nutritionPlan.setNutritionPlanParts(nutritionPlanDto.getNutritionPlanPartDtos().stream().map(this::map).collect(Collectors.toList()));
+        return nutritionPlan;
     }
 
-    private void map(ExerciseUnitDto exerciseUnitDto, ExerciseUnit exerciseUnit) {
-        exerciseUnit.setId(exerciseUnitDto.getId());
-        exerciseUnit.setRepetitions(exerciseUnitDto.getRepetitions());
-        if (exerciseUnitDto.getExercise() != null) {
-            exerciseUnit.setExercise(map(exerciseUnitDto.getExercise()));
-        }
+    private NutritionPlanPart map(NutritionPlanPartDto nutritionPlanPartDto) {
+        NutritionPlanPart nutritionPlanPart = new NutritionPlanPart();
+        nutritionPlanPart.setWeekDay(nutritionPlanPartDto.getWeekDay());
+        nutritionPlanPart.setContent(nutritionPlanPartDto.getContent());
+        return nutritionPlanPart;
     }
 
-    private void map(ExerciseDto exerciseDto, Exercise exercise) {
-        exercise.setId(exercise.getId());
-        exerciseDto.setName(exercise.getName());
+    public NutritionPlanDto map(NutritionPlan nutritionPlan) {
+        NutritionPlanDto nutritionPlanDto = new NutritionPlanDto();
+        nutritionPlanDto.setId(nutritionPlan.getId());
+        nutritionPlanDto.setName(nutritionPlan.getName());
+        nutritionPlanDto.setDescription(nutritionPlan.getDescription());
+        nutritionPlanDto.setNutritionPlanPartDtos(nutritionPlan.getNutritionPlanParts().stream().map(this::map).collect(Collectors.toList()));
+        return nutritionPlanDto;
     }
+
+    private NutritionPlanPartDto map(NutritionPlanPart nutritionPlanPart) {
+        NutritionPlanPartDto nutritionPlanPartDto = new NutritionPlanPartDto();
+        nutritionPlanPartDto.setId(nutritionPlanPart.getId());
+        nutritionPlanPartDto.setWeekDay(nutritionPlanPart.getWeekDay());
+        nutritionPlanPartDto.setContent(nutritionPlanPart.getContent());
+        return nutritionPlanPartDto;
+    }
+
+    public void map(NutritionPlanDto nutritionPlanDto, NutritionPlan nutritionPlan) {
+        nutritionPlan.setId(nutritionPlanDto.getId());
+        nutritionPlan.setName(nutritionPlanDto.getName());
+        nutritionPlan.setDescription(nutritionPlanDto.getDescription());
+        nutritionPlan.getNutritionPlanParts().forEach(part -> {
+            Optional<NutritionPlanPartDto> nutritionPlanPartOpt = nutritionPlanDto.getNutritionPlanPartDtos().stream()
+                    .filter(dto -> part.getWeekDay().equals(dto.getWeekDay())).findFirst();
+            nutritionPlanPartOpt.ifPresent(nutritionPlanPartDto -> map(nutritionPlanPartDto, part));
+        });
+    }
+
+    public void map(NutritionPlanPartDto nutritionPlanPartDto, NutritionPlanPart nutritionPlanPart) {
+        nutritionPlanPart.setId(nutritionPlanPartDto.getId());
+        nutritionPlanPart.setWeekDay(nutritionPlanPartDto.getWeekDay());
+        nutritionPlanPart.setContent(nutritionPlanPartDto.getContent());
+    }
+
+    public Chat map(ChatDto chatDto) {
+        Chat chat = new Chat();
+        chat.setId(chatDto.getId());
+        return chat;
+    }
+
+    public ChatDto map(Chat chat) {
+        ChatDto chatDto = new ChatDto();
+        chatDto.setId(chat.getId());
+        chatDto.setClient(mapShort(chat.getClient()));
+        chatDto.setTrainer(mapShort(chat.getTrainer()));
+        return chatDto;
+    }
+
+    public ClientShortDto mapShort(Client client) {
+        ClientShortDto clientShortDto = new ClientShortDto();
+        clientShortDto.setId(client.getId());
+        clientShortDto.setName(client.getFirstName() + " " + client.getLastName());
+        return clientShortDto;
+    }
+
+    public TrainerShortDto mapShort(Trainer trainer) {
+        TrainerShortDto trainerShortDto = new TrainerShortDto();
+        trainerShortDto.setId(trainer.getId());
+        trainerShortDto.setName(trainer.getFirstName() + " " + trainer.getLastName());
+        return trainerShortDto;
+    }
+
+    public MessageDto map(Message message) {
+        MessageDto messageDto = new MessageDto();
+        messageDto.setId(message.getId());
+        messageDto.setContent(message.getContent());
+        messageDto.setSender(message.getSender());
+        messageDto.setReceiver(message.getReceiver());
+        messageDto.setCreatedTime(message.getCreatedTime());
+        messageDto.setChatId(message.getChat().getId());
+        return messageDto;
+    }
+
+    public Message map(MessageDto messageDto) {
+        Message message = new Message();
+        message.setContent(messageDto.getContent());
+        message.setSender(messageDto.getSender());
+        message.setReceiver(messageDto.getReceiver());
+        return message;
+    }
+
 }

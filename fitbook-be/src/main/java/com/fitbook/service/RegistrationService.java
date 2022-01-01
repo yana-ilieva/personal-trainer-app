@@ -2,7 +2,6 @@ package com.fitbook.service;
 
 import com.fitbook.dto.RegistrationDto;
 import com.fitbook.dto.UserDto;
-import com.fitbook.entity.user.Role;
 import com.fitbook.entity.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;

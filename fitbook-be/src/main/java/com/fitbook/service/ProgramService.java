@@ -47,6 +47,10 @@ public class ProgramService {
         return mapper.map(programRepository.save(program));
     }
 
+    public Program create(Program program) {
+        return programRepository.save(program);
+    }
+
     public ProgramDto update(Long id, ProgramDto programDto) {
         Optional<Program> programOpt = programRepository.findById(id);
         if (programOpt.isEmpty()) {
@@ -57,7 +61,6 @@ public class ProgramService {
         mapper.map(programDto, program);
         program.setId(id);
 
-        program = programRepository.save(program);
-        return mapper.map(program);
+        return mapper.map(programRepository.save(program));
     }
 }

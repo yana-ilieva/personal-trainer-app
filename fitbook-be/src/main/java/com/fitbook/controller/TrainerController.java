@@ -1,5 +1,6 @@
 package com.fitbook.controller;
 
+import com.fitbook.dto.ChatDto;
 import com.fitbook.dto.ClientDto;
 import com.fitbook.dto.SearchDto;
 import com.fitbook.dto.TrainerDto;
@@ -57,5 +58,11 @@ public class TrainerController {
     @Secured("ROLE_TRAINER")
     public TrainerDto update(@PathVariable("id") Long id, @RequestBody TrainerDto trainerDto) {
         return trainerService.update(id, trainerDto);
+    }
+
+    @GetMapping("/{id}/chat_mates")
+    @Secured("ROLE_TRAINER")
+    public List<ChatDto> getChats(@PathVariable("id") Long id) {
+        return trainerService.getChats(id);
     }
 }

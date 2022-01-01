@@ -7,15 +7,15 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
-public class ProgramDto {
+@NoArgsConstructor
+public class NutritionPlanDto {
 
     private Long id;
 
-    private String description;
-
     private String name;
 
-    private List<ProgramPartDto> programParts;
+    private String description;
+
+    private List<NutritionPlanPartDto> nutritionPlanPartDtos;
 }

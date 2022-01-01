@@ -1,7 +1,6 @@
 package com.fitbook.entity.program;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -22,5 +21,14 @@ public class Program {
     @OneToMany(mappedBy = "program", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<ProgramPart> programParts;
 
+    private String name;
+
     private String description;
+
+    public Program(Program program) {
+        this.id = null;
+        this.description = program.description;
+        this.name = program.name;
+        this.programParts = program.programParts;
+    }
 }

@@ -2,7 +2,6 @@ package com.fitbook.entity.program;
 
 import com.fitbook.enums.WeekDay;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 

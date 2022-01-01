@@ -1,9 +1,10 @@
 package com.fitbook.service;
 
+import com.fitbook.dto.ChatDto;
 import com.fitbook.dto.ClientDto;
 import com.fitbook.dto.ProgressDto;
 import com.fitbook.entity.client.Client;
-import com.fitbook.entity.client.Progress;
+import com.fitbook.entity.program.NutritionPlan;
 import com.fitbook.entity.program.Program;
 import com.fitbook.entity.user.User;
 import com.fitbook.exception.ResourceNotFoundException;
@@ -28,13 +29,16 @@ public class ClientService {
 
     private final ProgressService progressService;
 
+    private final NutritionPlanService nutritionPlanService;
+
     @Autowired
     public ClientService(ClientRepository clientRepository, Mapper mapper, ProgramService programService,
-                         ProgressService progressService) {
+                         ProgressService progressService, NutritionPlanService nutritionPlanService) {
         this.clientRepository = clientRepository;
         this.mapper = mapper;
         this.programService = programService;
         this.progressService = progressService;
+        this.nutritionPlanService = nutritionPlanService;
     }
 
     public Long create(User user) {
@@ -68,7 +72,24 @@ public class ClientService {
             throw new ResourceNotFoundException(String.format("Client with id %d not found", clientId));
         }
         Program program = programService.findById(programId);
-        clientOpt.get().setProgram(program);
+        Program programCopy = new Program(program);
+        programCopy = programService.create(programCopy);
+        clientOpt.get().setProgram(programCopy);
+
+        return mapper.map(clientRepository.save(clientOpt.get()));
+    }
+
+    public ClientDto assignNutritionPlanToClient(Long clientId, Long nutritionPlanId) {
+        Optional<Client> clientOpt = clientRepository.findById(clientId);
+        if (clientOpt.isEmpty()) {
+            throw new ResourceNotFoundException(String.format("Client with id %d not found", clientId));
+        }
+
+        NutritionPlan nutritionPlan = nutritionPlanService.findById(nutritionPlanId);
+        NutritionPlan nutritionPlanCopy = new NutritionPlan(nutritionPlan);
+        nutritionPlanCopy = nutritionPlanService.create(nutritionPlanCopy);
+
+        clientOpt.get().setNutritionPlan(nutritionPlanCopy);
 
         return mapper.map(clientRepository.save(clientOpt.get()));
     }
@@ -76,5 +97,14 @@ public class ClientService {
     public List<ProgressDto> getProgress(Long id, int page, int size) {
         return clientRepository.getProgress(id, PageRequest.of(page, size)).stream()
                 .map(mapper::map).collect(Collectors.toList());
+    }
+
+    public List<ChatDto> getChats(Long id) {
+        Optional<Client> clientOpt = clientRepository.findById(id);
+        if (clientOpt.isEmpty()) {
+            throw new ResourceNotFoundException(String.format("Client with id %d not found", id));
+        }
+
+        return clientOpt.get().getChats().stream().map(mapper::map).collect(Collectors.toList());
     }
 }

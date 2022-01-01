@@ -4,14 +4,10 @@ import com.fitbook.dto.ExerciseDto;
 import com.fitbook.dto.ExerciseUnitDto;
 import com.fitbook.dto.ProgramDto;
 import com.fitbook.dto.ProgramPartDto;
-import com.fitbook.entity.program.Program;
-import com.fitbook.entity.program.ProgramPart;
 import com.fitbook.enums.WeekDay;
-import com.fitbook.repository.ProgramRepository;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.security.core.parameters.P;
 import org.springframework.test.context.jdbc.Sql;
 
 import javax.transaction.Transactional;
@@ -63,7 +59,7 @@ public class ProgramServiceTest {
 
     @Test
     @Transactional
-    public void update() {
+    public void update_addNewExerciseUnit() {
         ExerciseDto exerciseDto = exerciseDto(10000L, "first exercise");
         ExerciseDto exerciseDto2 = exerciseDto(10001L, "second exercise");
         ExerciseDto exerciseDto3 = exerciseDto(10002L, "third exercise");
@@ -101,6 +97,45 @@ public class ProgramServiceTest {
         assertAll(
                 () -> assertEquals(3, updated.getProgramParts().get(0).getExerciseUnits().size()),
                 () -> assertEquals("fifth exercise", updated.getProgramParts().get(0).getExerciseUnits().get(2).getExercise().getName())
+        );
+    }
+
+    @Test
+    @Transactional
+    public void update_removeExerciseUnit() {
+        ExerciseDto exerciseDto = exerciseDto(10000L, "first exercise");
+        ExerciseDto exerciseDto2 = exerciseDto(10001L, "second exercise");
+        ExerciseDto exerciseDto3 = exerciseDto(10002L, "third exercise");
+        ExerciseDto exerciseDto4 = exerciseDto(10003L, "fourth exercise");
+
+        ExerciseUnitDto exerciseUnitDto = exerciseUnitDto(10, exerciseDto);
+        ExerciseUnitDto exerciseUnitDto2 = exerciseUnitDto(10, exerciseDto2);
+        ExerciseUnitDto exerciseUnitDto3 = exerciseUnitDto(10, exerciseDto3);
+        ExerciseUnitDto exerciseUnitDto4 = exerciseUnitDto(10, exerciseDto4);
+
+        List<ExerciseUnitDto> exerciseUnitDtos = new ArrayList<>();
+        exerciseUnitDtos.add(exerciseUnitDto);
+        exerciseUnitDtos.add(exerciseUnitDto2);
+        ProgramPartDto programPartDto = programPartDto(WeekDay.MONDAY, 2, exerciseUnitDtos);
+        List<ExerciseUnitDto> exerciseUnitDtos2 = new ArrayList<>();
+        exerciseUnitDtos2.add(exerciseUnitDto3);
+        exerciseUnitDtos2.add(exerciseUnitDto4);
+        ProgramPartDto programPartDto2 = programPartDto(WeekDay.WEDNESDAY,2, exerciseUnitDtos2);
+        List<ProgramPartDto> programPartDtos = new ArrayList<>();
+        programPartDtos.add(programPartDto);
+        programPartDtos.add(programPartDto2);
+
+        ProgramDto programDto = programDto("some description", programPartDtos);
+
+        ProgramDto saved = programService.create(programDto);
+
+        saved.getProgramParts().get(0).getExerciseUnits().remove(1);
+
+        ProgramDto updated = programService.update(saved.getId(), saved);
+
+        assertAll(
+                () -> assertEquals(1, updated.getProgramParts().get(0).getExerciseUnits().size()),
+                () -> assertEquals("first exercise", updated.getProgramParts().get(0).getExerciseUnits().get(0).getExercise().getName())
         );
     }
 

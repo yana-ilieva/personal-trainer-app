@@ -1,11 +1,12 @@
 package com.fitbook.entity.client;
 
+import com.fitbook.entity.chat.Chat;
+import com.fitbook.entity.program.NutritionPlan;
 import com.fitbook.entity.program.Program;
 import com.fitbook.entity.trainer.Trainer;
 import com.fitbook.entity.user.User;
 import com.fitbook.enums.Gender;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,7 +17,6 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder
 @Table(name = "clients")
 @Entity
 public class Client {
@@ -41,9 +41,6 @@ public class Client {
     @ManyToOne
     private Trainer trainer;
 
-    @OneToMany
-    private List<Trainer> chatHistory;
-
     @OneToOne
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
@@ -52,6 +49,13 @@ public class Client {
     @JoinColumn(name = "program_id", referencedColumnName = "id")
     private Program program;
 
-    @OneToMany
+    @OneToOne
+    @JoinColumn(name = "nutrition_plan_id", referencedColumnName = "id")
+    private NutritionPlan nutritionPlan;
+
+    @OneToMany(mappedBy = "client")
     private List<Progress> progresses;
+
+    @OneToMany(mappedBy = "client")
+    private List<Chat> chats;
 }

@@ -1,5 +1,6 @@
 package com.fitbook.controller;
 
+import com.fitbook.dto.ChatDto;
 import com.fitbook.dto.ClientDto;
 import com.fitbook.dto.ProgressDto;
 import com.fitbook.service.ClientService;
@@ -45,5 +46,17 @@ public class ClientController {
     @Secured("ROLE_TRAINER")
     public ClientDto assignProgramToClient(@PathVariable("client_id") Long clientId, @PathVariable("program_id") Long programId) {
         return clientService.assignProgramToClient(clientId, programId);
+    }
+
+    @GetMapping("/{client_id}/nutrition_plan/{nutrition_plan_id}")
+    @Secured("ROLE_TRAINER")
+    public ClientDto assignNutritionPlanToClient(@PathVariable("client_id") Long clientId, @PathVariable("nutrition_plan_id") Long nutritionPlanId) {
+        return clientService.assignNutritionPlanToClient(clientId, nutritionPlanId);
+    }
+
+    @GetMapping("/{id}/chat_mates")
+    @Secured("ROLE_CLIENT")
+    public List<ChatDto> getChats(@PathVariable("id") Long id) {
+        return clientService.getChats(id);
     }
 }
