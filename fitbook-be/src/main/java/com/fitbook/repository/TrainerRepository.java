@@ -1,6 +1,7 @@
 package com.fitbook.repository;
 
 import com.fitbook.entity.trainer.Trainer;
+import com.fitbook.entity.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;

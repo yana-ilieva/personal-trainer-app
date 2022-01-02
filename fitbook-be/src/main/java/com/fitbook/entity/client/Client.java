@@ -39,6 +39,7 @@ public class Client {
     private String description;
 
     @ManyToOne
+    @JoinColumn(name = "trainer_id", referencedColumnName = "id")
     private Trainer trainer;
 
     @OneToOne

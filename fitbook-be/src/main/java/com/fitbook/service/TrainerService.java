@@ -80,22 +80,11 @@ public class TrainerService {
 
         try {
             requestRepository.save(request);
-            notificationService.sendNotification(trainer.getUser().getEmail(), notificationDto(client, trainer));
+            notificationService.sendNotification(trainer.getUser().getEmail(), NotificationType.REQUEST_SENT, trainer, client);
             return true;
         } catch (Exception e) {
             return false;
         }
-    }
-    
-    private NotificationDto notificationDto(Client client, Trainer trainer) {
-        NotificationDto dto = new NotificationDto();
-        dto.setNotificationType(NotificationType.REQUEST_SENT);
-        dto.setCreatedTimeStamp(DateUtil.now());
-        dto.setTrainerId(trainer.getId());
-        dto.setClientId(client.getId());
-        dto.setTrainerName(trainer.getFirstName() + " " + trainer.getLastName());
-        dto.setClientName(client.getFirstName() + " " + trainer.getLastName());
-        return dto;
     }
 
     public Trainer findById(Long id) {
@@ -131,5 +120,18 @@ public class TrainerService {
         }
 
         return trainerOpt.get().getChats().stream().map(mapper::map).collect(Collectors.toList());
+    }
+
+    public boolean handleRequest(Long trainerId, Long clientId) {
+        try {
+            Trainer trainer = findById(trainerId);
+            Client client = clientService.findById(clientId);
+            client.setTrainer(trainer);
+            clientService.update(client);
+            notificationService.sendNotification(client.getUser().getEmail(), NotificationType.REQUEST_ACCEPTED, trainer, client);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
     }
 }

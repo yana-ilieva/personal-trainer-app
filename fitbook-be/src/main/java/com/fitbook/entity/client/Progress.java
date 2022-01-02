@@ -26,4 +26,21 @@ public class Progress {
     @ManyToOne
     @JoinColumn(name = "client_id", referencedColumnName = "id")
     private Client client;
+
+    private Double weight;
+
+    @Column(name = "chest_measurement")
+    private Double chestMeasurement;
+
+    @Column(name = "waist_measurement")
+    private Double waistMeasurement;
+
+    @Column(name = "hip_measurement")
+    private Double hipMeasurement;
+
+    @Column(name = "thigh_measurement")
+    private Double thighMeasurement;
+
+    @Column(name = "upper_arm_measurement")
+    private Double upperArmMeasurement;
 }

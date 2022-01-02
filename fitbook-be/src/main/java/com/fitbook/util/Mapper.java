@@ -5,6 +5,7 @@ import com.fitbook.entity.chat.Chat;
 import com.fitbook.entity.chat.Message;
 import com.fitbook.entity.client.Client;
 import com.fitbook.entity.client.Progress;
+import com.fitbook.entity.notification.Notification;
 import com.fitbook.entity.program.*;
 import com.fitbook.entity.trainer.Trainer;
 import org.springframework.stereotype.Service;
@@ -24,7 +25,7 @@ public class Mapper {
         trainerDto.setGender(trainer.getGender());
         trainerDto.setCity(trainer.getCity());
         trainerDto.setNeighborhood(trainer.getNeighborhood());
-        trainerDto.setDescription(trainerDto.getDescription());
+        trainerDto.setDescription(trainer.getDescription());
         return trainerDto;
     }
 
@@ -49,7 +50,7 @@ public class Mapper {
 
     public ClientDto map(Client client) {
         ClientDto clientDto = new ClientDto();
-        clientDto.setId(clientDto.getId());
+        clientDto.setId(client.getId());
         clientDto.setFirstName(client.getFirstName());
         clientDto.setLastName(client.getLastName());
         clientDto.setBirthDate(client.getBirthDate());
@@ -62,6 +63,7 @@ public class Mapper {
     public Program map(ProgramDto programDto) {
         Program program = new Program();
         program.setDescription(programDto.getDescription());
+        program.setName(programDto.getName());
         if (programDto.getProgramParts() != null) {
             program.setProgramParts(programDto.getProgramParts().stream().map(this::map).collect(Collectors.toList()));
         }
@@ -138,8 +140,37 @@ public class Mapper {
     public ProgressDto map(Progress progress) {
         ProgressDto progressDto = new ProgressDto();
         progressDto.setId(progress.getId());
+        progressDto.setClientId(progress.getClient().getId());
         progressDto.setCreatedTimestamp(progress.getCreatedTimestamp());
+        progressDto.setWeight(progress.getWeight());
+        progressDto.setChestMeasurement(progress.getChestMeasurement());
+        progressDto.setHipMeasurement(progress.getHipMeasurement());
+        progressDto.setThighMeasurement(progress.getThighMeasurement());
+        progressDto.setWaistMeasurement(progress.getWaistMeasurement());
+        progressDto.setUpperArmMeasurement(progress.getUpperArmMeasurement());
         return progressDto;
+    }
+
+    public Progress map(ProgressDto progressDto) {
+        Progress progress = new Progress();
+        progress.setId(progressDto.getId());
+        progress.setCreatedTimestamp(progressDto.getCreatedTimestamp());
+        progress.setWeight(progressDto.getWeight());
+        progress.setChestMeasurement(progressDto.getChestMeasurement());
+        progress.setHipMeasurement(progressDto.getHipMeasurement());
+        progress.setThighMeasurement(progressDto.getThighMeasurement());
+        progress.setWaistMeasurement(progressDto.getWaistMeasurement());
+        progress.setUpperArmMeasurement(progressDto.getUpperArmMeasurement());
+        return progress;
+    }
+
+    public void map(ProgressDto progressDto, Progress progress) {
+        progress.setWeight(progressDto.getWeight());
+        progress.setChestMeasurement(progressDto.getChestMeasurement());
+        progress.setHipMeasurement(progressDto.getHipMeasurement());
+        progress.setThighMeasurement(progressDto.getThighMeasurement());
+        progress.setWaistMeasurement(progressDto.getWaistMeasurement());
+        progress.setUpperArmMeasurement(progressDto.getUpperArmMeasurement());
     }
 
     public void map(ProgramDto programDto, Program program) {
@@ -161,6 +192,7 @@ public class Mapper {
 
     private NutritionPlanPart map(NutritionPlanPartDto nutritionPlanPartDto) {
         NutritionPlanPart nutritionPlanPart = new NutritionPlanPart();
+        nutritionPlanPart.setId(nutritionPlanPartDto.getId());
         nutritionPlanPart.setWeekDay(nutritionPlanPartDto.getWeekDay());
         nutritionPlanPart.setContent(nutritionPlanPartDto.getContent());
         return nutritionPlanPart;
@@ -187,11 +219,13 @@ public class Mapper {
         nutritionPlan.setId(nutritionPlanDto.getId());
         nutritionPlan.setName(nutritionPlanDto.getName());
         nutritionPlan.setDescription(nutritionPlanDto.getDescription());
-        nutritionPlan.getNutritionPlanParts().forEach(part -> {
+       /* nutritionPlan.getNutritionPlanParts().forEach(part -> {
             Optional<NutritionPlanPartDto> nutritionPlanPartOpt = nutritionPlanDto.getNutritionPlanPartDtos().stream()
                     .filter(dto -> part.getWeekDay().equals(dto.getWeekDay())).findFirst();
             nutritionPlanPartOpt.ifPresent(nutritionPlanPartDto -> map(nutritionPlanPartDto, part));
-        });
+        });*/
+
+        nutritionPlan.setNutritionPlanParts(nutritionPlanDto.getNutritionPlanPartDtos().stream().map(this::map).collect(Collectors.toList()));
     }
 
     public void map(NutritionPlanPartDto nutritionPlanPartDto, NutritionPlanPart nutritionPlanPart) {
@@ -247,4 +281,14 @@ public class Mapper {
         return message;
     }
 
+    public NotificationDto map(Notification notification) {
+        NotificationDto dto = new NotificationDto();
+        dto.setNotificationType(notification.getNotificationType());
+        dto.setCreatedTimeStamp(notification.getCreatedTimestamp());
+        dto.setTrainerId(notification.getTrainer().getId());
+        dto.setClientId(notification.getClient().getId());
+        dto.setTrainerName(notification.getTrainer().getFirstName() + " " + notification.getTrainer().getLastName());
+        dto.setClientName(notification.getClient().getFirstName() + " " + notification.getClient().getLastName());
+        return dto;
+    }
 }

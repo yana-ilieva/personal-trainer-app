@@ -7,9 +7,9 @@ import com.fitbook.service.ClientService;
 import com.fitbook.service.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -31,8 +31,8 @@ public class ClientController {
     public List<ProgressDto> getProgress(@PathVariable("id") Long id,
                                          @RequestParam(value = "page", defaultValue = "0") int page,
                                          @RequestParam(value = "size", defaultValue = "20") int size,
-                                         Principal principal) {
-        validator.checkClientAccessRights(id, principal);
+                                         Authentication authentication) {
+        validator.checkClientAccessRights(id, authentication);
         return clientService.getProgress(id, page, size);
     }
 

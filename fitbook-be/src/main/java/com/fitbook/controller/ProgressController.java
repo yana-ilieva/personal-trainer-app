@@ -17,12 +17,12 @@ public class ProgressController {
     }
 
     @PostMapping
-    public void create(@RequestBody ProgressDto progressDto) {
-       // progressService.
+    public ProgressDto create(@RequestBody ProgressDto progressDto) {
+        return progressService.create(progressDto);
     }
 
     @PutMapping("/{id}")
-    public void update(@PathVariable("id") Long id, @RequestBody ProgressDto progressDto) {
-        // progressService.
+    public ProgressDto update(@PathVariable("id") Long id, @RequestBody ProgressDto progressDto) {
+         return progressService.update(id, progressDto);
     }
 }

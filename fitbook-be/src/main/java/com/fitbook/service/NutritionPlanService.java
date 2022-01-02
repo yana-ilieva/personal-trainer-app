@@ -2,12 +2,15 @@ package com.fitbook.service;
 
 import com.fitbook.dto.NutritionPlanDto;
 import com.fitbook.entity.program.NutritionPlan;
+import com.fitbook.entity.program.NutritionPlanPart;
 import com.fitbook.exception.ResourceNotFoundException;
 import com.fitbook.repository.NutritionPlanRepository;
 import com.fitbook.util.Mapper;
+import com.fitbook.util.NutritionPlanPartUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @Service
@@ -17,10 +20,13 @@ public class NutritionPlanService {
 
     private final Mapper mapper;
 
+    private final NutritionPlanPartUtil nutritionPlanPartUtil;
+
     @Autowired
-    public NutritionPlanService(NutritionPlanRepository nutritionPlanRepository, Mapper mapper) {
+    public NutritionPlanService(NutritionPlanRepository nutritionPlanRepository, Mapper mapper, NutritionPlanPartUtil nutritionPlanPartUtil) {
         this.nutritionPlanRepository = nutritionPlanRepository;
         this.mapper = mapper;
+        this.nutritionPlanPartUtil = nutritionPlanPartUtil;
     }
 
     public NutritionPlanDto findByIdPublic(Long id) {
@@ -37,6 +43,10 @@ public class NutritionPlanService {
 
     public NutritionPlanDto create(NutritionPlanDto nutritionPlanDto) {
         NutritionPlan nutritionPlan = mapper.map(nutritionPlanDto);
+
+        List<NutritionPlanPart> nutritionPlanPartList = nutritionPlan.getNutritionPlanParts();
+
+        nutritionPlan.setNutritionPlanParts(nutritionPlanPartUtil.transformNutritionPlanParts(nutritionPlanPartList));
         return mapper.map(nutritionPlanRepository.save(nutritionPlan));
     }
 

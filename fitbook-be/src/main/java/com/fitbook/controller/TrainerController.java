@@ -8,9 +8,9 @@ import com.fitbook.service.TrainerService;
 import com.fitbook.service.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
-import java.security.Principal;
 import java.util.List;
 
 @RestController
@@ -35,8 +35,8 @@ public class TrainerController {
 
     @GetMapping("/{id}/clients")
     @Secured("ROLE_TRAINER")
-    public List<ClientDto> findClientsByTrainer(@PathVariable("id") Long id, Principal principal) {
-        validator.checkTrainerAccessRights(id, principal);
+    public List<ClientDto> findClientsByTrainer(@PathVariable("id") Long id, Authentication authentication) {
+        validator.checkTrainerAccessRights(id, authentication);
         return trainerService.findClientsByTrainer(id);
     }
 
@@ -52,6 +52,13 @@ public class TrainerController {
     public Boolean sendRequest(@PathVariable("trainer_id") Long trainerId,
                                @PathVariable("client_id") Long clientId) {
         return trainerService.sendRequest(trainerId, clientId);
+    }
+
+    @GetMapping("/{trainer_id}/handle_request/{client_id}")
+    @Secured("ROLE_TRAINER")
+    public Boolean handleRequest(@PathVariable("trainer_id") Long trainerId,
+                                 @PathVariable("client_id") Long clientId) {
+        return trainerService.handleRequest(trainerId, clientId);
     }
 
     @PutMapping("/{id}")

@@ -7,6 +7,7 @@ import com.fitbook.entity.trainer.Trainer;
 import com.fitbook.enums.NotificationType;
 import com.fitbook.repository.NotificationRepository;
 import com.fitbook.util.DateUtil;
+import com.fitbook.util.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
@@ -18,24 +19,27 @@ public class NotificationService {
 
     private final SimpMessagingTemplate simpMessagingTemplate;
 
+    private final Mapper mapper;
+
     @Autowired
-    public NotificationService(NotificationRepository notificationRepository, SimpMessagingTemplate simpMessagingTemplate) {
+    public NotificationService(NotificationRepository notificationRepository, SimpMessagingTemplate simpMessagingTemplate, Mapper mapper) {
         this.notificationRepository = notificationRepository;
         this.simpMessagingTemplate = simpMessagingTemplate;
+        this.mapper = mapper;
     }
 
-    public void create(NotificationType notificationType, Trainer trainer, Client client) {
-
+    private NotificationDto create(NotificationType notificationType, Trainer trainer, Client client) {
         Notification notification = new Notification();
         notification.setNotificationType(notificationType);
         notification.setCreatedTimestamp(DateUtil.now());
         notification.setClient(client);
         notification.setTrainer(trainer);
 
-        notificationRepository.save(notification);
+        return mapper.map(notificationRepository.save(notification));
     }
 
-    public void sendNotification(String username, NotificationDto notificationDto) {
+    public void sendNotification(String username, NotificationType notificationType, Trainer trainer, Client client) {
+        NotificationDto notificationDto = create(notificationType, trainer, client);
         simpMessagingTemplate.convertAndSendToUser(username, "/queue/notifications", notificationDto);
     }
 }

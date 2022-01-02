@@ -13,6 +13,9 @@ import java.util.Map;
 
 @Component
 public class JwtTokenUtil {
+
+    String key = "asdasd";
+
     public String generateToken(User user, String role) {
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", user.getId());
@@ -23,7 +26,7 @@ public class JwtTokenUtil {
                 .setSubject(user.getEmail())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() * 10000))
-                .signWith(SignatureAlgorithm.HS512, "aacademy")
+                .signWith(SignatureAlgorithm.HS512, key)
                 .compact();
     }
 
@@ -39,7 +42,7 @@ public class JwtTokenUtil {
 
     public String getEmailFromToken(String token) {
         Claims body = Jwts.parser()
-                .setSigningKey("aacademy")
+                .setSigningKey(key)
                 .parseClaimsJws(token)
                 .getBody();
 
@@ -50,7 +53,7 @@ public class JwtTokenUtil {
 
     public Date getExpirationDateFromToken(String token) {
         Claims body = Jwts.parser()
-                .setSigningKey("aacademy")
+                .setSigningKey(key)
                 .parseClaimsJws(token)
                 .getBody();
 

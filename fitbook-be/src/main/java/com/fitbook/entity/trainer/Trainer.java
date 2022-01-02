@@ -38,7 +38,7 @@ public class Trainer {
 
     private String neighborhood;
 
-    @OneToMany
+    @OneToMany(mappedBy = "trainer")
     private List<Client> clients;
 
     @OneToOne

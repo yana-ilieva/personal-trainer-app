@@ -27,17 +27,14 @@ public class ClientService {
 
     private final ProgramService programService;
 
-    private final ProgressService progressService;
-
     private final NutritionPlanService nutritionPlanService;
 
     @Autowired
     public ClientService(ClientRepository clientRepository, Mapper mapper, ProgramService programService,
-                         ProgressService progressService, NutritionPlanService nutritionPlanService) {
+                         NutritionPlanService nutritionPlanService) {
         this.clientRepository = clientRepository;
         this.mapper = mapper;
         this.programService = programService;
-        this.progressService = progressService;
         this.nutritionPlanService = nutritionPlanService;
     }
 
@@ -45,6 +42,10 @@ public class ClientService {
         Client client = new Client();
         client.setUser(user);
         return clientRepository.save(client).getId();
+    }
+
+    public Client update(Client client) {
+        return clientRepository.save(client);
     }
 
     public ClientDto update(Long id, ClientDto clientDto) {
