@@ -1,5 +1,5 @@
 <template>
-  <registration></registration>
+  <login></login>
   <!-- <div id="nav">
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link>
@@ -8,9 +8,9 @@
 </template>
 
 <script>
-import Registration from './components/Registration.vue';
+import Login from './components/Login.vue';
 export default {
-  components: { Registration },
+  components: { Login },
 };
 </script>
 
