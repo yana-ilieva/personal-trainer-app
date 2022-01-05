@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="z-30">
     <div
       @click="$emit('hideNotifications')"
       class="absolute top-2 right-2 cursor-pointer"

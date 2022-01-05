@@ -11,7 +11,10 @@
         <div class="mt-3 self-end justify-self-end"></div>
       </div>
       <div class="flex self-end">
-        <button class="px-3 py-0.5 bg-syellow text-darkmint rounded-md mr-4">
+        <button
+          @click="$emit('editProgram')"
+          class="px-3 py-0.5 bg-syellow text-darkmint rounded-md mr-4 hover:bg-darksyellow"
+        >
           Edit
         </button>
         <button
@@ -27,5 +30,6 @@
 <script>
 export default {
   props: ['name', 'desc'],
+  emits: ['editPrograms'],
 };
 </script>

@@ -8,8 +8,10 @@ module.exports = {
       },
       colors: {
         darkmint: '#547d6d',
+        darkermint: '#4e7465',
         mint: '#97cac3',
         syellow: '#f7dc70',
+        darksyellow: '#f4d248',
         beige: '#e0c8ae',
         lbeige: '#eadfd9',
       },
