@@ -3,6 +3,9 @@ module.exports = {
   darkMode: false,
   theme: {
     extend: {
+      fontSize: {
+        xs: '.75rem',
+      },
       colors: {
         darkmint: '#547d6d',
         mint: '#97cac3',

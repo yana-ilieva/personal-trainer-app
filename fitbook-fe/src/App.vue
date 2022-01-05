@@ -1,5 +1,14 @@
 <template>
-  <login></login>
+  <div>
+    <the-header @showNotifications="showNotifications"></the-header>
+    <notifications
+      v-if="isNotifications"
+      @hideNotifications="hideNotifications"
+      class="absolute top-0 right-0 w-1/4 h-screen overflow-auto bg-gray-100"
+    ></notifications>
+    <router-view></router-view>
+  </div>
+
   <!-- <div id="nav">
     <router-link to="/">Home</router-link> |
     <router-link to="/about">About</router-link>
@@ -8,9 +17,23 @@
 </template>
 
 <script>
-import Login from './components/Login.vue';
+import Notifications from './components/Notifications.vue';
+import TheHeader from './components/TheHeader.vue';
 export default {
-  components: { Login },
+  components: { TheHeader, Notifications },
+  data() {
+    return {
+      isNotifications: false,
+    };
+  },
+  methods: {
+    showNotifications() {
+      this.isNotifications = true;
+    },
+    hideNotifications() {
+      this.isNotifications = false;
+    },
+  },
 };
 </script>
 
