@@ -72,4 +72,12 @@ public class TrainerController {
     public List<ChatDto> getChats(@PathVariable("id") Long id) {
         return trainerService.getChats(id);
     }
+
+    @DeleteMapping("/{trainer_id}/client/{client_id}")
+    @Secured("ROLE_TRAINER")
+    public boolean removeClientFromList(@PathVariable("trainer_id") Long trainerId,
+                                        @PathVariable("client_id") Long clientId, Authentication authentication) {
+        validator.checkTrainerAccessRights(trainerId, authentication);
+        return trainerService.removeClientFromList(clientId);
+    }
 }

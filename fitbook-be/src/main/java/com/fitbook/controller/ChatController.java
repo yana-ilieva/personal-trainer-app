@@ -6,6 +6,7 @@ import com.fitbook.service.ChatService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.messaging.handler.annotation.MessageMapping;
 import org.springframework.messaging.handler.annotation.Payload;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -22,8 +23,8 @@ public class ChatController {
     }
 
     @MessageMapping("/chat/{to}")
-    public void sendSpecific(@PathVariable("to") String to, @Payload MessageDto message, Principal user) {
-        chatService.send(to, message);
+    public void sendSpecific(@PathVariable("to") String to, @Payload MessageDto message, Authentication authentication) {
+        chatService.send(to, message, authentication);
     }
 
     @PostMapping("/api/chat")

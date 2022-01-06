@@ -134,4 +134,15 @@ public class TrainerService {
             return false;
         }
     }
+
+    public boolean removeClientFromList(Long clientId) {
+        try {
+            Client client = clientService.findById(clientId);
+            client.setTrainer(null);
+            clientService.update(client);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
 }

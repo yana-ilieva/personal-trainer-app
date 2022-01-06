@@ -6,6 +6,7 @@ import com.fitbook.entity.chat.Chat;
 import com.fitbook.entity.chat.Message;
 import com.fitbook.entity.client.Client;
 import com.fitbook.entity.trainer.Trainer;
+import com.fitbook.entity.user.User;
 import com.fitbook.exception.ResourceNotFoundException;
 import com.fitbook.repository.ChatRepository;
 import com.fitbook.repository.MessageRepository;
@@ -15,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -48,7 +50,7 @@ public class ChatService {
         this.messageRepository = messageRepository;
     }
 
-    public void send(String username, MessageDto messageDto) {
+    public void send(String username, MessageDto messageDto, Authentication authentication) {
         Message message = mapper.map(messageDto);
         message.setCreatedTime(DateUtil.now());
 
@@ -66,7 +68,12 @@ public class ChatService {
             throw new ResourceNotFoundException("Message not found");
         }
 
-        simpMessagingTemplate.convertAndSendToUser(username, "/topic/messages", mapper.map(message));
+        MessageDto msg = mapper.map(message);
+
+        User user = (User) authentication.getPrincipal();
+
+        simpMessagingTemplate.convertAndSendToUser(username, "/topic/messages", msg);
+        simpMessagingTemplate.convertAndSendToUser(user.getEmail(), "/topic/messages", msg);
     }
 
     public ChatDto initializeChat(ChatDto chatDto) {
