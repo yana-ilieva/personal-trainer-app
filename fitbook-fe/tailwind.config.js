@@ -15,6 +15,12 @@ module.exports = {
         beige: '#e0c8ae',
         lbeige: '#eadfd9',
       },
+      spacing: {
+        300: '2000px',
+      },
+      flex: {
+        m: '1 1 200px',
+      },
     },
   },
   variants: {

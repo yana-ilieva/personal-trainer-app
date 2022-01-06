@@ -17,7 +17,11 @@
           <button class="px-3 py-0.5 bg-syellow text-darkmint rounded-md mr-4">
             Chat
           </button>
-          <button class="px-3 py-0.5 hover:bg-mint rounded-md">Edit</button>
+          <router-link
+            :to="{ name: 'edit', params: { id: name } }"
+            class="px-3 py-1.5 hover:bg-mint rounded-md"
+            >Edit</router-link
+          >
         </div>
       </div>
     </div>
