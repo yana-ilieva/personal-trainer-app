@@ -3,6 +3,7 @@ package com.fitbook.service;
 import com.fitbook.dto.ChatDto;
 import com.fitbook.dto.ClientDto;
 import com.fitbook.dto.ProgressDto;
+import com.fitbook.dto.RegistrationDto;
 import com.fitbook.entity.client.Client;
 import com.fitbook.entity.program.NutritionPlan;
 import com.fitbook.entity.program.Program;
@@ -38,9 +39,12 @@ public class ClientService {
         this.nutritionPlanService = nutritionPlanService;
     }
 
-    public Long create(User user) {
+    public Long create(User user, RegistrationDto registrationDto) {
         Client client = new Client();
         client.setUser(user);
+        client.setFirstName(registrationDto.getFirstName());
+        client.setLastName(registrationDto.getLastName());
+        client.setGender(registrationDto.getGender());
         return clientRepository.save(client).getId();
     }
 

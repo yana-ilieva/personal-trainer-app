@@ -1,6 +1,7 @@
 package com.fitbook.controller;
 
 import com.fitbook.dto.LoginDto;
+import com.fitbook.dto.LoginResponseDto;
 import com.fitbook.entity.user.User;
 import com.fitbook.service.security.SecurityAuthenticationProvider;
 import com.fitbook.util.JwtTokenUtil;
@@ -28,10 +29,13 @@ public class LoginController {
     }
 
     @PostMapping
-    public ResponseEntity<String> login(@RequestBody LoginDto loginDto) {
+    public LoginResponseDto login(@RequestBody LoginDto loginDto) {
         Authentication authenticate = securityAuthenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
         User user = (User) authenticate.getPrincipal();
-        String token = jwtTokenUtil.generateToken(user, user.getRole().getName());
-        return ResponseEntity.ok(token);
+        LoginResponseDto dto = new LoginResponseDto();
+        dto.setJwt(jwtTokenUtil.generateToken(user, user.getRole().getName()));
+        dto.setRole(user.getRole().getName());
+        dto.setUserId(user.getId());
+        return dto;
     }
 }

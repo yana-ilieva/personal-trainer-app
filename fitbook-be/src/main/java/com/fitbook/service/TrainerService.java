@@ -96,9 +96,13 @@ public class TrainerService {
         return trainerOpt.get();
     }
 
-    public Long create(User user) {
+    public Long create(User user, RegistrationDto registrationDto) {
         Trainer trainer = new Trainer();
         trainer.setUser(user);
+        trainer.setFirstName(registrationDto.getFirstName());
+        trainer.setLastName(registrationDto.getLastName());
+        trainer.setCity(registrationDto.getCity());
+        trainer.setGender(registrationDto.getGender());
         return trainerRepository.save(trainer).getId();
     }
 

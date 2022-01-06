@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/registration")
 public class RegistrationController {
 
-    private RegistrationService authService;
+    private final RegistrationService authService;
 
     @Autowired
     public RegistrationController(RegistrationService authService) {

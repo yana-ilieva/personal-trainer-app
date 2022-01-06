@@ -30,15 +30,15 @@ public class RegistrationService {
                 .build();
 
         User user = userService.save(userDto);
-        createEntity(user);
+        createEntity(user, registrationDto);
     }
 
-    private void createEntity(User user) {
+    private void createEntity(User user, RegistrationDto registrationDto) {
         if (user.getRole().getName().equals("ROLE_TRAINER")) {
-            trainerService.create(user);
+            trainerService.create(user, registrationDto);
         }
         if (user.getRole().getName().equals("ROLE_CLIENT")) {
-            clientService.create(user);
+            clientService.create(user, registrationDto);
         }
     }
 }
