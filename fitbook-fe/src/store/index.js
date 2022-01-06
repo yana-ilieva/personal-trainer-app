@@ -1,8 +1,10 @@
 import { createStore } from 'vuex';
+import clientsModule from './clients/index';
+import trainersModule from './trainers/index';
 
 export default createStore({
-  state: {},
-  mutations: {},
-  actions: {},
-  modules: {},
+  modules: {
+    clients: clientsModule,
+    trainers: trainersModule,
+  },
 });
