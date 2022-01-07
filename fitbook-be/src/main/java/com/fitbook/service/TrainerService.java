@@ -10,6 +10,7 @@ import com.fitbook.exception.ResourceNotFoundException;
 import com.fitbook.repository.RequestRepository;
 import com.fitbook.repository.TrainerRepository;
 import com.fitbook.repository.TrainerSpecification;
+import com.fitbook.repository.UserRepository;
 import com.fitbook.util.DateUtil;
 import com.fitbook.util.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,13 +34,16 @@ public class TrainerService {
 
     private final NotificationService notificationService;
 
+    private final UserRepository userRepository;
+
     @Autowired
-    public TrainerService(TrainerRepository trainerRepository, Mapper mapper, RequestRepository requestRepository, ClientService clientService, NotificationService notificationService) {
+    public TrainerService(TrainerRepository trainerRepository, Mapper mapper, RequestRepository requestRepository, ClientService clientService, NotificationService notificationService, UserRepository userRepository) {
         this.trainerRepository = trainerRepository;
         this.mapper = mapper;
         this.requestRepository = requestRepository;
         this.clientService = clientService;
         this.notificationService = notificationService;
+        this.userRepository = userRepository;
     }
 
     public TrainerDto findTrainer(Long id) {
@@ -51,6 +55,18 @@ public class TrainerService {
             return mapper.map(trainerOpt.get());
         } catch (Exception e) {
             throw new ResourceNotFoundException(String.format("Failed to find trainer with id %d", id));
+        }
+    }
+
+    public TrainerDto findTrainerByUserId(Long id) {
+        try {
+            Optional<User> userOpt = userRepository.findById(id);
+            if (userOpt.isEmpty()) {
+                return null;
+            }
+            return mapper.map(trainerRepository.findByUser(userOpt.get()));
+        } catch (Exception e) {
+            throw new ResourceNotFoundException(String.format("Failed to find user with id %d", id));
         }
     }
 
