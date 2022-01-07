@@ -47,12 +47,24 @@ export default {
       ],
     };
   },
+  async mounted() {
+    this.programs = await this.getPrograms();
+  },
   methods: {
     editProgram() {
       this.isEdit = true;
     },
     cancelEditProgram() {
       this.isEdit = false;
+    },
+    async getPrograms() {
+      const response = await fetch(`http://localhost:8081/api/program`);
+      console.log(response);
+      if (response.ok) {
+        console.log(await response.json());
+      } else {
+        console.log('error getting user data');
+      }
     },
   },
 };

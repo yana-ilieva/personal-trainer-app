@@ -4,11 +4,13 @@
       <ul class="w-full">
         <client-card
           v-for="client in clients"
-          :key="client.name"
-          :name="client.name"
-          :bDate="client.bDate"
+          :key="client.id"
+          :firstName="client.firstName"
+          :lastName="client.lastName"
+          :bDate="client.birthDate"
           :gender="client.gender"
-          :desc="client.desc"
+          :height="client.height"
+          :desc="client.description"
           class="w-full h-44 border border-darkmint rounded-md"
         ></client-card>
       </ul>
@@ -22,27 +24,24 @@ export default {
   components: { ClientCard },
   data() {
     return {
-      clients: [
-        {
-          name: 'aaaa',
-          bDate: '41421',
-          gender: 'male',
-          desc: 'wmvpawrmbpaemr prb iarobvma roiam erpi mapr',
-        },
-        {
-          name: 'aaaa',
-          bDate: '41421',
-          gender: 'male',
-          desc: 'wmvpawrmbpaemr prb iarobvma roiam erpi mapr',
-        },
-        {
-          name: 'aaaa',
-          bDate: '41421',
-          gender: 'male',
-          desc: 'wmvpawrmbpaemr prb iarobvma roiam erpi mapr',
-        },
-      ],
+      clients: [],
     };
+  },
+  async mounted() {
+    this.clients = await this.getClients();
+  },
+  methods: {
+    async getClients() {
+      const response = await fetch(
+        `http://localhost:8081/api/trainer/2/clients`
+      );
+      console.log(response);
+      if (response.ok) {
+        console.log(await response.json());
+      } else {
+        console.log('error getting user data');
+      }
+    },
   },
 };
 </script>
