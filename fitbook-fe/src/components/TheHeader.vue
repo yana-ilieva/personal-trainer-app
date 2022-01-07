@@ -2,31 +2,43 @@
   <header class="bg-darkmint text-syellow h-20 flex">
     <nav class="flex w-full justify-center pl-2">
       <ul class="w-full flex justify-start items-center list-none m-0 p-0">
-        <li>
+        <li v-if="isAuthenticated">
           <router-link class="px-4 py-2 mr-4" to="/clients"
             >Clients</router-link
           >
         </li>
-        <li>
+        <li v-if="isAuthenticated">
           <router-link class="px-4 py-2 mr-4" to="/trainers"
             >Trainers</router-link
           >
         </li>
-        <li>
+        <li v-if="isAuthenticated">
           <router-link class="px-4 py-2 mr-4" to="/programs"
             >Programs</router-link
           >
         </li>
-        <li>
+        <li v-if="isAuthenticated">
           <router-link class="px-4 py-2 mr-4" to="/chat">Chat</router-link>
         </li>
-        <li>
+        <li v-if="isAuthenticated">
           <router-link class="px-4 py-2 mr-4" to="/my-profile"
             >My Profile</router-link
           >
         </li>
+        <li v-if="!isAuthenticated">
+          <router-link class="px-4 py-2 mr-4" to="/registration"
+            >Registration</router-link
+          >
+        </li>
+        <li v-if="!isAuthenticated">
+          <router-link class="px-4 py-2 mr-4" to="/login">Login</router-link>
+        </li>
       </ul>
-      <div @click="$emit('showNotifications')" class="self-center mr-4">
+      <div
+        v-if="isAuthenticated"
+        @click="$emit('showNotifications')"
+        class="self-center mr-4"
+      >
         <svg
           class="cursor-pointer"
           xmlns="http://www.w3.org/2000/svg"
@@ -48,6 +60,11 @@
 <script>
 export default {
   emits: ['showNotifications'],
+  computed: {
+    isAuthenticated() {
+      return this.$store.getters['auth/isAuthenticated'];
+    },
+  },
 };
 </script>
 

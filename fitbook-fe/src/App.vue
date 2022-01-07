@@ -34,6 +34,9 @@ export default {
       this.isNotifications = false;
     },
   },
+  created() {
+    this.$store.dispatch('auth/autoLogin');
+  },
 };
 </script>
 

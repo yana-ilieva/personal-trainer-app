@@ -14,95 +14,51 @@ export default {
     });
   },
   async auth(context, payload) {
-    const mode = payload.mode;
-    let url =
-      'https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyBN-VW9LijWQ4gCIKIYnVxegih_-ve2-Rg';
+    console.log({ ...payload });
 
-    if (mode === 'signup') {
-      url =
-        'https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyBN-VW9LijWQ4gCIKIYnVxegih_-ve2-Rg';
-    }
-    const response = await fetch(url, {
-      method: 'POST',
-      body: JSON.stringify({
-        email: payload.email,
-        password: payload.password,
-        returnSecureToken: true,
-      }),
-    });
-    const responseData = await response.json();
+    // if (!response.ok) {
+    //   const error = new Error(
+    //     responseData.message || 'Failed to authenticate.'
+    //   );
+    //   throw error;
+    // }
 
-    if (!response.ok) {
-      const error = new Error(
-        responseData.message || 'Failed to authenticate.'
-      );
-      throw error;
-    }
+    //   context.dispatch(
+    //     'users/registerUser',
+    //     {
+    //       id: responseData.localId,
+    //       email: payload.email,
+    //       password: payload.password,
+    //       likes: [''],
+    //     },
+    //     { root: true }
+    //   );
 
-    if (mode === 'signup') {
-      await fetch(
-        `https://vue-dogs-258aa-default-rtdb.firebaseio.com/users/${responseData.localId}.json`,
-        {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify({
-            userId: responseData.localId,
-            email: payload.email,
-            password: payload.password,
-            likes: [''],
-          }),
-        }
-      );
+    // const expiresIn = +responseData.expiresIn * 1000;
+    // const expirationDate = new Date().getTime() + expiresIn;
 
-      context.dispatch(
-        'users/registerUser',
-        {
-          id: responseData.localId,
-          email: payload.email,
-          password: payload.password,
-          likes: [''],
-        },
-        { root: true }
-      );
-    }
+    // localStorage.setItem('token', responseData.idToken);
+    // localStorage.setItem('userId', responseData.localId);
+    // localStorage.setItem('tokenExpiration', expirationDate);
 
-    const expiresIn = +responseData.expiresIn * 1000;
-    const expirationDate = new Date().getTime() + expiresIn;
+    // timer = setTimeout(() => {
+    //   context.dispatch('didLogout');
+    // }, expiresIn);
 
-    localStorage.setItem('token', responseData.idToken);
-    localStorage.setItem('userId', responseData.localId);
-    localStorage.setItem('tokenExpiration', expirationDate);
-
-    timer = setTimeout(() => {
-      context.dispatch('didLogout');
-    }, expiresIn);
-
-    context.commit('setUser', {
-      token: responseData.idToken,
-      userId: responseData.localId,
-    });
+    // context.commit('setUser', {
+    //   token: responseData.idToken,
+    //   userId: responseData.localId,
+    // });
   },
   autoLogin(context) {
     const token = localStorage.getItem('token');
-    const userId = localStorage.getItem('userId');
-    const tokenExpiration = localStorage.getItem('tokenExpiration');
-
-    const expiresIn = +tokenExpiration - new Date().getTime();
-
-    if (expiresIn < 0) {
-      return;
-    }
-
-    timer = setTimeout(() => {
-      context.dispatch('didLogout');
-    }, expiresIn);
+    const userId = localStorage.getItem('id');
 
     if (token && userId) {
+      console.log('here');
       context.commit('setUser', {
-        token: token,
-        userId: userId,
+        token,
+        userId,
       });
     }
   },
@@ -111,15 +67,55 @@ export default {
     context.commit('didLogout');
   },
   async login(context, payload) {
-    return context.dispatch('auth', {
-      ...payload,
-      mode: 'login',
+    console.log({ ...payload });
+    const response = await fetch('http://localhost:8081/api/login', {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ...payload,
+      }),
     });
+    if (response.ok) {
+      const responseData = await response.json();
+      console.log(responseData);
+      context.commit('setUser', {
+        token: responseData.jwt,
+        userId: responseData.userId,
+      });
+      localStorage.setItem('token', responseData.jwt);
+      localStorage.setItem('id', responseData.userId);
+      return responseData;
+    } else {
+      return null;
+    }
+
+    // if (!response.ok) {
+    //   const error = new Error(
+    //     responseData.message || 'Failed to authenticate.'
+    //   );
+    //   throw error;
+    // } else {
+    //   console.log(responseData);
+    // }
   },
   async signup(context, payload) {
-    return context.dispatch('auth', {
-      ...payload,
-      mode: 'signup',
+    const response = await fetch('http://localhost:8081/api/registration', {
+      method: 'POST',
+      mode: 'cors',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        ...payload,
+      }),
     });
+    // const responseData = await response.json();
+    if (response.ok) {
+      return true;
+    }
+    return false;
   },
 };
