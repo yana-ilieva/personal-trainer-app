@@ -7,12 +7,21 @@ import Chat from '../pages/Chat.vue';
 import MyProfile from '../pages/MyProfile.vue';
 import Login from '../components/Login.vue';
 import Registration from '../components/Registration.vue';
+import Progress from '../pages/Progress.vue';
 import store from '../store/index';
 
 const routes = [
   {
     path: '/',
-    redirect: '/clients',
+    redirect:
+      store.getters['auth/role'] === 'ROLE_TRAINER' ? '/clients' : '/progress',
+  },
+  {
+    path: '/progress',
+    component: Progress,
+    meta: {
+      requiresAuth: true,
+    },
   },
   {
     path: '/registration',
@@ -82,7 +91,12 @@ router.beforeEach((to, _, next) => {
   if (to.meta.requiresAuth && !store.getters['auth/isAuthenticated']) {
     next('/login');
   } else if (to.meta.requiresUnauth && store.getters['auth/isAuthenticated']) {
-    next('/clients');
+    console.log(store.getters['auth/role']);
+    if (store.getters['auth/role'] === 'ROLE_TRAINER') {
+      next('/progress');
+    } else {
+      next('/progress');
+    }
   } else {
     next();
   }

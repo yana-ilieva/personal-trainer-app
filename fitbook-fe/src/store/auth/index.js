@@ -8,7 +8,7 @@ export default {
     return {
       userId: null,
       token: null,
-      didLogout: false,
+      role: null,
     };
   },
   actions,

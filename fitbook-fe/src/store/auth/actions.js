@@ -1,70 +1,28 @@
-let timer;
-
 export default {
   logout(context) {
     localStorage.removeItem('token');
     localStorage.removeItem('userId');
     localStorage.removeItem('tokenExpiration');
 
-    clearTimeout(timer);
-
     context.commit('setUser', {
       token: null,
       userId: null,
+      role: null,
     });
-  },
-  async auth(context, payload) {
-    console.log({ ...payload });
-
-    // if (!response.ok) {
-    //   const error = new Error(
-    //     responseData.message || 'Failed to authenticate.'
-    //   );
-    //   throw error;
-    // }
-
-    //   context.dispatch(
-    //     'users/registerUser',
-    //     {
-    //       id: responseData.localId,
-    //       email: payload.email,
-    //       password: payload.password,
-    //       likes: [''],
-    //     },
-    //     { root: true }
-    //   );
-
-    // const expiresIn = +responseData.expiresIn * 1000;
-    // const expirationDate = new Date().getTime() + expiresIn;
-
-    // localStorage.setItem('token', responseData.idToken);
-    // localStorage.setItem('userId', responseData.localId);
-    // localStorage.setItem('tokenExpiration', expirationDate);
-
-    // timer = setTimeout(() => {
-    //   context.dispatch('didLogout');
-    // }, expiresIn);
-
-    // context.commit('setUser', {
-    //   token: responseData.idToken,
-    //   userId: responseData.localId,
-    // });
   },
   autoLogin(context) {
     const token = localStorage.getItem('token');
     const userId = localStorage.getItem('id');
+    const role = localStorage.getItem('userRole');
 
     if (token && userId) {
       console.log('here');
       context.commit('setUser', {
         token,
         userId,
+        role,
       });
     }
-  },
-  autoLogout(context) {
-    context.dispatch('logout');
-    context.commit('didLogout');
   },
   async login(context, payload) {
     console.log({ ...payload });
@@ -84,9 +42,11 @@ export default {
       context.commit('setUser', {
         token: responseData.jwt,
         userId: responseData.userId,
+        role: responseData.role,
       });
       localStorage.setItem('token', responseData.jwt);
       localStorage.setItem('id', responseData.userId);
+      localStorage.setItem('userRole', responseData.role);
       return responseData;
     } else {
       return null;

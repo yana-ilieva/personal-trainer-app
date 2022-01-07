@@ -5,6 +5,9 @@ export default {
   token(state) {
     return state.token;
   },
+  role(state) {
+    return state.role;
+  },
   isAuthenticated(state) {
     return !!state.token;
   },
@@ -13,8 +16,5 @@ export default {
       token: state.token,
       userId: state.userId,
     };
-  },
-  didLogout(state) {
-    return state.didLogout;
   },
 };

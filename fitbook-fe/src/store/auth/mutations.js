@@ -3,6 +3,7 @@ export default {
     console.log('setUser');
     state.token = payload.token;
     state.userId = payload.userId;
+    state.role = payload.role;
     state.didLogout = false;
   },
   didLogout(state) {

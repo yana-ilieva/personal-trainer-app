@@ -55,8 +55,12 @@ export default {
           .then((res) => {
             console.log(res);
             if (res) {
-              console.log('logged in');
-              const redirectUrl = this.$route.query.redirect || 'clients';
+              let redirectUrl = '';
+              if (this.$store.getters['auth/role'] === 'ROLE_TRAINER') {
+                redirectUrl = 'clients';
+              } else {
+                redirectUrl = 'progress';
+              }
               this.$router.replace(`/${redirectUrl}`);
             } else {
               this.isModal = true;
