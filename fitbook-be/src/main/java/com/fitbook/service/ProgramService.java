@@ -3,6 +3,8 @@ package com.fitbook.service;
 import com.fitbook.dto.ProgramDto;
 import com.fitbook.entity.program.Program;
 import com.fitbook.entity.program.ProgramPart;
+import com.fitbook.entity.trainer.Trainer;
+import com.fitbook.entity.user.User;
 import com.fitbook.exception.ResourceNotFoundException;
 import com.fitbook.repository.ProgramRepository;
 import com.fitbook.util.Mapper;
@@ -21,11 +23,17 @@ public class ProgramService {
 
     private final ProgramPartUtil programPartUtil;
 
+    private final UserService userService;
+
+    private final TrainerService trainerService;
+
     @Autowired
-    public ProgramService(ProgramRepository programRepository, Mapper mapper, ProgramPartUtil programPartUtil) {
+    public ProgramService(ProgramRepository programRepository, Mapper mapper, ProgramPartUtil programPartUtil, UserService userService, TrainerService trainerService) {
         this.programRepository = programRepository;
         this.mapper = mapper;
         this.programPartUtil = programPartUtil;
+        this.userService = userService;
+        this.trainerService = trainerService;
     }
 
     public Program findById(Long id) {
@@ -37,14 +45,20 @@ public class ProgramService {
         return programOpt.get();
     }
 
-    public ProgramDto create(ProgramDto programDto) {
+    public ProgramDto create(ProgramDto programDto, Long trainerUserId) {
         Program program = mapper.map(programDto);
 
         List<ProgramPart> programParts = program.getProgramParts();
 
         program.setProgramParts(programPartUtil.transformProgramParts(programParts));
 
-        return mapper.map(programRepository.save(program));
+        program = programRepository.save(program);
+
+        User user = userService.findById(trainerUserId);
+        Trainer trainer = trainerService.findTrainerByUser(user);
+        trainer.getPrograms().add(program);
+
+        return mapper.map(program);
     }
 
     public Program create(Program program) {

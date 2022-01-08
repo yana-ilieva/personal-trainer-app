@@ -1,8 +1,7 @@
 package com.fitbook.controller;
 
-import com.fitbook.dto.ChatDto;
-import com.fitbook.dto.ClientDto;
-import com.fitbook.dto.ProgressDto;
+import com.fitbook.dto.*;
+import com.fitbook.entity.program.NutritionPlan;
 import com.fitbook.service.ClientService;
 import com.fitbook.service.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -65,5 +64,17 @@ public class ClientController {
     @Secured("ROLE_CLIENT")
     public List<ChatDto> getChats(@PathVariable("id") Long id) {
         return clientService.getChats(id);
+    }
+
+    @GetMapping("/user/{user_id}/program")
+    @Secured("ROLE_CLIENT")
+    public ProgramDto getProgram(@PathVariable("user_id") Long userId) {
+        return clientService.getProgram(userId);
+    }
+
+    @GetMapping("/user/{user_id}/nutrition_plan")
+    @Secured("ROLE_CLIENT")
+    public NutritionPlanDto getNutritionPlan(@PathVariable("user_id") Long userId) {
+        return clientService.getNutritionPlan(userId);
     }
 }

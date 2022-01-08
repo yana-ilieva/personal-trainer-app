@@ -49,6 +49,16 @@ public class TrainerService {
         this.userService = userService;
     }
 
+    public List<ProgramDto> findProgramsByUserId(Long userId) {
+        try {
+            User user = userService.findById(userId);
+            Trainer trainer = trainerRepository.findByUser(user);
+            return trainer.getPrograms().stream().map(mapper::map).collect(Collectors.toList());
+        } catch (Exception e) {
+            throw new ResourceNotFoundException(String.format("Failed to find trainer with user id %d", userId));
+        }
+    }
+
     public Trainer findTrainerByUser(User user) {
         try {
             return trainerRepository.findByUser(user);

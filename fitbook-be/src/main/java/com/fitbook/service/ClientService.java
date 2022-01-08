@@ -1,9 +1,6 @@
 package com.fitbook.service;
 
-import com.fitbook.dto.ChatDto;
-import com.fitbook.dto.ClientDto;
-import com.fitbook.dto.ProgressDto;
-import com.fitbook.dto.RegistrationDto;
+import com.fitbook.dto.*;
 import com.fitbook.entity.client.Client;
 import com.fitbook.entity.program.NutritionPlan;
 import com.fitbook.entity.program.Program;
@@ -13,6 +10,7 @@ import com.fitbook.repository.ClientRepository;
 import com.fitbook.repository.UserRepository;
 import com.fitbook.util.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
@@ -33,14 +31,35 @@ public class ClientService {
 
     private final UserRepository userRepository;
 
+    private final UserService userService;
+
     @Autowired
-    public ClientService(ClientRepository clientRepository, Mapper mapper, ProgramService programService,
-                         NutritionPlanService nutritionPlanService, UserRepository userRepository) {
+    public ClientService(ClientRepository clientRepository, Mapper mapper, @Lazy ProgramService programService,
+                         NutritionPlanService nutritionPlanService, UserRepository userRepository, UserService userService) {
         this.clientRepository = clientRepository;
         this.mapper = mapper;
         this.programService = programService;
         this.nutritionPlanService = nutritionPlanService;
         this.userRepository = userRepository;
+        this.userService = userService;
+    }
+
+    public ProgramDto getProgram(Long userId) {
+        try {
+            User user = userService.findById(userId);
+            return mapper.map(clientRepository.findByUser(user).getProgram());
+        } catch (Exception e) {
+            throw new ResourceNotFoundException(String.format("Client with user id %d not found", userId));
+        }
+    }
+
+    public NutritionPlanDto getNutritionPlan(Long userId) {
+        try {
+            User user = userService.findById(userId);
+            return mapper.map(clientRepository.findByUser(user).getNutritionPlan());
+        } catch (Exception e) {
+            throw new ResourceNotFoundException(String.format("Client with user id %d not found", userId));
+        }
     }
 
     public Client findClientByUser(User user) {

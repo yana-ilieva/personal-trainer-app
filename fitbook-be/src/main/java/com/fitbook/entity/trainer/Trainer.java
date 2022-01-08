@@ -2,6 +2,7 @@ package com.fitbook.entity.trainer;
 
 import com.fitbook.entity.chat.Chat;
 import com.fitbook.entity.client.Client;
+import com.fitbook.entity.program.Program;
 import com.fitbook.entity.user.User;
 import com.fitbook.enums.Gender;
 import lombok.AllArgsConstructor;
@@ -47,4 +48,7 @@ public class Trainer {
 
     @OneToMany(mappedBy = "trainer")
     private List<Chat> chats;
+
+    @OneToMany
+    private List<Program> programs;
 }

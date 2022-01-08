@@ -17,9 +17,9 @@ public class ProgramController {
         this.programService = programService;
     }
 
-    @PostMapping
-    public ProgramDto save(@RequestBody ProgramDto programDto) {
-        return programService.create(programDto);
+    @PostMapping("/user/{user_id}")
+    public ProgramDto save(@PathVariable("user_id") Long userId, @RequestBody ProgramDto programDto) {
+        return programService.create(programDto, userId);
     }
 
     @PutMapping("/{id}")

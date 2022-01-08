@@ -1,9 +1,6 @@
 package com.fitbook.controller;
 
-import com.fitbook.dto.ChatDto;
-import com.fitbook.dto.ClientDto;
-import com.fitbook.dto.SearchDto;
-import com.fitbook.dto.TrainerDto;
+import com.fitbook.dto.*;
 import com.fitbook.service.TrainerService;
 import com.fitbook.service.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -39,6 +36,12 @@ public class TrainerController {
     public List<ClientDto> findClientsByTrainer(@PathVariable("id") Long id, Authentication authentication) {
         validator.checkTrainerAccessRights(id, authentication);
         return trainerService.findClientsByTrainer(id);
+    }
+
+    @GetMapping("/{id}/programs")
+    @Secured("ROLE_TRAINER")
+    public List<ProgramDto> getPrograms(@PathVariable("id") Long id) {
+        return trainerService.findProgramsByUserId(id);
     }
 
     @GetMapping("/user/{user_id}")

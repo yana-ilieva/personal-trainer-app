@@ -1,5 +1,6 @@
 package com.fitbook.entity.program;
 
+import com.fitbook.entity.trainer.Trainer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
