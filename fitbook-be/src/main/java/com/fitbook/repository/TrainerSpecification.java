@@ -27,7 +27,7 @@ public class TrainerSpecification {
                 predicates.add(cb.equal(root.get("gender"), searchDto.getGender()));
             }
 
-            if (searchDto.getCity() != null && !searchDto.getName().equals("")) {
+            if (searchDto.getCity() != null && !searchDto.getCity().equals("")) {
                 predicates.add(cb.equal(root.get("city"), searchDto.getCity()));
             }
             return cb.and(predicates.toArray(Predicate[]::new));
