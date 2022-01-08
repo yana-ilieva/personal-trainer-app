@@ -36,14 +36,25 @@ public class TrainerService {
 
     private final UserRepository userRepository;
 
+    private final UserService userService;
+
     @Autowired
-    public TrainerService(TrainerRepository trainerRepository, Mapper mapper, RequestRepository requestRepository, ClientService clientService, NotificationService notificationService, UserRepository userRepository) {
+    public TrainerService(TrainerRepository trainerRepository, Mapper mapper, RequestRepository requestRepository, ClientService clientService, NotificationService notificationService, UserRepository userRepository, UserService userService) {
         this.trainerRepository = trainerRepository;
         this.mapper = mapper;
         this.requestRepository = requestRepository;
         this.clientService = clientService;
         this.notificationService = notificationService;
         this.userRepository = userRepository;
+        this.userService = userService;
+    }
+
+    public Trainer findTrainerByUser(User user) {
+        try {
+            return trainerRepository.findByUser(user);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException(String.format("Failed to find trainer with user id %d", user.getId()));
+        }
     }
 
     public TrainerDto findTrainer(Long id) {
@@ -88,8 +99,9 @@ public class TrainerService {
         return trainerOpt.get().getClients().stream().map(mapper::map).collect(Collectors.toList());
     }
 
-    public Boolean sendRequest(Long trainerId, Long clientId) {
-        Client client = clientService.findById(clientId);
+    public Boolean sendRequest(Long trainerId, Long userId) {
+        User user = userService.findById(userId);
+        Client client = clientService.findClientByUser(user);
         Trainer trainer = findById(trainerId);
 
         Request request = Request.builder().client(client).trainer(trainer).submitTime(DateUtil.now()).build();
@@ -142,9 +154,10 @@ public class TrainerService {
         return trainerOpt.get().getChats().stream().map(mapper::map).collect(Collectors.toList());
     }
 
-    public boolean handleRequest(Long trainerId, Long clientId) {
+    public boolean handleRequest(Long userId, Long clientId) {
         try {
-            Trainer trainer = findById(trainerId);
+            User user = userService.findById(userId);
+            Trainer trainer = findTrainerByUser(user);
             Client client = clientService.findById(clientId);
             client.setTrainer(trainer);
             clientService.update(client);
