@@ -17,7 +17,8 @@ public class TrainerSpecification {
                 String[] tokens = searchDto.getName().split(" ");
                 List<Predicate> namePredicates = new ArrayList<>();
                 for (String token : tokens) {
-                    namePredicates.add(cb.equal(root.get("name"), token));
+                    namePredicates.add(cb.equal(root.get("firstName"), token));
+                    namePredicates.add(cb.equal(root.get("lastName"), token));
                 }
                 predicates.add(cb.or(namePredicates.toArray(Predicate[]::new)));
             }
