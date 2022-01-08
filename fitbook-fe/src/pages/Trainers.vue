@@ -2,8 +2,9 @@
   <div class="w-full flex">
     <div class="w-3/12 px-4">
       <div class="w-full mt-8">
-        <form action="">
-          <div class="relative">
+        <form @submit.prevent="submitSearchForm" action="">
+          <h4 class="text-lg mb-2">Filter By:</h4>
+          <div class="relative mb-4">
             <svg
               class="absolute left-2 top-0 bottom-0 my-auto"
               xmlns="http://www.w3.org/2000/svg"
@@ -25,11 +26,6 @@
               id="search"
             />
           </div>
-        </form>
-      </div>
-      <div class="mt-10">
-        <h4 class="text-left text-lg">Filter By:</h4>
-        <form class="mt-4 flex flex-col" action="">
           <input
             class="self-start px-3 py-0.5 bg-gray-100 rounded-md mb-4"
             type="text"
@@ -81,11 +77,11 @@
       <ul class="w-full">
         <trainer-card
           v-for="trainer in trainers"
-          :key="trainer.name"
-          :name="trainer.name"
-          :bDate="trainer.bDate"
+          :key="trainer.id"
+          :name="trainer.firstName + ' ' + trainer.lastName"
+          :bDate="trainer.birthDate"
           :gender="trainer.gender"
-          :desc="trainer.desc"
+          :desc="trainer.description"
           class="w-full h-44 border border-darkmint rounded-md"
         ></trainer-card>
       </ul>
@@ -99,11 +95,6 @@ export default {
   components: { TrainerCard },
   data() {
     return {
-      searchedTrainer: {
-        name: '',
-        city: '',
-        gender: '',
-      },
       trainers: [],
     };
   },
@@ -112,9 +103,8 @@ export default {
   },
   methods: {
     async getTrainers() {
-      console.log(this.$store.getters['auth/token']);
       const response = await fetch(
-        `http://localhost:8081/api/trainer?page=1&size=10`,
+        `http://localhost:8081/api/trainer?page=0&size=10`,
         {
           method: 'POST',
           mode: 'cors',
@@ -127,7 +117,36 @@ export default {
       );
       console.log(response);
       if (response.ok) {
-        console.log(await response.json());
+        return await response.json();
+      } else {
+        console.log('error getting user data');
+      }
+    },
+    async submitSearchForm(e) {
+      console.log({
+        name: e.target.search.value,
+        city: e.target.addressFilter.value,
+        gender: e.target.genderFilter.value,
+      });
+      const response = await fetch(
+        `http://localhost:8081/api/trainer?page=0&size=10`,
+        {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            Authorization: `Bearer ${this.$store.getters['auth/token']}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            name: e.target.search.value,
+            city: e.target.addressFilter.value,
+            gender: e.target.genderFilter.value,
+          }),
+        }
+      );
+      console.log(response);
+      if (response.ok) {
+        return await response.json();
       } else {
         console.log('error getting user data');
       }
