@@ -11,24 +11,25 @@ import java.util.List;
 public class TrainerSpecification {
 
     public static Specification<Trainer> findTrainers(SearchDto searchDto) {
-        return (root, criteriaQuery, criteriaBuilder) -> {
+        return (root, cq, cb) -> {
             List<Predicate> predicates = new ArrayList<>();
             if (searchDto.getName() != null && !searchDto.getName().equals("")) {
-                predicates.add(criteriaBuilder.equal(root.get("name"), searchDto.getName()));
+                String[] tokens = searchDto.getName().split(" ");
+                List<Predicate> namePredicates = new ArrayList<>();
+                for (String token : tokens) {
+                    namePredicates.add(cb.equal(root.get("name"), token));
+                }
+                predicates.add(cb.or(namePredicates.toArray(Predicate[]::new)));
             }
 
             if (searchDto.getGender() != null) {
-                predicates.add(criteriaBuilder.equal(root.get("gender"), searchDto.getGender()));
+                predicates.add(cb.equal(root.get("gender"), searchDto.getGender()));
             }
 
             if (searchDto.getCity() != null && !searchDto.getName().equals("")) {
-                predicates.add(criteriaBuilder.equal(root.get("city"), searchDto.getCity()));
+                predicates.add(cb.equal(root.get("city"), searchDto.getCity()));
             }
-
-            if (searchDto.getNeighborhood() != null && !searchDto.getName().equals("")) {
-                predicates.add(criteriaBuilder.equal(root.get("neighborhood"), searchDto.getNeighborhood()));
-            }
-            return criteriaBuilder.and(predicates.toArray(Predicate[]::new));
+            return cb.and(predicates.toArray(Predicate[]::new));
         };
     }
 }
