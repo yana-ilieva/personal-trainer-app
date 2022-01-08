@@ -38,6 +38,7 @@ export default {
     hideNotifications() {
       this.isNotifications = false;
     },
+    getEmail() {},
     send() {
       console.log('Send message:' + this.send_message);
       if (this.stompClient && this.stompClient.connected) {
@@ -47,23 +48,28 @@ export default {
       }
     },
     connect() {
-      this.socket = new SockJS('http://localhost:8081/ws');
-      this.stompClient = Stomp.over(this.socket);
-      this.stompClient.connect(
-        {},
-        (frame) => {
-          this.connected = true;
-          console.log(frame);
-          this.stompClient.subscribe('/queue/notifications', (tick) => {
-            console.log(tick);
-            this.received_messages.push(JSON.parse(tick.body).content);
-          });
-        },
-        (error) => {
-          console.log(error);
-          this.connected = false;
-        }
-      );
+      if (this.$store.getters['auth/isAuthenticated']) {
+        this.socket = new SockJS('http://localhost:8081/ws');
+        this.stompClient = Stomp.over(this.socket);
+        console.log('before connect');
+        this.stompClient.connect(
+          {
+            Authorization: `Bearer ${this.$store.getters['auth/token']}`,
+          },
+          (frame) => {
+            this.connected = true;
+            console.log('in connect: ' + frame);
+            this.stompClient.subscribe('/user/queue/notifications', (tick) => {
+              console.log('tick: ', tick);
+              this.received_messages.push(JSON.parse(tick.body).content);
+            });
+          },
+          (error) => {
+            console.log(error);
+            this.connected = false;
+          }
+        );
+      }
     },
     disconnect() {
       if (this.stompClient) {
