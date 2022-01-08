@@ -40,7 +40,7 @@ public class ProgramServiceTest {
         ProgramPartDto programPartDto2 = programPartDto(WeekDay.WEDNESDAY, 2, List.of(exerciseUnitDto3, exerciseUnitDto4));
         ProgramDto programDto = programDto("some description", List.of(programPartDto, programPartDto2));
 
-        ProgramDto saved = programService.create(programDto);
+        ProgramDto saved = programService.create(programDto, 1L);
 
         assertAll(
                 () -> assertNotNull(saved),
@@ -84,7 +84,7 @@ public class ProgramServiceTest {
 
         ProgramDto programDto = programDto("some description", programPartDtos);
 
-        ProgramDto saved = programService.create(programDto);
+        ProgramDto saved = programService.create(programDto, 1L);
 
         ExerciseDto newExercise = exerciseDto(10004L, "fifth exercise");
 
@@ -127,7 +127,7 @@ public class ProgramServiceTest {
 
         ProgramDto programDto = programDto("some description", programPartDtos);
 
-        ProgramDto saved = programService.create(programDto);
+        ProgramDto saved = programService.create(programDto, 1L);
 
         saved.getProgramParts().get(0).getExerciseUnits().remove(1);
 

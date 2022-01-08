@@ -118,7 +118,7 @@ public class TrainerService {
 
         try {
             requestRepository.save(request);
-            notificationService.sendNotification(trainer.getUser().getEmail(), NotificationType.REQUEST_SENT, trainer, client);
+            notificationService.sendNotification(trainer.getUser(), NotificationType.REQUEST_SENT, trainer, client);
             return true;
         } catch (Exception e) {
             return false;
@@ -171,7 +171,7 @@ public class TrainerService {
             Client client = clientService.findById(clientId);
             client.setTrainer(trainer);
             clientService.update(client);
-            notificationService.sendNotification(client.getUser().getEmail(), NotificationType.REQUEST_ACCEPTED, trainer, client);
+            notificationService.sendNotification(client.getUser(), NotificationType.REQUEST_ACCEPTED, trainer, client);
             return true;
         } catch (Exception e) {
             return false;
