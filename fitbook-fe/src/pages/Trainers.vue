@@ -123,11 +123,6 @@ export default {
       }
     },
     async submitSearchForm(e) {
-      console.log({
-        name: e.target.search.value,
-        city: e.target.addressFilter.value,
-        gender: e.target.genderFilter.value,
-      });
       const response = await fetch(
         `http://localhost:8081/api/trainer?page=0&size=10`,
         {
@@ -140,15 +135,18 @@ export default {
           body: JSON.stringify({
             name: e.target.search.value,
             city: e.target.addressFilter.value,
-            gender: e.target.genderFilter.value,
+            gender:
+              e.target.genderFilter.value == 'All'
+                ? null
+                : e.target.genderFilter.value.toUpperCase(),
           }),
         }
       );
-      console.log(response);
       if (response.ok) {
-        return await response.json();
+        this.trainers = await response.json();
       } else {
         console.log('error getting user data');
+        this.trainers = [];
       }
     },
   },
