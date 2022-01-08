@@ -21,6 +21,8 @@ public class ExerciseUnit {
     @JoinColumn(name = "program_part_id")
     private ProgramPart programPart;
 
+    private Integer restBetweenExercises;
+
     @OneToOne
     private Exercise exercise;
 }

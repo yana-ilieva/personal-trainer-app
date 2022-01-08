@@ -21,8 +21,6 @@ public class ProgramPart {
 
     private WeekDay weekDay;
 
-    private Integer restBetweenExercises;
-
     @OneToMany(mappedBy = "programPart", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
     private List<ExerciseUnit> exerciseUnits;
 
