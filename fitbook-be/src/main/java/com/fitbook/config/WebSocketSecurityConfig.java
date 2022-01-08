@@ -11,9 +11,4 @@ public class WebSocketSecurityConfig extends AbstractSecurityWebSocketMessageBro
     protected void configureInbound(MessageSecurityMetadataSourceRegistry messages) {
         messages.simpDestMatchers("/secured/**").authenticated().anyMessage().authenticated();
     }
-
-    @Override
-    protected boolean sameOriginDisabled() {
-        return true;
-    }
 }
