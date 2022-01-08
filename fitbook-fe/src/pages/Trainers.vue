@@ -93,59 +93,18 @@
 
 <script>
 import TrainerCard from '../components/TrainerCard.vue';
-import SockJS from 'sockjs-client';
-import Stomp from 'webstomp-client';
+
 export default {
   components: { TrainerCard },
   data() {
     return {
       trainers: [],
-      received_messages: [],
-      send_message: null,
-      connected: false,
     };
   },
   async mounted() {
     this.trainers = await this.getTrainers();
-    this.connect();
   },
   methods: {
-    send() {
-      console.log('Send message:' + this.send_message);
-      if (this.stompClient && this.stompClient.connected) {
-        const msg = { name: this.send_message };
-        console.log(JSON.stringify(msg));
-        this.stompClient.send('/app/hello', JSON.stringify(msg), {});
-      }
-    },
-    connect() {
-      this.socket = new SockJS('http://localhost:8081/ws');
-      this.stompClient = Stomp.over(this.socket);
-      this.stompClient.connect(
-        {},
-        (frame) => {
-          this.connected = true;
-          console.log(frame);
-          this.stompClient.subscribe('/queue/notifications', (tick) => {
-            console.log(tick);
-            this.received_messages.push(JSON.parse(tick.body).content);
-          });
-        },
-        (error) => {
-          console.log(error);
-          this.connected = false;
-        }
-      );
-    },
-    disconnect() {
-      if (this.stompClient) {
-        this.stompClient.disconnect();
-      }
-      this.connected = false;
-    },
-    tickleConnection() {
-      this.connected ? this.disconnect() : this.connect();
-    },
     async getTrainers() {
       const response = await fetch(
         `http://localhost:8081/api/trainer?page=0&size=10`,
