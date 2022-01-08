@@ -14,8 +14,10 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.messaging.simp.SimpMessagingTemplate;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.stereotype.Service;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -68,8 +70,8 @@ public class NotificationService {
         return mapper.map(notificationRepository.save(notification));
     }
 
-    public void sendNotification(String username, NotificationType notificationType, Trainer trainer, Client client) {
+    public void sendNotification(User user, NotificationType notificationType, Trainer trainer, Client client) {
         NotificationDto notificationDto = create(notificationType, trainer, client);
-        simpMessagingTemplate.convertAndSendToUser(username, "/queue/notifications", notificationDto);
+        simpMessagingTemplate.convertAndSendToUser(user.toString(), "/queue/notifications", notificationDto);
     }
 }
