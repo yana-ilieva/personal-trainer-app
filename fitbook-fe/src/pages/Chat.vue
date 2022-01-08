@@ -5,9 +5,9 @@
       <div class="overflow-auto w-1/4">
         <ul class="border border-darkmint">
           <chat-card
-            v-for="chat in chats"
-            :key="chat.name"
-            :name="chat.name"
+            v-for="client in clients"
+            :key="client.firstName"
+            :name="client.firstName"
           ></chat-card>
         </ul>
       </div>
@@ -93,20 +93,7 @@ export default {
   data() {
     return {
       currentUser: 'Yana Ilieva',
-      chats: [
-        {
-          name: 'Yana Ilieva',
-          img: 'test',
-        },
-        {
-          name: 'Mariyan Zhelyazkov',
-          img: 'test',
-        },
-        {
-          name: 'Marc Anthony',
-          img: 'test',
-        },
-      ],
+      clients: [],
       chatMessages: [
         {
           text: 'iria ivarwnmbvai',
@@ -158,6 +145,25 @@ export default {
         },
       ],
     };
+  },
+  async mounted() {
+    this.clients = await this.getClients();
+  },
+  methods: {
+    async getClients() {
+      const response = await fetch(
+        `http://localhost:8081/api/trainer/2/clients`,
+        {
+          Authorization: `Bearer ${this.$store.getters['auth/token']}`,
+        }
+      );
+      console.log(response);
+      if (response.ok) {
+        console.log(await response.json());
+      } else {
+        console.log('error getting user data');
+      }
+    },
   },
 };
 </script>

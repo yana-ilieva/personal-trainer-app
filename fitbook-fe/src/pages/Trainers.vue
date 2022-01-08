@@ -99,27 +99,39 @@ export default {
   components: { TrainerCard },
   data() {
     return {
-      trainers: [
-        {
-          name: 'aaaa',
-          bDate: '41421',
-          gender: 'male',
-          desc: 'wmvpawrmbpaemr prb iarobvma roiam erpi mapr',
-        },
-        {
-          name: 'aaaa',
-          bDate: '41421',
-          gender: 'male',
-          desc: 'wmvpawrmbpaemr prb iarobvma roiam erpi mapr',
-        },
-        {
-          name: 'aaaa',
-          bDate: '41421',
-          gender: 'male',
-          desc: 'wmvpawrmbpaemr prb iarobvma roiam erpi mapr',
-        },
-      ],
+      searchedTrainer: {
+        name: '',
+        city: '',
+        gender: '',
+      },
+      trainers: [],
     };
+  },
+  async mounted() {
+    this.trainers = await this.getTrainers();
+  },
+  methods: {
+    async getTrainers() {
+      console.log(this.$store.getters['auth/token']);
+      const response = await fetch(
+        `http://localhost:8081/api/trainer?page=1&size=10`,
+        {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            Authorization: `Bearer ${this.$store.getters['auth/token']}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({}),
+        }
+      );
+      console.log(response);
+      if (response.ok) {
+        console.log(await response.json());
+      } else {
+        console.log('error getting user data');
+      }
+    },
   },
 };
 </script>
