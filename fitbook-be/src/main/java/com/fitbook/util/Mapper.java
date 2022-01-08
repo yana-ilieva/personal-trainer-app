@@ -130,7 +130,7 @@ public class Mapper {
         return exerciseUnitDto;
     }
 
-    private ExerciseDto map(Exercise exercise) {
+    public ExerciseDto map(Exercise exercise) {
         ExerciseDto exerciseDto = new ExerciseDto();
         exerciseDto.setId(exercise.getId());
         exerciseDto.setName(exercise.getName());
@@ -219,12 +219,6 @@ public class Mapper {
         nutritionPlan.setId(nutritionPlanDto.getId());
         nutritionPlan.setName(nutritionPlanDto.getName());
         nutritionPlan.setDescription(nutritionPlanDto.getDescription());
-       /* nutritionPlan.getNutritionPlanParts().forEach(part -> {
-            Optional<NutritionPlanPartDto> nutritionPlanPartOpt = nutritionPlanDto.getNutritionPlanPartDtos().stream()
-                    .filter(dto -> part.getWeekDay().equals(dto.getWeekDay())).findFirst();
-            nutritionPlanPartOpt.ifPresent(nutritionPlanPartDto -> map(nutritionPlanPartDto, part));
-        });*/
-
         nutritionPlan.setNutritionPlanParts(nutritionPlanDto.getNutritionPlanPartDtos().stream().map(this::map).collect(Collectors.toList()));
     }
 
