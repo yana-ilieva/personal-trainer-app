@@ -76,8 +76,10 @@
     <div class="w-7/12 ml-10 mt-8">
       <ul class="w-full">
         <trainer-card
+          @sendRequest="sendRequest(id)"
           v-for="trainer in trainers"
           :key="trainer.id"
+          :id="trainer.id"
           :name="trainer.firstName + ' ' + trainer.lastName"
           :bDate="trainer.birthDate"
           :gender="trainer.gender"
@@ -119,7 +121,8 @@ export default {
       if (response.ok) {
         return await response.json();
       } else {
-        console.log('error getting user data');
+        console.log('error getting trainers data');
+        return [];
       }
     },
     async submitSearchForm(e) {
@@ -145,8 +148,28 @@ export default {
       if (response.ok) {
         this.trainers = await response.json();
       } else {
-        console.log('error getting user data');
+        console.log('error getting trainers data');
         this.trainers = [];
+      }
+    },
+    async sendRequest(id) {
+      const response = await fetch(
+        `http://localhost:8081/api/trainer/${id}/request/`,
+        {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            Authorization: `Bearer ${this.$store.getters['auth/token']}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({}),
+        }
+      );
+      console.log(response);
+      if (response.ok) {
+        return await response.json();
+      } else {
+        console.log('error getting user data');
       }
     },
   },

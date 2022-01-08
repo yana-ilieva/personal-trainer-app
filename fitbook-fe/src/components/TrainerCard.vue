@@ -14,10 +14,15 @@
           </div>
         </div>
         <div class="self-end justify-self-end">
-          <button class="px-3 py-0.5 bg-syellow text-darkmint rounded-md mr-4">
+          <button
+            class="px-3 py-0.5 bg-syellow text-darkmint rounded-md mr-4 hover:bg-darksyellow"
+          >
             Chat
           </button>
-          <button class="px-3 py-0.5 hover:bg-mint rounded-md">
+          <button
+            @click="$emit('sendRequest', id)"
+            class="px-3 py-0.5 hover:bg-mint rounded-md"
+          >
             Send Request
           </button>
         </div>
@@ -28,6 +33,7 @@
 
 <script>
 export default {
-  props: ['name', 'bDate', 'gender', 'desc'],
+  props: ['id', 'name', 'bDate', 'gender', 'desc'],
+  emits: ['sendRequest'],
 };
 </script>
