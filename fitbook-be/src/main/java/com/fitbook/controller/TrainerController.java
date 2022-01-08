@@ -15,6 +15,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/trainer")
+@CrossOrigin(origins = "http://localhost:8080")
 public class TrainerController {
 
     private final TrainerService trainerService;
@@ -38,6 +39,12 @@ public class TrainerController {
     public List<ClientDto> findClientsByTrainer(@PathVariable("id") Long id, Authentication authentication) {
         validator.checkTrainerAccessRights(id, authentication);
         return trainerService.findClientsByTrainer(id);
+    }
+
+    @GetMapping("/user/{user_id}")
+    @Secured("ROLE_TRAINER")
+    public TrainerDto findTrainerByUserId(@PathVariable("user_id") Long id) {
+        return trainerService.findTrainerByUserId(id);
     }
 
     @PostMapping

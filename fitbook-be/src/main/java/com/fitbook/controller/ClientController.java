@@ -37,6 +37,12 @@ public class ClientController {
         return clientService.getProgress(id, page, size);
     }
 
+    @GetMapping("/user/{user_id}")
+    @Secured("ROLE_CLIENT")
+    public ClientDto findClientByUserId(@PathVariable("user_id") Long id) {
+        return clientService.findClientByUserId(id);
+    }
+
     @PutMapping("/{id}")
     @Secured("ROLE_CLIENT")
     public ClientDto update(@PathVariable("id") Long id, @RequestBody ClientDto clientDto) {

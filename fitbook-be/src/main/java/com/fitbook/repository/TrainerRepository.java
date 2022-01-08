@@ -12,4 +12,6 @@ public interface TrainerRepository extends JpaRepository<Trainer, Long>, JpaSpec
 
     @Query("select t.id from Trainer t where t.user.email like ?1")
     Long getIdByEmail(String email);
+
+    Trainer findByUser(User user);
 }

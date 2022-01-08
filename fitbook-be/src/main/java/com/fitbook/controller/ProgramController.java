@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/api/program")
+@CrossOrigin(origins = "http://localhost:8080")
 public class ProgramController {
 
     private final ProgramService programService;

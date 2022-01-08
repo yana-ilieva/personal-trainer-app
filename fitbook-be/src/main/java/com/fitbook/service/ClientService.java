@@ -10,6 +10,7 @@ import com.fitbook.entity.program.Program;
 import com.fitbook.entity.user.User;
 import com.fitbook.exception.ResourceNotFoundException;
 import com.fitbook.repository.ClientRepository;
+import com.fitbook.repository.UserRepository;
 import com.fitbook.util.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -30,13 +31,28 @@ public class ClientService {
 
     private final NutritionPlanService nutritionPlanService;
 
+    private final UserRepository userRepository;
+
     @Autowired
     public ClientService(ClientRepository clientRepository, Mapper mapper, ProgramService programService,
-                         NutritionPlanService nutritionPlanService) {
+                         NutritionPlanService nutritionPlanService, UserRepository userRepository) {
         this.clientRepository = clientRepository;
         this.mapper = mapper;
         this.programService = programService;
         this.nutritionPlanService = nutritionPlanService;
+        this.userRepository = userRepository;
+    }
+
+    public ClientDto findClientByUserId(Long id) {
+        try {
+            Optional<User> userOpt = userRepository.findById(id);
+            if (userOpt.isEmpty()) {
+                return null;
+            }
+            return mapper.map(clientRepository.findByUser(userOpt.get()));
+        } catch (Exception e) {
+            throw new ResourceNotFoundException(String.format("Client with user id %d not found", id));
+        }
     }
 
     public Long create(User user, RegistrationDto registrationDto) {

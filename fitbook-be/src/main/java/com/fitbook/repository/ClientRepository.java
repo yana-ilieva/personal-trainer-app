@@ -18,4 +18,6 @@ public interface ClientRepository extends JpaRepository<Client, Long> {
 
     @Query("select c.id from Client c where c.user.email like ?1")
     Long getIdByEmail(String email);
+
+    Client findByUser(User user);
 }
