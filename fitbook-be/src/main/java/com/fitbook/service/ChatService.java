@@ -72,8 +72,8 @@ public class ChatService {
 
         User user = (User) authentication.getPrincipal();
 
-        simpMessagingTemplate.convertAndSendToUser(username, "/topic/messages", msg);
-        simpMessagingTemplate.convertAndSendToUser(user.getEmail(), "/topic/messages", msg);
+        simpMessagingTemplate.convertAndSendToUser(username, "/secured/topic/messages", msg);
+        simpMessagingTemplate.convertAndSendToUser(user.getEmail(), "/secured/topic/messages", msg);
     }
 
     public ChatDto initializeChat(ChatDto chatDto) {

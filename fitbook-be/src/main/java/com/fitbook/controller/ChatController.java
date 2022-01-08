@@ -23,7 +23,7 @@ public class ChatController {
         this.chatService = chatService;
     }
 
-    @MessageMapping("/chat/{to}")
+    @MessageMapping("/secured/chat/{to}")
     public void sendSpecific(@PathVariable("to") String to, @Payload MessageDto message, Authentication authentication) {
         chatService.send(to, message, authentication);
     }
