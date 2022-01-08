@@ -54,18 +54,18 @@ public class TrainerController {
         return trainerService.findTrainers(searchDto, page, size);
     }
 
-    @GetMapping("/{trainer_id}/request/{client_id}")
+    @GetMapping("/{trainer_id}/request/user/{user_id}")
     @Secured("ROLE_CLIENT")
     public Boolean sendRequest(@PathVariable("trainer_id") Long trainerId,
-                               @PathVariable("client_id") Long clientId) {
-        return trainerService.sendRequest(trainerId, clientId);
+                               @PathVariable("user_id") Long userId) {
+        return trainerService.sendRequest(trainerId, userId);
     }
 
-    @GetMapping("/{trainer_id}/handle_request/{client_id}")
+    @GetMapping("/user/{user_id}/handle_request/{client_id}")
     @Secured("ROLE_TRAINER")
-    public Boolean handleRequest(@PathVariable("trainer_id") Long trainerId,
+    public Boolean handleRequest(@PathVariable("user_id") Long userId,
                                  @PathVariable("client_id") Long clientId) {
-        return trainerService.handleRequest(trainerId, clientId);
+        return trainerService.handleRequest(userId, clientId);
     }
 
     @PutMapping("/{id}")

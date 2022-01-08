@@ -43,6 +43,14 @@ public class ClientService {
         this.userRepository = userRepository;
     }
 
+    public Client findClientByUser(User user) {
+        try {
+            return clientRepository.findByUser(user);
+        } catch (Exception e) {
+            throw new ResourceNotFoundException(String.format("Client with user id %d not found", user.getId()));
+        }
+    }
+
     public ClientDto findClientByUserId(Long id) {
         try {
             Optional<User> userOpt = userRepository.findById(id);

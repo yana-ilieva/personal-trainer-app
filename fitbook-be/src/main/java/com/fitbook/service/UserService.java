@@ -12,6 +12,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.HashSet;
+import java.util.Optional;
 import java.util.Set;
 
 @Service
@@ -32,6 +33,14 @@ public class UserService {
 
     public Set<User> findAll() {
         return new HashSet<>(userRepository.findAll());
+    }
+
+    public User findById(Long id) {
+        Optional<User> userOpt = userRepository.findById(id);
+        if (userOpt.isEmpty()) {
+            throw new ResourceNotFoundException(String.format("User with id %d not found", id));
+        }
+        return userOpt.get();
     }
 
     public User findByEmail(String email) {
