@@ -12,6 +12,5 @@ public class SearchDto {
 
     private Gender gender;
     private String city;
-    private String neighborhood;
     private String name;
 }
