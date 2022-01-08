@@ -70,6 +70,6 @@ public class NotificationService {
 
     public void sendNotification(String username, NotificationType notificationType, Trainer trainer, Client client) {
         NotificationDto notificationDto = create(notificationType, trainer, client);
-        simpMessagingTemplate.convertAndSendToUser(username, "/secured/queue/notifications", notificationDto);
+        simpMessagingTemplate.convertAndSendToUser(username, "/queue/notifications", notificationDto);
     }
 }
