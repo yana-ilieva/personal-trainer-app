@@ -15,6 +15,7 @@
         </div>
         <div class="self-end justify-self-end">
           <button
+            @click="$emit('initializeChat')"
             class="px-3 py-0.5 bg-syellow text-darkmint rounded-md mr-4 hover:bg-darksyellow"
           >
             Chat
@@ -33,5 +34,6 @@
 <script>
 export default {
   props: ['firstName', 'lastName', 'bDate', 'gender', 'desc'],
+  emits: ['initializeChat'],
 };
 </script>

@@ -5,9 +5,10 @@
       <div class="overflow-auto w-1/4">
         <ul class="border border-darkmint">
           <chat-card
-            v-for="client in clients"
-            :key="client.firstName"
-            :name="client.firstName"
+            v-for="client of clients"
+            :key="client.client.id"
+            :name="client.client.name"
+            @click="getChatMessages(client.id)"
           ></chat-card>
         </ul>
       </div>
@@ -24,30 +25,37 @@
                 <li
                   class="w-full flex flex-col mb-1"
                   v-for="message in chatMessages"
-                  :key="message.text"
+                  :key="message.id"
                 >
                   <div
                     :class="
-                      message.sender == currentUser ? 'self-end' : 'self-start'
+                      message.sender ==
+                      currentUser.firstName + ' ' + currentUser.lastName
+                        ? 'self-end'
+                        : 'self-start'
                     "
                     class="w-max max-w-xs"
                   >
                     <p
                       class="text-xs text-right"
-                      v-if="message.sender == currentUser"
+                      v-if="
+                        message.sender ==
+                        currentUser.firstName + ' ' + currentUser.lastName
+                      "
                     >
                       You
                     </p>
                     <p class="text-xs text-left" v-else>{{ message.sender }}</p>
                     <p
                       :class="
-                        message.sender == currentUser
+                        message.sender ==
+                        currentUser.firstName + ' ' + currentUser.lastName
                           ? 'bg-mint'
                           : 'bg-gray-200'
                       "
                       class="text-left text-black rounded-md px-3 py-1"
                     >
-                      {{ message.text }}
+                      {{ message.content }}
                     </p>
                   </div>
                 </li>
@@ -92,69 +100,62 @@ export default {
   },
   data() {
     return {
-      currentUser: 'Yana Ilieva',
+      currentUser: {},
       clients: [],
-      chatMessages: [
-        {
-          text: 'iria ivarwnmbvai',
-          sender: 'Yana Ilieva',
-        },
-        {
-          text: 'shakira shakira',
-          sender: 'Yana Ilieva',
-        },
-        {
-          text: 'bailandoooo bailandoooo oooooooooo oooooooooooo oooooooooooooooo',
-          sender: 'Mariyan Zhelyazkov',
-        },
-        {
-          text: 'jeanyyy',
-          sender: 'Yana Ilieva',
-        },
-        {
-          text: 'send nudes',
-          sender: 'Mariyan Zhelyazkov',
-        },
-        {
-          text: 'fneg rsrvwgvrae',
-          sender: 'Mariyan Zhelyazkov',
-        },
-        {
-          text: 'fneg rsrvwgvrae',
-          sender: 'Mariyan Zhelyazkov',
-        },
-        {
-          text: 'fneg rsrvwgvrae',
-          sender: 'Mariyan Zhelyazkov',
-        },
-        {
-          text: 'fneg rsrvwgvrae',
-          sender: 'Mariyan Zhelyazkov',
-        },
-        {
-          text: 'fneg rsrvwgvrae',
-          sender: 'Mariyan Zhelyazkov',
-        },
-        {
-          text: 'fneg rsrvwgvrae',
-          sender: 'Mariyan Zhelyazkov',
-        },
-        {
-          text: 'fneg rsrvwgvrae',
-          sender: 'Mariyan Zhelyazkov',
-        },
-      ],
+      chatMessages: [],
     };
   },
   async mounted() {
     this.clients = await this.getClients();
+    this.currentUser = await this.getUser();
+    console.log(this.currentUser);
   },
   methods: {
+    async getUser() {
+      let url = '';
+      if (this.$store.getters['auth/role'] === 'ROLE_TRAINER') {
+        url = `http://localhost:8081/api/trainer/user/${this.$store.getters['auth/userId']}`;
+      } else {
+        url = `http://localhost:8081/api/client/user/${this.$store.getters['auth/userId']}`;
+      }
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${this.$store.getters['auth/token']}`,
+        },
+      });
+      console.log(response);
+      if (response.ok) {
+        return await response.json();
+      } else {
+        console.log('error getting user data');
+      }
+    },
+    async getChatMessages(id) {
+      const response = await fetch(
+        `http://localhost:8081/api/chat/${id}/messages/0`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${this.$store.getters['auth/token']}`,
+          },
+        }
+      );
+      console.log(response);
+      if (response.ok) {
+        this.chatMessages = await response.json();
+      } else {
+        console.log('error getting user data');
+      }
+    },
     async getClients() {
       const response = await fetch(
-        `http://localhost:8081/api/trainer/user/${this.$store.getters['auth/userId']}/clients`,
+        `http://localhost:8081/api/trainer/chat_mates`,
         {
-          Authorization: `Bearer ${this.$store.getters['auth/token']}`,
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${this.$store.getters['auth/token']}`,
+          },
         }
       );
       console.log(response);

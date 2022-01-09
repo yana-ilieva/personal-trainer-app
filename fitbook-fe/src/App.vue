@@ -63,6 +63,10 @@ export default {
               console.log('tick: ', tick);
               this.received_messages.push(JSON.parse(tick.body).content);
             });
+            this.stompClient.subscribe('/user/queue/messages', (tick) => {
+              console.log('tick: ', tick);
+              this.received_messages.push(JSON.parse(tick.body).content);
+            });
           },
           (error) => {
             console.log(error);

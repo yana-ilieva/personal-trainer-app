@@ -1,6 +1,6 @@
 <template>
   <li
-    class="w-full h-32 border-b border-darkmint p-2 hover:bg-syellow cursor-pointer"
+    class="w-full h-32 border-b border-darkmint p-2 hover:bg-syellow cursor-pointer active:bg-syellow"
   >
     <div class="flex">
       <div class="w-20 h-28 bg-mint">
@@ -15,6 +15,6 @@
 
 <script>
 export default {
-  props: ['name', 'img'],
+  props: ['name'],
 };
 </script>
