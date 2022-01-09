@@ -71,6 +71,7 @@
               name="chatSendInput"
               id="chatSendInput"
               placeholder="Write message..."
+              ref="chatSendInput"
             />
             <input
               class="w-1/12 bg-mint rounded-br-md rounded-tr-md cursor-pointer"
@@ -122,13 +123,11 @@ export default {
         {
           Authorization: `Bearer ${this.$store.getters['auth/token']}`,
         },
-        (frame) => {
+        () => {
           this.connected = true;
           this.stompClient.subscribe('/user/queue/messages', (tick) => {
-            console.log('tick: ', tick, frame);
-            this.chatMessages.push(JSON.parse(tick.body).content);
-            console.log(tick.body);
-            console.log(this.chatMessages);
+            this.chatMessages.push(JSON.parse(tick.body));
+            this.$refs.chatSendInput.value = '';
           });
         },
         (error) => {
@@ -206,15 +205,18 @@ export default {
       }
     },
     async getClients() {
-      const response = await fetch(
-        `http://localhost:8081/api/trainer/chat_mates`,
-        {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${this.$store.getters['auth/token']}`,
-          },
-        }
-      );
+      let url = '';
+      if (this.$store.getters['auth/role'] === 'ROLE_TRAINER') {
+        `http://localhost:8081/api/trainer/chat_mates`;
+      } else {
+        `http://localhost:8081/api/client/chat_mates`;
+      }
+      const response = await fetch(url, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${this.$store.getters['auth/token']}`,
+        },
+      });
       console.log(response);
       if (response.ok) {
         return await response.json();
