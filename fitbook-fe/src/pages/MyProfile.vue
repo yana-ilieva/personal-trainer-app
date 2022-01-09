@@ -30,6 +30,7 @@
                 placeholder="Last Name"
               />
               <input
+                @change="this.isBdateChanged = true"
                 :value="user.birthDate"
                 class="mb-4 border-b border-black"
                 type="text"
@@ -83,6 +84,7 @@
                 placeholder="Last Name"
               />
               <input
+                @change="this.isBdateChanged = true"
                 :value="user.birthDate"
                 class="mb-4 border-b border-black"
                 type="text"
@@ -185,6 +187,7 @@ export default {
     return {
       user: {},
       isEdit: false,
+      isBdateChanged: false,
     };
   },
   async mounted() {
@@ -211,13 +214,16 @@ export default {
     async submitEditUser(e) {
       let url = '';
       let body = {};
+      console.log(e.target.birthDateTrainer.value);
       if (this.$store.getters['auth/role'] === 'ROLE_TRAINER') {
         url = `http://localhost:8081/api/trainer/${this.user.id}`;
         body = {
           firstName: e.target.firstNameTrainer.value,
           lastName: e.target.lastNameTrainer.value,
           gender: e.target.genderTrainer.value,
-          birthDate: this.parseDate(e.target.birthDateTrainer.value),
+          birthDate: this.isBdateChanged
+            ? this.parseDate(e.target.birthDateTrainer.value)
+            : e.target.birthDateTrainer.value,
           description: e.target.descTrainer.value,
           city: e.target.cityTrainer.value,
           neighborhood: e.target.neighTrainer.value,
@@ -228,7 +234,9 @@ export default {
           firstName: e.target.firstNameClient.value,
           lastName: e.target.lastNameClient.value,
           gender: e.target.genderClient.value,
-          birthDate: this.parseDate(e.target.birthDateClient.value),
+          birthDate: this.isBdateChanged
+            ? this.parseDate(e.target.birthDateTrainer.value)
+            : e.target.birthDateTrainer.value,
           description: e.target.descClient.value,
           height: +e.target.heightClient.value,
         };
@@ -249,6 +257,7 @@ export default {
       if (response.ok) {
         const responseData = await response.json();
         this.user = responseData;
+        this.isBdateChanged = false;
       } else {
         console.log('error editing user');
       }

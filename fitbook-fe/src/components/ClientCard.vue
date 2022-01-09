@@ -21,7 +21,7 @@
             Chat
           </button>
           <router-link
-            :to="{ name: 'edit', params: { id: firstName + lastName } }"
+            :to="{ name: 'edit', params: { id: id } }"
             class="px-3 py-1.5 hover:bg-mint rounded-md"
             >Edit</router-link
           >
@@ -33,7 +33,7 @@
 
 <script>
 export default {
-  props: ['firstName', 'lastName', 'bDate', 'gender', 'desc'],
+  props: ['id', 'firstName', 'lastName', 'bDate', 'gender', 'desc'],
   emits: ['initializeChat'],
 };
 </script>

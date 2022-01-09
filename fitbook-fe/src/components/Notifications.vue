@@ -21,8 +21,11 @@
       <notification-card
         v-for="notification in notifications"
         :key="notification.id"
-        :sender="notification.sender"
-        :time="notification.time"
+        :clientName="notification.clientName"
+        :trainerName="notification.trainerName"
+        :type="notification.notificationType"
+        :time="notification.createdTimeStamp"
+        :clientId="notification.clientId"
       ></notification-card>
     </ul>
   </div>
@@ -35,29 +38,31 @@ export default {
   emits: ['hideNotifications'],
   data() {
     return {
-      notifications: [
-        {
-          id: 1,
-          sender: 'Yana Ilieva',
-          time: '11:10',
-        },
-        {
-          id: 2,
-          sender: 'Yana Ilieva',
-          time: '12:10',
-        },
-        {
-          id: 3,
-          sender: 'Yana Ilieva',
-          time: '14:10',
-        },
-        {
-          id: 4,
-          sender: 'Yana Ilieva',
-          time: '16:10',
-        },
-      ],
+      notifications: [],
     };
+  },
+  async mounted() {
+    this.notifications = await this.getNotifications();
+    console.log(this.notifications);
+  },
+  methods: {
+    async getNotifications() {
+      const response = await fetch(
+        `http://localhost:8081/api/notification/${this.$store.getters['auth/userId']}`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${this.$store.getters['auth/token']}`,
+          },
+        }
+      );
+      if (response.ok) {
+        let responseData = await response.json();
+        return responseData;
+      } else {
+        console.log('error getting user data');
+      }
+    },
   },
 };
 </script>

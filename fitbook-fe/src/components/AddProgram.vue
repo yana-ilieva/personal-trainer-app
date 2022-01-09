@@ -504,7 +504,6 @@ export default {
           Authorization: `Bearer ${this.$store.getters['auth/token']}`,
         },
       });
-      console.log(response);
       if (response.ok) {
         const responseData = await response.json();
 

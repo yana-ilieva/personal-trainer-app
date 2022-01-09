@@ -56,7 +56,6 @@ export default {
     editProgram(program) {
       this.isEdit = true;
       this.programToEdit = program;
-      console.log(this.programToEdit);
     },
     addProgram() {
       this.isAdd = true;

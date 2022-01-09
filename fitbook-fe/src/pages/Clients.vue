@@ -5,6 +5,7 @@
         <client-card
           v-for="client of clients"
           :key="client.id"
+          :id="client.id"
           :firstName="client.firstName"
           :lastName="client.lastName"
           :bDate="client.birthDate"
