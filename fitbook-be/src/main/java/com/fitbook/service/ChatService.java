@@ -2,7 +2,6 @@ package com.fitbook.service;
 
 import com.fitbook.dto.ChatDto;
 import com.fitbook.dto.MessageDto;
-import com.fitbook.dto.TrainerDto;
 import com.fitbook.entity.chat.Chat;
 import com.fitbook.entity.chat.Message;
 import com.fitbook.entity.client.Client;
@@ -20,6 +19,7 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
@@ -51,6 +51,7 @@ public class ChatService {
         this.messageRepository = messageRepository;
     }
 
+    @Transactional
     public void send(MessageDto messageDto, Authentication authentication) {
         Message message = mapper.map(messageDto);
         message.setCreatedTime(DateUtil.now());
@@ -60,8 +61,8 @@ public class ChatService {
             throw new ResourceNotFoundException(String.format("Chat with id %d not found", messageDto.getChatId()));
         }
 
-        chatOpt.get().getMessages().add(message);
         message.setChat(chatOpt.get());
+        chatOpt.get().getMessages().add(message);
         Chat chat = chatRepository.save(chatOpt.get());
 
         Optional<Message> messageOpt = chat.getMessages().stream().max(Comparator.comparing(Message::getCreatedTime));
@@ -69,7 +70,7 @@ public class ChatService {
             throw new ResourceNotFoundException("Message not found");
         }
 
-        MessageDto msg = mapper.map(message);
+        MessageDto msg = mapper.map(messageOpt.get());
 
         User sender = (User) authentication.getPrincipal();
         User receiver;
@@ -108,7 +109,7 @@ public class ChatService {
             throw new ResourceNotFoundException(String.format("Chat with id %d not found", chatId));
         }
 
-        List<Message> messages = messageRepository.getMessages(chatOpt.get(), PageRequest.of(page, 10, Sort.by("createdTime").descending()));
+        List<Message> messages = messageRepository.getMessages(chatOpt.get(), PageRequest.of(page, 10, Sort.by("createdTime")));
         return messages.stream().map(mapper::map).collect(Collectors.toList());
     }
 }
