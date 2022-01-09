@@ -18,6 +18,7 @@
           Edit
         </button>
         <button
+          @click="$emit('deleteProgram')"
           class="px-3 py-0.5 hover:bg-red-500 hover:text-white rounded-md"
         >
           Delete
@@ -30,6 +31,6 @@
 <script>
 export default {
   props: ['name', 'desc'],
-  emits: ['editPrograms'],
+  emits: ['editProgram', 'deleteProgram'],
 };
 </script>

@@ -27,6 +27,7 @@
           :key="program.id"
           :name="program.name"
           :desc="program.description"
+          @deleteProgram="deleteProgram(program.id)"
         ></program-card>
       </ul>
     </div>
@@ -61,6 +62,24 @@ export default {
     },
     cancelAddProgram() {
       this.isAdd = false;
+    },
+    async deleteProgram(id) {
+      console.log(id);
+      const response = await fetch(
+        `http://localhost:8081/api/trainer/program/${id}`,
+        {
+          method: 'DELETE',
+          headers: {
+            Authorization: `Bearer ${this.$store.getters['auth/token']}`,
+          },
+        }
+      );
+      console.log(response);
+      if (response.ok) {
+        location.reload();
+      } else {
+        console.log('error getting user data');
+      }
     },
     async getPrograms() {
       const response = await fetch(
