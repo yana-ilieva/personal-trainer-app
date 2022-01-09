@@ -10,7 +10,6 @@ import com.fitbook.entity.program.*;
 import com.fitbook.entity.trainer.Trainer;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -57,6 +56,20 @@ public class Mapper {
         clientDto.setGender(client.getGender());
         clientDto.setHeight(client.getHeight());
         clientDto.setDescription(client.getDescription());
+        return clientDto;
+    }
+
+    public ClientFullDto mapFull(Client client) {
+        ClientFullDto clientDto = new ClientFullDto();
+        clientDto.setId(client.getId());
+        clientDto.setFirstName(client.getFirstName());
+        clientDto.setLastName(client.getLastName());
+        clientDto.setBirthDate(client.getBirthDate());
+        clientDto.setGender(client.getGender());
+        clientDto.setHeight(client.getHeight());
+        clientDto.setDescription(client.getDescription());
+        clientDto.setProgramDto(map(client.getProgram()));
+        clientDto.setNutritionPlanDto(map(client.getNutritionPlan()));
         return clientDto;
     }
 
@@ -157,7 +170,6 @@ public class Mapper {
     public Progress map(ProgressDto progressDto) {
         Progress progress = new Progress();
         progress.setId(progressDto.getId());
-        progress.setCreatedTimestamp(progressDto.getCreatedTimestamp());
         progress.setWeight(progressDto.getWeight());
         progress.setChestMeasurement(progressDto.getChestMeasurement());
         progress.setHipMeasurement(progressDto.getHipMeasurement());
@@ -202,6 +214,9 @@ public class Mapper {
     }
 
     public NutritionPlanDto map(NutritionPlan nutritionPlan) {
+        if (nutritionPlan == null) {
+            return null;
+        }
         NutritionPlanDto nutritionPlanDto = new NutritionPlanDto();
         nutritionPlanDto.setId(nutritionPlan.getId());
         nutritionPlanDto.setName(nutritionPlan.getName());

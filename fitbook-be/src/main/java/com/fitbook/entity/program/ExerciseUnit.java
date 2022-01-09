@@ -4,12 +4,13 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Entity
 @Table(name = "exercise_units")
 @Data
 @NoArgsConstructor
-public class ExerciseUnit {
+public class ExerciseUnit implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

@@ -18,12 +18,14 @@ public class ClientController {
 
     private final ClientService clientService;
 
-    private final Validator validator;
-
     @Autowired
-    public ClientController(ClientService clientService, Validator validator) {
+    public ClientController(ClientService clientService) {
         this.clientService = clientService;
-        this.validator = validator;
+    }
+
+    @GetMapping("/{id}")
+    public ClientFullDto getClient(@PathVariable("id") Long id) {
+        return clientService.getFullDto(id);
     }
 
     @GetMapping("/{id}/progress")
