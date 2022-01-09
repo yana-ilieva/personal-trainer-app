@@ -91,9 +91,15 @@ public class ChatService {
         Chat chat = mapper.map(chatDto);
 
         Client client = clientService.findById(chatDto.getClient().getId());
-        chat.setClient(client);
-
         Trainer trainer = trainerService.findById(chatDto.getTrainer().getId());
+
+        Optional<Chat> chatOpt = chatRepository.findByClientAndTrainer(client, trainer);
+
+        if (chatOpt.isPresent()) {
+            return mapper.map(chatOpt.get());
+        }
+
+        chat.setClient(client);
         chat.setTrainer(trainer);
 
         return mapper.map(chatRepository.save(chat));
