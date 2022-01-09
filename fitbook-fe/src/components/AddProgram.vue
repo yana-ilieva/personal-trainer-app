@@ -98,10 +98,13 @@
                     name=""
                     id=""
                   >
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
+                    <option
+                      v-for="exercise in exercises"
+                      :key="exercise.id"
+                      :value="exercise"
+                    >
+                      {{ exercise.name }}
+                    </option>
                   </select>
                   <p class="mr-2">with</p>
                   <input
@@ -146,10 +149,13 @@
                     name=""
                     id=""
                   >
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
+                    <option
+                      v-for="exercise in exercises"
+                      :key="exercise.id"
+                      :value="exercise.name"
+                    >
+                      {{ exercise.name }}
+                    </option>
                   </select>
                   <p class="mr-2">with</p>
                   <input
@@ -198,10 +204,13 @@
                     name=""
                     id=""
                   >
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
+                    <option
+                      v-for="exercise in exercises"
+                      :key="exercise.id"
+                      :value="exercise.name"
+                    >
+                      {{ exercise.name }}
+                    </option>
                   </select>
                   <p class="mr-2">with</p>
                   <input
@@ -246,10 +255,13 @@
                     name=""
                     id=""
                   >
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
+                    <option
+                      v-for="exercise in exercises"
+                      :key="exercise.id"
+                      :value="exercise.name"
+                    >
+                      {{ exercise.name }}
+                    </option>
                   </select>
                   <p class="mr-2">with</p>
                   <input
@@ -294,10 +306,13 @@
                     name=""
                     id=""
                   >
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
+                    <option
+                      v-for="exercise in exercises"
+                      :key="exercise.id"
+                      :value="exercise.name"
+                    >
+                      {{ exercise.name }}
+                    </option>
                   </select>
                   <p class="mr-2">with</p>
                   <input
@@ -342,10 +357,13 @@
                     name=""
                     id=""
                   >
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
+                    <option
+                      v-for="exercise in exercises"
+                      :key="exercise.id"
+                      :value="exercise.name"
+                    >
+                      {{ exercise.name }}
+                    </option>
                   </select>
                   <p class="mr-2">with</p>
                   <input
@@ -390,10 +408,13 @@
                     name=""
                     id=""
                   >
-                    <option value="volvo">Volvo</option>
-                    <option value="saab">Saab</option>
-                    <option value="mercedes">Mercedes</option>
-                    <option value="audi">Audi</option>
+                    <option
+                      v-for="exercise in exercises"
+                      :key="exercise.id"
+                      :value="exercise"
+                    >
+                      {{ exercise.name }}
+                    </option>
                   </select>
                   <p class="mr-2">with</p>
                   <input
@@ -438,6 +459,7 @@ export default {
   emits: ['cancelAddProgram'],
   data() {
     return {
+      exercises: [],
       programName: '',
       programDesc: '',
       mondayId: 0,
@@ -463,16 +485,29 @@ export default {
       isSunday: false,
     };
   },
+  async mounted() {
+    this.exercises = await this.getExercises();
+  },
   methods: {
-    submitAddProgram() {
-      let body = {};
+    async getExercises() {
+      const response = await fetch(`http://localhost:8081/api/exercise`, {
+        method: 'GET',
+        headers: {
+          Authorization: `Bearer ${this.$store.getters['auth/token']}`,
+        },
+      });
+      console.log(response);
+      if (response.ok) {
+        const responseData = await response.json();
 
-      delete this.tuesdayEx.id;
-      delete this.wednesdayEx.id;
-      delete this.thursdayEx.id;
-      delete this.fridayEx.id;
-      delete this.saturdayEx.id;
-      delete this.sundayEx.id;
+        return responseData;
+      } else {
+        console.log('error getting user data');
+      }
+    },
+    async submitAddProgram() {
+      let body = {};
+      console.log(this.mondayEx[0].exercise);
       let arr = [
         { weekDay: 'MONDAY', exerciseUnits: this.mondayEx },
         { weekDay: 'TUESDAY', exerciseUnits: this.tuesdayEx },
@@ -526,76 +561,77 @@ export default {
           programParts: arr,
         };
       }
-      console.log(body);
-      // const response = await fetch(
-      //     `http://localhost:8081/api/program/user/${this.$store.getters['auth/userId']}`,
-      //     {
-      //       method: 'POST',
-      //       mode: 'cors',
-      //       headers: {
-      //         Authorization: `Bearer ${this.$store.getters['auth/token']}`,
-      //         'Content-Type': 'application/json'
-      //       },
-      //       body: JSON.stringify({
-      //        body
-      //       })
-      //     }
-      //   );
-      //   console.log(response);
-      //   if (response.ok) {
-      //     return await response.json();
-      //   } else {
-      //     console.log('error getting user data');
-      //   }
+      console.log(JSON.stringify({ ...body }));
+      const response = await fetch(
+        `http://localhost:8081/api/program/user/${this.$store.getters['auth/userId']}`,
+        {
+          method: 'POST',
+          mode: 'cors',
+          headers: {
+            Authorization: `Bearer ${this.$store.getters['auth/token']}`,
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            ...body,
+          }),
+        }
+      );
+      console.log(response);
+
+      if (response.ok) {
+        console.log(await response.json());
+      } else {
+        console.log('error getting user data');
+      }
     },
     addEx() {
       if (this.isMonday) {
         this.mondayEx.push({
           id: this.mondayId++,
           repetitions: 0,
-          exercise: '',
+          exercise: {},
           restBetweenExercises: 0,
         });
       } else if (this.isTuesday) {
         this.tuesdayEx.push({
           id: this.tuesdayId++,
           repetitions: 0,
-          exercise: '',
+          exercise: {},
           restBetweenExercises: 0,
         });
       } else if (this.isWednesday) {
         this.wednesdayEx.push({
           id: this.wednesdayId++,
           repetitions: 0,
-          exercise: '',
+          exercise: {},
           restBetweenExercises: 0,
         });
       } else if (this.isThursday) {
         this.thursdayEx.push({
           id: this.thursdayId++,
           repetitions: 0,
-          exercise: '',
+          exercise: {},
           restBetweenExercises: 0,
         });
       } else if (this.isFriday) {
         this.fridayEx.push({
           id: this.fridayId++,
           repetitions: 0,
-          exercise: '',
+          exercise: {},
           restBetweenExercises: 0,
         });
       } else if (this.isSaturday) {
         this.saturdayEx.push({
           id: this.saturdayId++,
           repetitions: 0,
-          exercise: '',
+          exercise: {},
           restBetweenExercises: 0,
         });
       } else {
         this.sundayEx.push({
           id: this.sundayId++,
           repetitions: 0,
-          exercise: '',
+          exercise: {},
           restBetweenExercises: 0,
         });
       }

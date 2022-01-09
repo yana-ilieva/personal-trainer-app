@@ -33,7 +33,13 @@ export default {
   methods: {
     async getClients() {
       const response = await fetch(
-        `http://localhost:8081/api/trainer/2/clients`
+        `http://localhost:8081/api/trainer/2/clients`,
+        {
+          method: 'GET',
+          headers: {
+            Authorization: `Bearer ${this.$store.getters['auth/token']}`,
+          },
+        }
       );
       console.log(response);
       if (response.ok) {
