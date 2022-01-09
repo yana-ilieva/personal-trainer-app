@@ -58,6 +58,8 @@ public class ProgramService {
         Trainer trainer = trainerService.findTrainerByUser(user);
         trainer.getPrograms().add(program);
 
+        trainerService.save(trainer);
+
         return mapper.map(program);
     }
 

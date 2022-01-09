@@ -31,11 +31,11 @@ public class TrainerController {
         return trainerService.findTrainer(id);
     }
 
-    @GetMapping("/{id}/clients")
+    @GetMapping("/user/{user_id}/clients")
     @Secured("ROLE_TRAINER")
-    public List<ClientDto> findClientsByTrainer(@PathVariable("id") Long id, Authentication authentication) {
-        validator.checkTrainerAccessRights(id, authentication);
-        return trainerService.findClientsByTrainer(id);
+    public List<ClientDto> findClientsByTrainer(@PathVariable("user_id") Long userId, Authentication authentication) {
+        validator.checkTrainerAccessRights(userId, authentication);
+        return trainerService.findClientsByTrainerUserId(userId);
     }
 
     @GetMapping("/{id}/programs")
