@@ -58,10 +58,10 @@ public class ClientController {
         return clientService.assignNutritionPlanToClient(clientId, nutritionPlanId);
     }
 
-    @GetMapping("/{id}/chat_mates")
+    @GetMapping("/chat_mates")
     @Secured("ROLE_CLIENT")
-    public List<ChatDto> getChats(@PathVariable("id") Long id) {
-        return clientService.getChats(id);
+    public List<ChatDto> getChats(Authentication authentication) {
+        return clientService.getChats(authentication);
     }
 
     @GetMapping("/user/{user_id}/program")

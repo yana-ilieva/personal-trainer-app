@@ -12,6 +12,7 @@ import com.fitbook.util.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -147,12 +148,13 @@ public class ClientService {
                 .map(mapper::map).collect(Collectors.toList());
     }
 
-    public List<ChatDto> getChats(Long id) {
-        Optional<Client> clientOpt = clientRepository.findById(id);
-        if (clientOpt.isEmpty()) {
-            throw new ResourceNotFoundException(String.format("Client with id %d not found", id));
+    public List<ChatDto> getChats(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        Client client = clientRepository.findByUser(user);
+        if (client == null) {
+            throw new ResourceNotFoundException(String.format("Client with user id %d not found", user.getId()));
         }
 
-        return clientOpt.get().getChats().stream().map(mapper::map).collect(Collectors.toList());
+        return client.getChats().stream().map(mapper::map).collect(Collectors.toList());
     }
 }
