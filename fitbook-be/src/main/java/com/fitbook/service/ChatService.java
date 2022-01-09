@@ -65,12 +65,7 @@ public class ChatService {
         chatOpt.get().getMessages().add(message);
         Chat chat = chatRepository.save(chatOpt.get());
 
-        Optional<Message> lastMessage = chat.getMessages().stream().min(Comparator.comparing(Message::getCreatedTime));
-        if (lastMessage.isEmpty()) {
-            throw new RuntimeException("Cannot find message");
-        }
-
-        MessageDto msg = mapper.map(lastMessage.get());
+        MessageDto msg = mapper.map(message);
 
         User sender = (User) authentication.getPrincipal();
         User receiver;
