@@ -16,7 +16,5 @@ public class ProgramPartDto {
 
     private WeekDay weekDay;
 
-    private Integer restBetweenExercises;
-
     private List<ExerciseUnitDto> exerciseUnits;
 }

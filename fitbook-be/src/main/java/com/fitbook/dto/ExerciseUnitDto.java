@@ -14,4 +14,6 @@ public class ExerciseUnitDto {
     private Integer repetitions;
 
     private ExerciseDto exercise;
+
+    private Integer restBetweenExercises;
 }

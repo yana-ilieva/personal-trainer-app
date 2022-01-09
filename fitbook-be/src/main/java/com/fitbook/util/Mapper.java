@@ -74,7 +74,6 @@ public class Mapper {
         ProgramPart programPart = new ProgramPart();
         programPart.setId(programPartDto.getId());
         programPart.setWeekDay(programPartDto.getWeekDay());
-        programPart.setRestBetweenExercises(programPartDto.getRestBetweenExercises());
         if (programPartDto.getExerciseUnits() != null) {
             programPart.setExerciseUnits(programPartDto.getExerciseUnits().stream().map(this::map).collect(Collectors.toList()));
         }
@@ -85,6 +84,7 @@ public class Mapper {
         ExerciseUnit exerciseUnit = new ExerciseUnit();
         exerciseUnit.setId(exerciseUnitDto.getId());
         exerciseUnit.setRepetitions(exerciseUnitDto.getRepetitions());
+        exerciseUnit.setRestBetweenExercises(exerciseUnitDto.getRestBetweenExercises());
         if (exerciseUnitDto.getExercise() != null) {
             exerciseUnit.setExercise(map(exerciseUnitDto.getExercise()));
         }
@@ -113,7 +113,6 @@ public class Mapper {
         ProgramPartDto programPartDto = new ProgramPartDto();
         programPartDto.setId(programPart.getId());
         programPartDto.setWeekDay(programPart.getWeekDay());
-        programPartDto.setRestBetweenExercises(programPart.getRestBetweenExercises());
         if (programPart.getExerciseUnits() != null) {
             programPartDto.setExerciseUnits(programPart.getExerciseUnits().stream().map(this::map).collect(Collectors.toList()));
         }
@@ -124,6 +123,7 @@ public class Mapper {
         ExerciseUnitDto exerciseUnitDto = new ExerciseUnitDto();
         exerciseUnitDto.setId(exerciseUnit.getId());
         exerciseUnitDto.setRepetitions(exerciseUnit.getRepetitions());
+        exerciseUnitDto.setRestBetweenExercises(exerciseUnit.getRestBetweenExercises());
         if (exerciseUnit.getExercise() != null) {
             exerciseUnitDto.setExercise(map(exerciseUnit.getExercise()));
         }
