@@ -3,11 +3,19 @@
     <div class="flex w-full">
       <!-- left section -->
       <div class="overflow-auto w-1/4">
-        <ul class="border border-darkmint">
+        <ul v-if="isTrainer" class="border border-darkmint">
           <chat-card
             v-for="client of clients"
             :key="client.client.id"
             :name="client.client.name"
+            @click="getChatMessages(client)"
+          ></chat-card>
+        </ul>
+        <ul v-else class="border border-darkmint">
+          <chat-card
+            v-for="client of clients"
+            :key="client.trainer.id"
+            :name="client.trainer.name"
             @click="getChatMessages(client)"
           ></chat-card>
         </ul>
@@ -46,6 +54,18 @@
                       You
                     </p>
                     <p class="text-xs text-left" v-else>{{ message.sender }}</p>
+                    <!-- <p
+                      class="text-xs text-right"
+                      v-if="
+                        message.sender ==
+                        currentUser.firstName + ' ' + currentUser.lastName
+                      "
+                    >
+                      {{ new Date() }}
+                    </p>
+                    <p class="text-xs text-left" v-else>
+                      {{ message.createdTime }}
+                    </p> -->
                     <p
                       :class="
                         message.sender ==
@@ -100,6 +120,9 @@ export default {
         45
       );
     },
+    isTrainer() {
+      return this.$store.getters['auth/role'] === 'ROLE_TRAINER';
+    },
   },
   data() {
     return {
@@ -113,6 +136,7 @@ export default {
   async mounted() {
     this.clients = await this.getClients();
     this.currentUser = await this.getUser();
+    console.log(this.clients);
     this.subscribe();
   },
   methods: {
@@ -137,14 +161,6 @@ export default {
       );
     },
     async sendMessage(e) {
-      console.log(
-        JSON.stringify({
-          content: e.target.chatSendInput.value,
-          sender: this.currentUser.firstName + ' ' + this.currentUser.lastName,
-          receiver: this.currentChatName,
-          chatId: this.currentChatId,
-        })
-      );
       const response = await fetch(`http://localhost:8081/api/chat/message`, {
         method: 'POST',
         mode: 'cors',
@@ -207,9 +223,9 @@ export default {
     async getClients() {
       let url = '';
       if (this.$store.getters['auth/role'] === 'ROLE_TRAINER') {
-        `http://localhost:8081/api/trainer/chat_mates`;
+        url = `http://localhost:8081/api/trainer/chat_mates`;
       } else {
-        `http://localhost:8081/api/client/chat_mates`;
+        url = `http://localhost:8081/api/client/chat_mates`;
       }
       const response = await fetch(url, {
         method: 'GET',
