@@ -8,7 +8,7 @@
             v-for="client of clients"
             :key="client.client.id"
             :name="client.client.name"
-            @click="getChatMessages(client.id)"
+            @click="getChatMessages(client)"
           ></chat-card>
         </ul>
       </div>
@@ -64,7 +64,7 @@
           </div>
         </div>
         <div class="w-full p-2">
-          <form action="" class="flex w-full">
+          <form @submit.prevent="sendMessage" action="" class="flex w-full">
             <input
               class="rounded-bl-md rounded-tl-md px-3 py-0.5 bg-gray-300 w-11/12"
               type="text"
@@ -101,8 +101,10 @@ export default {
   data() {
     return {
       currentUser: {},
+      currentChatName: '',
       clients: [],
       chatMessages: [],
+      currentChatId: null,
     };
   },
   async mounted() {
@@ -111,6 +113,35 @@ export default {
     console.log(this.currentUser);
   },
   methods: {
+    async sendMessage(e) {
+      console.log(
+        JSON.stringify({
+          content: e.target.chatSendInput.value,
+          sender: this.currentUser.firstName + ' ' + this.currentUser.lastName,
+          receiver: this.currentChatName,
+          chatId: this.currentChatId,
+        })
+      );
+      const response = await fetch(`http://localhost:8081/api/chat/message`, {
+        method: 'POST',
+        mode: 'cors',
+        headers: {
+          Authorization: `Bearer ${this.$store.getters['auth/token']}`,
+        },
+        body: JSON.stringify({
+          content: e.target.chatSendInput.value,
+          sender: this.currentUser.firstName + ' ' + this.currentUser.lastName,
+          receiver: this.currentChatName,
+          chatId: this.currentChatId,
+        }),
+      });
+      console.log(response);
+      if (response.ok) {
+        return await response.json();
+      } else {
+        console.log('error getting user data');
+      }
+    },
     async getUser() {
       let url = '';
       if (this.$store.getters['auth/role'] === 'ROLE_TRAINER') {
@@ -131,9 +162,9 @@ export default {
         console.log('error getting user data');
       }
     },
-    async getChatMessages(id) {
+    async getChatMessages(chat) {
       const response = await fetch(
-        `http://localhost:8081/api/chat/${id}/messages/0`,
+        `http://localhost:8081/api/chat/${chat.id}/messages/0`,
         {
           method: 'GET',
           headers: {
@@ -141,9 +172,10 @@ export default {
           },
         }
       );
-      console.log(response);
       if (response.ok) {
         this.chatMessages = await response.json();
+        this.currentChatId = chat.id;
+        this.currentChatName = chat.client.name;
       } else {
         console.log('error getting user data');
       }
