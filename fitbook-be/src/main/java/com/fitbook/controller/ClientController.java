@@ -30,9 +30,7 @@ public class ClientController {
     @Secured("ROLE_CLIENT")
     public List<ProgressDto> getProgress(@PathVariable("id") Long id,
                                          @RequestParam(value = "page", defaultValue = "0") int page,
-                                         @RequestParam(value = "size", defaultValue = "20") int size,
-                                         Authentication authentication) {
-        validator.checkClientAccessRights(id, authentication);
+                                         @RequestParam(value = "size", defaultValue = "20") int size) {
         return clientService.getProgress(id, page, size);
     }
 

@@ -13,6 +13,7 @@ import java.security.Principal;
 import java.util.List;
 
 @RestController
+@RequestMapping("/api/chat")
 @CrossOrigin(origins = "http://localhost:8080")
 public class ChatController {
 
@@ -23,17 +24,17 @@ public class ChatController {
         this.chatService = chatService;
     }
 
-    @MessageMapping("/chat/{receiver_id}")
-    public void sendSpecific(@PathVariable("receiver_id") Long receiverId, @Payload MessageDto message, Authentication authentication) {
+    @PostMapping("/{receiver_id}")
+    public void sendSpecific(@PathVariable("receiver_id") Long receiverId, @RequestBody MessageDto message, Authentication authentication) {
         chatService.send(receiverId, message, authentication);
     }
 
-    @PostMapping("/api/chat")
+    @PostMapping
     public ChatDto initializeChat(@RequestBody ChatDto chatDto) {
         return chatService.initializeChat(chatDto);
     }
 
-    @GetMapping("/api/chat/{id}/messages/{page}")
+    @GetMapping("/{id}/messages/{page}")
     public List<MessageDto> getMessages(@PathVariable("id") Long chatId, @PathVariable("page") int page) {
         return chatService.getMessages(chatId, page);
     }
