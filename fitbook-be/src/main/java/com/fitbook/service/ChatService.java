@@ -51,7 +51,7 @@ public class ChatService {
         this.messageRepository = messageRepository;
     }
 
-    public void send(Long receiverId, MessageDto messageDto, Authentication authentication) {
+    public void send(MessageDto messageDto, Authentication authentication) {
         Message message = mapper.map(messageDto);
         message.setCreatedTime(DateUtil.now());
 
@@ -74,13 +74,10 @@ public class ChatService {
         User sender = (User) authentication.getPrincipal();
         User receiver;
 
-        Trainer trainer;
-
-        if ((trainer = trainerService.findById(receiverId)) != null) {
-            receiver = trainer.getUser();
-        }
-        else {
-            receiver = clientService.findById(receiverId).getUser();
+        if (sender.getRole().getName().equals("ROLE_TRAINER")) {
+            receiver = chat.getClient().getUser();
+        } else {
+            receiver = chat.getTrainer().getUser();
         }
 
         simpMessagingTemplate.convertAndSendToUser(sender.toString(), "/queue/messages", msg);

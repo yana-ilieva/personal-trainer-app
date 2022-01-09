@@ -24,9 +24,9 @@ public class ChatController {
         this.chatService = chatService;
     }
 
-    @PostMapping("/{receiver_id}")
-    public void sendSpecific(@PathVariable("receiver_id") Long receiverId, @RequestBody MessageDto message, Authentication authentication) {
-        chatService.send(receiverId, message, authentication);
+    @PostMapping("/message")
+    public void sendSpecific(@RequestBody MessageDto message, Authentication authentication) {
+        chatService.send(message, authentication);
     }
 
     @PostMapping
