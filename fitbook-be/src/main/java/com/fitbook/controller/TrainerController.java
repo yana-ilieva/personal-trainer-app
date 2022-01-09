@@ -34,7 +34,6 @@ public class TrainerController {
     @GetMapping("/user/{user_id}/clients")
     @Secured("ROLE_TRAINER")
     public List<ClientDto> findClientsByTrainer(@PathVariable("user_id") Long userId, Authentication authentication) {
-        validator.checkTrainerAccessRights(userId, authentication);
         return trainerService.findClientsByTrainerUserId(userId);
     }
 
@@ -77,10 +76,10 @@ public class TrainerController {
         return trainerService.update(id, trainerDto);
     }
 
-    @GetMapping("/{id}/chat_mates")
+    @GetMapping("/chat_mates")
     @Secured("ROLE_TRAINER")
-    public List<ChatDto> getChats(@PathVariable("id") Long id) {
-        return trainerService.getChats(id);
+    public List<ChatDto> getChats(Authentication authentication) {
+        return trainerService.getChats(authentication);
     }
 
     @DeleteMapping("/client/{client_id}")

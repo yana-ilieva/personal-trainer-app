@@ -157,13 +157,14 @@ public class TrainerService {
         return mapper.map(trainerRepository.save(trainerOpt.get()));
     }
 
-    public List<ChatDto> getChats(Long id) {
-        Optional<Trainer> trainerOpt = trainerRepository.findById(id);
-        if (trainerOpt.isEmpty()) {
-            throw new ResourceNotFoundException(String.format("Trainer with id %d not found.", id));
+    public List<ChatDto> getChats(Authentication authentication) {
+        User user = (User) authentication.getPrincipal();
+        Trainer trainer = trainerRepository.findByUser(user);
+        if (trainer == null) {
+            throw new ResourceNotFoundException(String.format("Trainer with user id %d not found.", user.getId()));
         }
 
-        return trainerOpt.get().getChats().stream().map(mapper::map).collect(Collectors.toList());
+        return trainer.getChats().stream().map(mapper::map).collect(Collectors.toList());
     }
 
     public boolean handleRequest(Long userId, Long clientId) {
