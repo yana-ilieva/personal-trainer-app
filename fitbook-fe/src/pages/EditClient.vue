@@ -134,6 +134,7 @@ export default {
       isEditProgram: false,
     };
   },
+  async mounted() {},
   methods: {
     clickProgram() {
       this.isProgram = true;
