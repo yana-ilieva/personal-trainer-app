@@ -5,7 +5,7 @@
       <div>
         <ul>
           <progress-card
-            v-for="progress in progresses"
+            v-for="progress of progresses"
             :key="progress.id"
             :weight="progress.weight"
             :time="progress.createdTimestamp"
@@ -82,7 +82,9 @@
 </template>
 
 <script>
+import ProgressCard from '../components/ProgressCard.vue';
 export default {
+  components: { ProgressCard },
   data() {
     return {
       progresses: [],
@@ -93,7 +95,7 @@ export default {
   async mounted() {
     this.client = await this.getClientId();
     this.progresses = await this.getProgresses();
-    console.log(this.progress);
+    console.log(this.progresses);
   },
   methods: {
     addProgressFormOpen() {
@@ -130,8 +132,9 @@ export default {
       });
       if (response.ok) {
         let responseData = await response.json();
-        this.isAddProgress = false;
-        return responseData.id;
+
+        location.reload();
+        console.log(responseData);
       } else {
         console.log('error getting user data');
       }

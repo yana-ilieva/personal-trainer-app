@@ -1,5 +1,5 @@
 <template>
-  <li class="border border-mint rounded-md p-4">
+  <li class="w-max mx-auto mb-2 border border-mint rounded-md p-4">
     <p>Time: {{ time }}</p>
     <p>Weight: {{ weight }}</p>
     <p>Chest: {{ chest }}</p>
