@@ -1,20 +1,19 @@
 package com.fitbook.entity.client;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fitbook.entity.chat.Chat;
 import com.fitbook.entity.program.NutritionPlan;
 import com.fitbook.entity.program.Program;
 import com.fitbook.entity.trainer.Trainer;
 import com.fitbook.entity.user.User;
 import com.fitbook.enums.Gender;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import javax.persistence.*;
 import java.time.LocalDate;
 import java.util.List;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "clients")
@@ -40,6 +39,7 @@ public class Client {
 
     @ManyToOne
     @JoinColumn(name = "trainer_id", referencedColumnName = "id")
+    @JsonBackReference
     private Trainer trainer;
 
     @OneToOne
@@ -57,6 +57,111 @@ public class Client {
     @OneToMany(mappedBy = "client")
     private List<Progress> progresses;
 
-    @OneToMany(mappedBy = "client")
+    @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
+    @JsonManagedReference
     private List<Chat> chats;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getFirstName() {
+        return firstName;
+    }
+
+    public void setFirstName(String firstName) {
+        this.firstName = firstName;
+    }
+
+    public String getLastName() {
+        return lastName;
+    }
+
+    public void setLastName(String lastName) {
+        this.lastName = lastName;
+    }
+
+    public LocalDate getBirthDate() {
+        return birthDate;
+    }
+
+    public void setBirthDate(LocalDate birthDate) {
+        this.birthDate = birthDate;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
+
+    public Integer getHeight() {
+        return height;
+    }
+
+    public void setHeight(Integer height) {
+        this.height = height;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Trainer getTrainer() {
+        return trainer;
+    }
+
+    public void setTrainer(Trainer trainer) {
+        this.trainer = trainer;
+    }
+
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
+    public Program getProgram() {
+        return program;
+    }
+
+    public void setProgram(Program program) {
+        this.program = program;
+    }
+
+    public NutritionPlan getNutritionPlan() {
+        return nutritionPlan;
+    }
+
+    public void setNutritionPlan(NutritionPlan nutritionPlan) {
+        this.nutritionPlan = nutritionPlan;
+    }
+
+    public List<Progress> getProgresses() {
+        return progresses;
+    }
+
+    public void setProgresses(List<Progress> progresses) {
+        this.progresses = progresses;
+    }
+
+    public List<Chat> getChats() {
+        return chats;
+    }
+
+    public void setChats(List<Chat> chats) {
+        this.chats = chats;
+    }
 }
