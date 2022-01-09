@@ -61,7 +61,7 @@ public class ChatService {
         }
 
         chatOpt.get().getMessages().add(message);
-
+        message.setChat(chatOpt.get());
         Chat chat = chatRepository.save(chatOpt.get());
 
         Optional<Message> messageOpt = chat.getMessages().stream().max(Comparator.comparing(Message::getCreatedTime));
