@@ -100,13 +100,14 @@ public class TrainerService {
                 .map(mapper::map).collect(Collectors.toList());
     }
 
-    public List<ClientDto> findClientsByTrainer(Long id) {
-        Optional<Trainer> trainerOpt = trainerRepository.findById(id);
-        if (trainerOpt.isEmpty()) {
-            throw new ResourceNotFoundException(String.format("Trainer with id %d not found.", id));
+    public List<ClientDto> findClientsByTrainerUserId(Long userId) {
+        User user = userService.findById(userId);
+        Trainer trainer = trainerRepository.findByUser(user);
+        if (trainer == null) {
+            throw new ResourceNotFoundException(String.format("Trainer with user id %d not found.", userId));
         }
 
-        return trainerOpt.get().getClients().stream().map(mapper::map).collect(Collectors.toList());
+        return trainer.getClients().stream().map(mapper::map).collect(Collectors.toList());
     }
 
     public Boolean sendRequest(Long trainerId, Long userId) {
@@ -187,5 +188,9 @@ public class TrainerService {
         } catch (Exception e) {
             return false;
         }
+    }
+
+    public Trainer save(Trainer trainer) {
+        return trainerRepository.save(trainer);
     }
 }
