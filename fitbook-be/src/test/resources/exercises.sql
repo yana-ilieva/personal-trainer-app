@@ -1,3 +1,5 @@
+insert into users (id) values (10000);
+
 insert into exercises (id, name)
 values (10000, 'first exercise'),
        (10001, 'second exercise'),
