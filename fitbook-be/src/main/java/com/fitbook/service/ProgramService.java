@@ -56,6 +56,9 @@ public class ProgramService {
 
         User user = userService.findById(trainerUserId);
         Trainer trainer = trainerService.findTrainerByUser(user);
+        if (trainer.getPrograms() == null) {
+            trainer.setPrograms(new ArrayList<>());
+        }
         trainer.getPrograms().add(program);
 
         trainerService.save(trainer);
