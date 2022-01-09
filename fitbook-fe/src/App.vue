@@ -6,7 +6,7 @@
       @hideNotifications="hideNotifications"
       class="absolute top-0 right-0 w-1/4 h-screen overflow-auto bg-gray-100"
     ></notifications>
-    <router-view></router-view>
+    <router-view ref="chatMessageReceiver"></router-view>
   </div>
 
   <!-- <div id="nav">
@@ -27,6 +27,7 @@ export default {
     return {
       isNotifications: false,
       received_messages: [],
+      received_notifications: [],
       send_message: null,
       connected: false,
     };
@@ -51,21 +52,16 @@ export default {
       if (this.$store.getters['auth/isAuthenticated']) {
         this.socket = new SockJS('http://localhost:8081/ws');
         this.stompClient = Stomp.over(this.socket);
-        console.log('before connect');
         this.stompClient.connect(
           {
             Authorization: `Bearer ${this.$store.getters['auth/token']}`,
           },
           (frame) => {
             this.connected = true;
-            console.log('in connect: ' + frame);
             this.stompClient.subscribe('/user/queue/notifications', (tick) => {
               console.log('tick: ', tick);
-              this.received_messages.push(JSON.parse(tick.body).content);
-            });
-            this.stompClient.subscribe('/user/queue/messages', (tick) => {
-              console.log('tick: ', tick);
-              this.received_messages.push(JSON.parse(tick.body).content);
+              this.received_notifications.push(JSON.parse(tick.body).content);
+              console.log(frame);
             });
           },
           (error) => {
@@ -89,7 +85,7 @@ export default {
     this.$store.dispatch('auth/autoLogin');
   },
   mounted() {
-    this.connect();
+    //this.connect();
   },
 };
 </script>

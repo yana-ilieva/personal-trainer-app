@@ -86,6 +86,8 @@
 
 <script>
 import ChatCard from '../components/ChatCard.vue';
+import SockJS from 'sockjs-client';
+import Stomp from 'webstomp-client';
 export default {
   components: { ChatCard },
   computed: {
@@ -110,9 +112,31 @@ export default {
   async mounted() {
     this.clients = await this.getClients();
     this.currentUser = await this.getUser();
-    console.log(this.currentUser);
+    this.subscribe();
   },
   methods: {
+    subscribe() {
+      this.socket = new SockJS('http://localhost:8081/ws');
+      this.stompClient = Stomp.over(this.socket);
+      this.stompClient.connect(
+        {
+          Authorization: `Bearer ${this.$store.getters['auth/token']}`,
+        },
+        (frame) => {
+          this.connected = true;
+          this.stompClient.subscribe('/user/queue/messages', (tick) => {
+            console.log('tick: ', tick, frame);
+            this.chatMessages.push(JSON.parse(tick.body).content);
+            console.log(tick.body);
+            console.log(this.chatMessages);
+          });
+        },
+        (error) => {
+          console.log(error);
+          this.connected = false;
+        }
+      );
+    },
     async sendMessage(e) {
       console.log(
         JSON.stringify({
