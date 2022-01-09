@@ -507,7 +507,11 @@ export default {
     },
     async submitAddProgram() {
       let body = {};
-      console.log(this.mondayEx[0].exercise);
+
+      this.mondayEx.forEach((element) => {
+        element.id = null;
+      });
+
       let arr = [
         { weekDay: 'MONDAY', exerciseUnits: this.mondayEx },
         { weekDay: 'TUESDAY', exerciseUnits: this.tuesdayEx },
