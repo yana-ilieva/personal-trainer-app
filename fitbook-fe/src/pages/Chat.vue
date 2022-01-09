@@ -127,6 +127,7 @@ export default {
         mode: 'cors',
         headers: {
           Authorization: `Bearer ${this.$store.getters['auth/token']}`,
+          'Content-Type': 'application/json',
         },
         body: JSON.stringify({
           content: e.target.chatSendInput.value,
