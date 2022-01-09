@@ -49,6 +49,6 @@ public class Trainer {
     @OneToMany(mappedBy = "trainer")
     private List<Chat> chats;
 
-    @OneToMany
+    @OneToMany(orphanRemoval = true)
     private List<Program> programs;
 }
