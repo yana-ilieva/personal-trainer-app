@@ -7,18 +7,20 @@
             <img src="" alt="" />
           </div>
           <div class="ml-4 text-left w-56">
-            <p>Name: {{ name }}</p>
+            <p>Name: {{ firstName + ' ' + lastName }}</p>
             <p>Birth Date: {{ bDate }}</p>
             <p>Gender: {{ gender }}</p>
             <p>Description: {{ desc }}</p>
           </div>
         </div>
         <div class="self-end justify-self-end">
-          <button class="px-3 py-0.5 bg-syellow text-darkmint rounded-md mr-4">
+          <button
+            class="px-3 py-0.5 bg-syellow text-darkmint rounded-md mr-4 hover:bg-darksyellow"
+          >
             Chat
           </button>
           <router-link
-            :to="{ name: 'edit', params: { id: name } }"
+            :to="{ name: 'edit', params: { id: firstName + lastName } }"
             class="px-3 py-1.5 hover:bg-mint rounded-md"
             >Edit</router-link
           >
@@ -30,6 +32,6 @@
 
 <script>
 export default {
-  props: ['name', 'bDate', 'gender', 'desc'],
+  props: ['firstName', 'lastName', 'bDate', 'gender', 'desc'],
 };
 </script>

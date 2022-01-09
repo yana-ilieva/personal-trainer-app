@@ -211,14 +211,13 @@ export default {
     async submitEditUser(e) {
       let url = '';
       let body = {};
-      console.log();
       if (this.$store.getters['auth/role'] === 'ROLE_TRAINER') {
         url = `http://localhost:8081/api/trainer/${this.user.id}`;
         body = {
           firstName: e.target.firstNameTrainer.value,
           lastName: e.target.lastNameTrainer.value,
           gender: e.target.genderTrainer.value,
-          birthDate: this.parseDate(e.target.birthDateClient.value),
+          birthDate: this.parseDate(e.target.birthDateTrainer.value),
           description: e.target.descTrainer.value,
           city: e.target.cityTrainer.value,
           neighborhood: e.target.neighTrainer.value,
