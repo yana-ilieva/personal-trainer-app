@@ -170,7 +170,6 @@ public class Mapper {
     public Progress map(ProgressDto progressDto) {
         Progress progress = new Progress();
         progress.setId(progressDto.getId());
-        progress.setCreatedTimestamp(progressDto.getCreatedTimestamp());
         progress.setWeight(progressDto.getWeight());
         progress.setChestMeasurement(progressDto.getChestMeasurement());
         progress.setHipMeasurement(progressDto.getHipMeasurement());
