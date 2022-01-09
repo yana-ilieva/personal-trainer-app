@@ -2,7 +2,7 @@
   <div class="w-full py-16 relative">
     <div
       v-if="isEdit || isAdd"
-      class="absolute w-full h-full top-0 left-0 z-10"
+      class="absolute w-full h-screen top-0 left-0 z-10"
       style="background-color: rgba(0, 0, 0, 0.6)"
     ></div>
     <add-program
@@ -12,6 +12,7 @@
     <edit-program
       @cancelEditProgram="cancelEditProgram"
       v-if="isEdit"
+      :program="programToEdit"
     ></edit-program>
     <button
       @click="addProgram"
@@ -22,11 +23,11 @@
     <div class="mx-auto w-9/12">
       <ul class="grid grid-cols-2 gap-5">
         <program-card
-          @editProgram="editProgram"
           v-for="program in programs"
           :key="program.id"
           :name="program.name"
           :desc="program.description"
+          @editProgram="editProgram(program)"
           @deleteProgram="deleteProgram(program.id)"
         ></program-card>
       </ul>
@@ -45,14 +46,17 @@ export default {
       isEdit: false,
       isAdd: false,
       programs: [],
+      programToEdit: {},
     };
   },
   async mounted() {
     this.programs = await this.getPrograms();
   },
   methods: {
-    editProgram() {
+    editProgram(program) {
       this.isEdit = true;
+      this.programToEdit = program;
+      console.log(this.programToEdit);
     },
     addProgram() {
       this.isAdd = true;
@@ -64,7 +68,6 @@ export default {
       this.isAdd = false;
     },
     async deleteProgram(id) {
-      console.log(id);
       const response = await fetch(
         `http://localhost:8081/api/trainer/program/${id}`,
         {
@@ -74,7 +77,6 @@ export default {
           },
         }
       );
-      console.log(response);
       if (response.ok) {
         location.reload();
       } else {
@@ -91,7 +93,6 @@ export default {
           },
         }
       );
-      console.log(response);
       if (response.ok) {
         return await response.json();
       } else {
