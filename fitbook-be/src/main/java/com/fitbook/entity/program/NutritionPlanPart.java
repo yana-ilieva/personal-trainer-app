@@ -7,6 +7,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import javax.persistence.*;
+import java.io.Serializable;
 
 @Data
 @AllArgsConstructor
@@ -14,7 +15,7 @@ import javax.persistence.*;
 @Builder
 @Table(name = "nutrition_plan_parts")
 @Entity
-public class NutritionPlanPart {
+public class NutritionPlanPart implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.SEQUENCE)

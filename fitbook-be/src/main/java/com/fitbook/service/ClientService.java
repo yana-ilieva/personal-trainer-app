@@ -4,17 +4,20 @@ import com.fitbook.dto.*;
 import com.fitbook.entity.client.Client;
 import com.fitbook.entity.program.NutritionPlan;
 import com.fitbook.entity.program.Program;
+import com.fitbook.entity.program.ProgramPart;
 import com.fitbook.entity.user.User;
 import com.fitbook.exception.ResourceNotFoundException;
 import com.fitbook.repository.ClientRepository;
 import com.fitbook.repository.UserRepository;
 import com.fitbook.util.Mapper;
+import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -43,6 +46,15 @@ public class ClientService {
         this.nutritionPlanService = nutritionPlanService;
         this.userRepository = userRepository;
         this.userService = userService;
+    }
+
+    public ClientFullDto getFullDto(Long id) {
+        Optional<Client> clientOpt = clientRepository.findById(id);
+        if (clientOpt.isEmpty()) {
+            throw new ResourceNotFoundException(String.format("Client with id %d not found", id));
+        }
+
+        return mapper.mapFull(clientOpt.get());
     }
 
     public ProgramDto getProgram(Long userId) {
@@ -115,17 +127,26 @@ public class ClientService {
         return clientOpt.get();
     }
 
+    @Transactional
     public ClientDto assignProgramToClient(Long clientId, Long programId) {
         Optional<Client> clientOpt = clientRepository.findById(clientId);
         if (clientOpt.isEmpty()) {
             throw new ResourceNotFoundException(String.format("Client with id %d not found", clientId));
         }
         Program program = programService.findById(programId);
-        Program programCopy = new Program(program);
+        Program programCopy = programCopy(program);
         programCopy = programService.create(programCopy);
         clientOpt.get().setProgram(programCopy);
 
         return mapper.map(clientRepository.save(clientOpt.get()));
+    }
+
+    private Program programCopy(Program program) {
+        Program newProgram = SerializationUtils.clone(program);
+        newProgram.setId(null);
+        newProgram.getProgramParts().forEach(part -> part.setId(null));
+        newProgram.getProgramParts().forEach(part -> part.getExerciseUnits().forEach(unit -> unit.setId(null)));
+        return newProgram;
     }
 
     public ClientDto assignNutritionPlanToClient(Long clientId, Long nutritionPlanId) {
@@ -135,13 +156,14 @@ public class ClientService {
         }
 
         NutritionPlan nutritionPlan = nutritionPlanService.findById(nutritionPlanId);
-        NutritionPlan nutritionPlanCopy = new NutritionPlan(nutritionPlan);
+        NutritionPlan nutritionPlanCopy = nutritionPlan;
         nutritionPlanCopy = nutritionPlanService.create(nutritionPlanCopy);
 
         clientOpt.get().setNutritionPlan(nutritionPlanCopy);
 
         return mapper.map(clientRepository.save(clientOpt.get()));
     }
+
 
     public List<ProgressDto> getProgress(Long id, int page, int size) {
         return clientRepository.getProgress(id, PageRequest.of(page, size)).stream()
