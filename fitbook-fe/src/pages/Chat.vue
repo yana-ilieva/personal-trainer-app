@@ -152,14 +152,14 @@ export default {
   methods: {
     async getClients() {
       const response = await fetch(
-        `http://localhost:8081/api/trainer/2/clients`,
+        `http://localhost:8081/api/trainer/user/${this.$store.getters['auth/userId']}/clients`,
         {
           Authorization: `Bearer ${this.$store.getters['auth/token']}`,
         }
       );
       console.log(response);
       if (response.ok) {
-        console.log(await response.json());
+        return await response.json();
       } else {
         console.log('error getting user data');
       }

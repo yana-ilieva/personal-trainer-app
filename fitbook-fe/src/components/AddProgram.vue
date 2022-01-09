@@ -84,16 +84,16 @@
           <div class="flex mt-5">
             <div class="mr-10">
               <ul>
-                <li v-for="exer of mondayEx" :key="exer.id" class="mb-3 flex">
+                <li v-for="exer of mondayEx" :key="exer.cid" class="mb-3 flex">
                   <input
                     class="w-10 mr-2 border-2 border-darkmint rounded-md pl-2"
                     type="number"
                     name=""
-                    v-model="mondayEx[exer.id].repetitions"
+                    v-model="mondayEx[exer.cid].repetitions"
                   />
                   <p class="mr-2">reps of</p>
                   <select
-                    v-model="mondayEx[exer.id].exercise"
+                    v-model="mondayEx[exer.cid].exercise"
                     class="border-2 border-darkmint rounded-md"
                     name=""
                     id=""
@@ -111,7 +111,7 @@
                     class="w-10 mr-2 border-2 border-darkmint rounded-md pl-2"
                     type="number"
                     name=""
-                    v-model="mondayEx[exer.id].restBetweenExercises"
+                    v-model="mondayEx[exer.cid].restBetweenExercises"
                   />
                   <p class="mr-2">minutes rest</p>
                 </li>
@@ -135,16 +135,16 @@
           <div class="flex mt-5">
             <div class="mr-10">
               <ul>
-                <li v-for="exer in tuesdayEx" :key="exer.id" class="mb-3 flex">
+                <li v-for="exer of tuesdayEx" :key="exer.cid" class="mb-3 flex">
                   <input
                     class="w-10 mr-2 border-2 border-darkmint rounded-md pl-2"
                     type="number"
                     name=""
-                    v-model="tuesdayEx[exer.id].repetitions"
+                    v-model="tuesdayEx[exer.cid].repetitions"
                   />
                   <p class="mr-2">reps of</p>
                   <select
-                    v-model="tuesdayEx[exer.id].exercise"
+                    v-model="tuesdayEx[exer.cid].exercise"
                     class="border-2 border-darkmint rounded-md"
                     name=""
                     id=""
@@ -152,7 +152,7 @@
                     <option
                       v-for="exercise in exercises"
                       :key="exercise.id"
-                      :value="exercise.name"
+                      :value="exercise"
                     >
                       {{ exercise.name }}
                     </option>
@@ -162,7 +162,7 @@
                     class="w-10 mr-2 border-2 border-darkmint rounded-md pl-2"
                     type="number"
                     name=""
-                    v-model="tuesdayEx[exer.id].restBetweenExercises"
+                    v-model="tuesdayEx[exer.cid].restBetweenExercises"
                   />
                   <p class="mr-2">minutes rest</p>
                 </li>
@@ -187,19 +187,19 @@
             <div class="mr-10">
               <ul>
                 <li
-                  v-for="exer in wednesdayEx"
-                  :key="exer.id"
+                  v-for="exer of wednesdayEx"
+                  :key="exer.cid"
                   class="mb-3 flex"
                 >
                   <input
                     class="w-10 mr-2 border-2 border-darkmint rounded-md pl-2"
                     type="number"
                     name=""
-                    v-model="wednesdayEx[exer.id].repetitions"
+                    v-model="wednesdayEx[exer.cid].repetitions"
                   />
                   <p class="mr-2">reps of</p>
                   <select
-                    v-model="wednesdayEx[exer.id].exercise"
+                    v-model="wednesdayEx[exer.cid].exercise"
                     class="border-2 border-darkmint rounded-md"
                     name=""
                     id=""
@@ -207,7 +207,7 @@
                     <option
                       v-for="exercise in exercises"
                       :key="exercise.id"
-                      :value="exercise.name"
+                      :value="exercise"
                     >
                       {{ exercise.name }}
                     </option>
@@ -217,7 +217,7 @@
                     class="w-10 mr-2 border-2 border-darkmint rounded-md pl-2"
                     type="number"
                     name=""
-                    v-model="wednesdayEx[exer.id].restBetweenExercises"
+                    v-model="wednesdayEx[exer.cid].restBetweenExercises"
                   />
                   <p class="mr-2">minutes rest</p>
                 </li>
@@ -241,16 +241,20 @@
           <div class="flex mt-5">
             <div class="mr-10">
               <ul>
-                <li v-for="exer in thursdayEx" :key="exer.id" class="mb-3 flex">
+                <li
+                  v-for="exer of thursdayEx"
+                  :key="exer.cid"
+                  class="mb-3 flex"
+                >
                   <input
                     class="w-10 mr-2 border-2 border-darkmint rounded-md pl-2"
                     type="number"
                     name=""
-                    v-model="thursdayEx[exer.id].repetitions"
+                    v-model="thursdayEx[exer.cid].repetitions"
                   />
                   <p class="mr-2">reps of</p>
                   <select
-                    v-model="thursdayEx[exer.id].exercise"
+                    v-model="thursdayEx[exer.cid].exercise"
                     class="border-2 border-darkmint rounded-md"
                     name=""
                     id=""
@@ -258,7 +262,7 @@
                     <option
                       v-for="exercise in exercises"
                       :key="exercise.id"
-                      :value="exercise.name"
+                      :value="exercise"
                     >
                       {{ exercise.name }}
                     </option>
@@ -268,7 +272,7 @@
                     class="w-10 mr-2 border-2 border-darkmint rounded-md pl-2"
                     type="number"
                     name=""
-                    v-model="thursdayEx[exer.id].restBetweenExercises"
+                    v-model="thursdayEx[exer.cid].restBetweenExercises"
                   />
                   <p class="mr-2">minutes rest</p>
                 </li>
@@ -292,16 +296,16 @@
           <div class="flex mt-5">
             <div class="mr-10">
               <ul>
-                <li v-for="exer in fridayEx" :key="exer.id" class="mb-3 flex">
+                <li v-for="exer of fridayEx" :key="exer.cid" class="mb-3 flex">
                   <input
                     class="w-10 mr-2 border-2 border-darkmint rounded-md pl-2"
                     type="number"
                     name=""
-                    v-model="fridayEx[exer.id].repetitions"
+                    v-model="fridayEx[exer.cid].repetitions"
                   />
                   <p class="mr-2">reps of</p>
                   <select
-                    v-model="fridayEx[exer.id].exercise"
+                    v-model="fridayEx[exer.cid].exercise"
                     class="border-2 border-darkmint rounded-md"
                     name=""
                     id=""
@@ -309,7 +313,7 @@
                     <option
                       v-for="exercise in exercises"
                       :key="exercise.id"
-                      :value="exercise.name"
+                      :value="exercise"
                     >
                       {{ exercise.name }}
                     </option>
@@ -319,7 +323,7 @@
                     class="w-10 mr-2 border-2 border-darkmint rounded-md pl-2"
                     type="number"
                     name=""
-                    v-model="fridayEx[exer.id].restBetweenExercises"
+                    v-model="fridayEx[exer.cid].restBetweenExercises"
                   />
                   <p class="mr-2">minutes rest</p>
                 </li>
@@ -343,16 +347,20 @@
           <div class="flex mt-5">
             <div class="mr-10">
               <ul>
-                <li v-for="exer in saturdayEx" :key="exer.id" class="mb-3 flex">
+                <li
+                  v-for="exer of saturdayEx"
+                  :key="exer.cid"
+                  class="mb-3 flex"
+                >
                   <input
                     class="w-10 mr-2 border-2 border-darkmint rounded-md pl-2"
                     type="number"
                     name=""
-                    v-model="saturdayEx[exer.id].repetitions"
+                    v-model="saturdayEx[exer.cid].repetitions"
                   />
                   <p class="mr-2">reps of</p>
                   <select
-                    v-model="saturdayEx[exer.id].exercise"
+                    v-model="saturdayEx[exer.cid].exercise"
                     class="border-2 border-darkmint rounded-md"
                     name=""
                     id=""
@@ -360,7 +368,7 @@
                     <option
                       v-for="exercise in exercises"
                       :key="exercise.id"
-                      :value="exercise.name"
+                      :value="exercise"
                     >
                       {{ exercise.name }}
                     </option>
@@ -370,7 +378,7 @@
                     class="w-10 mr-2 border-2 border-darkmint rounded-md pl-2"
                     type="number"
                     name=""
-                    v-model="saturdayEx[exer.id].restBetweenExercises"
+                    v-model="saturdayEx[exer.cid].restBetweenExercises"
                   />
                   <p class="mr-2">minutes rest</p>
                 </li>
@@ -394,16 +402,16 @@
           <div class="flex mt-5">
             <div class="mr-10">
               <ul>
-                <li v-for="exer in sundayEx" :key="exer.id" class="mb-3 flex">
+                <li v-for="exer of sundayEx" :key="exer.cid" class="mb-3 flex">
                   <input
                     class="w-10 mr-2 border-2 border-darkmint rounded-md pl-2"
                     type="number"
                     name=""
-                    v-model="sundayEx[exer.id].repetitions"
+                    v-model="sundayEx[exer.cid].repetitions"
                   />
                   <p class="mr-2">reps of</p>
                   <select
-                    v-model="sundayEx[exer.id].exercise"
+                    v-model="sundayEx[exer.cid].exercise"
                     class="border-2 border-darkmint rounded-md"
                     name=""
                     id=""
@@ -421,7 +429,7 @@
                     class="w-10 mr-2 border-2 border-darkmint rounded-md pl-2"
                     type="number"
                     name=""
-                    v-model="sundayEx[exer.id].restBetweenExercises"
+                    v-model="sundayEx[exer.cid].restBetweenExercises"
                   />
                   <p class="mr-2">minutes rest</p>
                 </li>
@@ -438,7 +446,7 @@
         <div class="mt-8 self-end">
           <button
             @click.prevent="submitAddProgram"
-            class="px-5 py-1 bg-darkmint text-syellow hover:bg-darkermint rounded-md mr-5"
+            class="px-5 py-1 bg-darkmint text-syellow hover:bg-darkermint rounded-md mr-5 cursor-pointer"
           >
             Save
           </button>
@@ -456,7 +464,7 @@
 
 <script>
 export default {
-  emits: ['cancelAddProgram'],
+  emits: ['cancelAddProgram', 'saveAddProgram'],
   data() {
     return {
       exercises: [],
@@ -507,19 +515,51 @@ export default {
     },
     async submitAddProgram() {
       let body = {};
+      let mEx = JSON.parse(JSON.stringify(this.mondayEx));
+      let tuEx = JSON.parse(JSON.stringify(this.tuesdayEx));
+      let wEx = JSON.parse(JSON.stringify(this.wednesdayEx));
+      let thEx = JSON.parse(JSON.stringify(this.thursdayEx));
+      let fEx = JSON.parse(JSON.stringify(this.fridayEx));
+      let saEx = JSON.parse(JSON.stringify(this.saturdayEx));
+      let suEx = JSON.parse(JSON.stringify(this.sundayEx));
 
-      this.mondayEx.forEach((element) => {
-        element.id = null;
-      });
+      for (const [element, value] of Object.entries(mEx)) {
+        console.log(element);
+        value.cid = null;
+      }
+      for (const [element, value] of Object.entries(tuEx)) {
+        console.log(element);
+        value.cid = null;
+      }
+      for (const [element, value] of Object.entries(wEx)) {
+        console.log(element);
+        value.cid = null;
+      }
+      for (const [element, value] of Object.entries(thEx)) {
+        console.log(element);
+        value.cid = null;
+      }
+      for (const [element, value] of Object.entries(fEx)) {
+        console.log(element);
+        value.cid = null;
+      }
+      for (const [element, value] of Object.entries(saEx)) {
+        console.log(element);
+        value.cid = null;
+      }
+      for (const [element, value] of Object.entries(suEx)) {
+        console.log(element);
+        value.cid = null;
+      }
 
       let arr = [
-        { weekDay: 'MONDAY', exerciseUnits: this.mondayEx },
-        { weekDay: 'TUESDAY', exerciseUnits: this.tuesdayEx },
-        { weekDay: 'WEDNESDAY', exerciseUnits: this.wednesdayEx },
-        { weekDay: 'THURSDAY', exerciseUnits: this.thursdayEx },
-        { weekDay: 'FRIDAY', exerciseUnits: this.fridayEx },
-        { weekDay: 'SATURDAY', exerciseUnits: this.saturdayEx },
-        { weekDay: 'SUNDAY', exerciseUnits: this.sundayEx },
+        { weekDay: 'MONDAY', exerciseUnits: mEx },
+        { weekDay: 'TUESDAY', exerciseUnits: tuEx },
+        { weekDay: 'WEDNESDAY', exerciseUnits: wEx },
+        { weekDay: 'THURSDAY', exerciseUnits: thEx },
+        { weekDay: 'FRIDAY', exerciseUnits: fEx },
+        { weekDay: 'SATURDAY', exerciseUnits: saEx },
+        { weekDay: 'SUNDAY', exerciseUnits: suEx },
       ];
 
       if (this.isMonday) {
@@ -583,7 +623,7 @@ export default {
       console.log(response);
 
       if (response.ok) {
-        console.log(await response.json());
+        location.reload();
       } else {
         console.log('error getting user data');
       }
@@ -591,49 +631,49 @@ export default {
     addEx() {
       if (this.isMonday) {
         this.mondayEx.push({
-          id: this.mondayId++,
+          cid: this.mondayId++,
           repetitions: 0,
           exercise: {},
           restBetweenExercises: 0,
         });
       } else if (this.isTuesday) {
         this.tuesdayEx.push({
-          id: this.tuesdayId++,
+          cid: this.tuesdayId++,
           repetitions: 0,
           exercise: {},
           restBetweenExercises: 0,
         });
       } else if (this.isWednesday) {
         this.wednesdayEx.push({
-          id: this.wednesdayId++,
+          cid: this.wednesdayId++,
           repetitions: 0,
           exercise: {},
           restBetweenExercises: 0,
         });
       } else if (this.isThursday) {
         this.thursdayEx.push({
-          id: this.thursdayId++,
+          cid: this.thursdayId++,
           repetitions: 0,
           exercise: {},
           restBetweenExercises: 0,
         });
       } else if (this.isFriday) {
         this.fridayEx.push({
-          id: this.fridayId++,
+          cid: this.fridayId++,
           repetitions: 0,
           exercise: {},
           restBetweenExercises: 0,
         });
       } else if (this.isSaturday) {
         this.saturdayEx.push({
-          id: this.saturdayId++,
+          cid: this.saturdayId++,
           repetitions: 0,
           exercise: {},
           restBetweenExercises: 0,
         });
       } else {
         this.sundayEx.push({
-          id: this.sundayId++,
+          cid: this.sundayId++,
           repetitions: 0,
           exercise: {},
           restBetweenExercises: 0,

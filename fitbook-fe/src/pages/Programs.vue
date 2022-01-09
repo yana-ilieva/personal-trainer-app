@@ -2,7 +2,7 @@
   <div class="w-full py-16 relative">
     <div
       v-if="isEdit || isAdd"
-      class="absolute w-full h-screen top-0 left-0 z-10"
+      class="absolute w-full h-full top-0 left-0 z-10"
       style="background-color: rgba(0, 0, 0, 0.6)"
     ></div>
     <add-program
