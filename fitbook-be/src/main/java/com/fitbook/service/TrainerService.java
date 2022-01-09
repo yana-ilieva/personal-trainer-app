@@ -15,6 +15,7 @@ import com.fitbook.util.DateUtil;
 import com.fitbook.util.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -184,6 +185,18 @@ public class TrainerService {
             Client client = clientService.findById(clientId);
             client.setTrainer(null);
             clientService.update(client);
+            return true;
+        } catch (Exception e) {
+            return false;
+        }
+    }
+
+    public boolean removeProgramFromList(Long programId, Authentication authentication) {
+        try {
+            User user = (User) authentication.getPrincipal();
+            Trainer trainer = findTrainerByUser(user);
+            trainer.getPrograms().removeIf(p -> p.getId().equals(programId));
+            trainerRepository.save(trainer);
             return true;
         } catch (Exception e) {
             return false;

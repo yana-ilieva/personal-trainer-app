@@ -83,11 +83,15 @@ public class TrainerController {
         return trainerService.getChats(id);
     }
 
-    @DeleteMapping("/{trainer_id}/client/{client_id}")
+    @DeleteMapping("/client/{client_id}")
     @Secured("ROLE_TRAINER")
-    public boolean removeClientFromList(@PathVariable("trainer_id") Long trainerId,
-                                        @PathVariable("client_id") Long clientId, Authentication authentication) {
-        validator.checkTrainerAccessRights(trainerId, authentication);
+    public boolean removeClientFromList(@PathVariable("client_id") Long clientId) {
         return trainerService.removeClientFromList(clientId);
+    }
+
+    @DeleteMapping("/program/{program_id}")
+    @Secured("ROLE_TRAINER")
+    public boolean removeProgramFromList(@PathVariable("program_id") Long clientId, Authentication authentication) {
+        return trainerService.removeProgramFromList(clientId, authentication);
     }
 }

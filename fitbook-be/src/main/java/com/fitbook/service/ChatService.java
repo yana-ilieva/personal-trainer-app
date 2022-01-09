@@ -2,6 +2,7 @@ package com.fitbook.service;
 
 import com.fitbook.dto.ChatDto;
 import com.fitbook.dto.MessageDto;
+import com.fitbook.dto.TrainerDto;
 import com.fitbook.entity.chat.Chat;
 import com.fitbook.entity.chat.Message;
 import com.fitbook.entity.client.Client;
@@ -50,7 +51,7 @@ public class ChatService {
         this.messageRepository = messageRepository;
     }
 
-    public void send(String username, MessageDto messageDto, Authentication authentication) {
+    public void send(Long receiverId, MessageDto messageDto, Authentication authentication) {
         Message message = mapper.map(messageDto);
         message.setCreatedTime(DateUtil.now());
 
@@ -70,10 +71,20 @@ public class ChatService {
 
         MessageDto msg = mapper.map(message);
 
-        User user = (User) authentication.getPrincipal();
+        User sender = (User) authentication.getPrincipal();
+        User receiver;
 
-        simpMessagingTemplate.convertAndSendToUser(username, "/topic/messages", msg);
-        simpMessagingTemplate.convertAndSendToUser(user.getEmail(), "/topic/messages", msg);
+        Trainer trainer;
+
+        if ((trainer = trainerService.findById(receiverId)) != null) {
+            receiver = trainer.getUser();
+        }
+        else {
+            receiver = clientService.findById(receiverId).getUser();
+        }
+
+        simpMessagingTemplate.convertAndSendToUser(sender.toString(), "/queue/messages", msg);
+        simpMessagingTemplate.convertAndSendToUser(receiver.toString(), "/queue/messages", msg);
     }
 
     public ChatDto initializeChat(ChatDto chatDto) {

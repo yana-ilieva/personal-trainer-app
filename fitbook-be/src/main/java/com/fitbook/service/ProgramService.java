@@ -51,6 +51,9 @@ public class ProgramService {
         List<ProgramPart> programParts = program.getProgramParts();
 
         program.setProgramParts(programPartUtil.transformProgramParts(programParts));
+        for (ProgramPart programPart : program.getProgramParts()) {
+            programPart.setProgram(program);
+        }
 
         program = programRepository.save(program);
 
