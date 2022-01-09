@@ -15,7 +15,7 @@
     ></edit-program>
     <button
       @click="addProgram"
-      class="w-7/12 mx-auto bg-darkmint text-syellow py-1 rounded-md hover:bg-darkermint"
+      class="w-7/12 mx-auto mb-10 bg-darkmint text-syellow py-1 rounded-md hover:bg-darkermint"
     >
       Add Program
     </button>

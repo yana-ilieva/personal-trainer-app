@@ -33,7 +33,7 @@ export default {
   methods: {
     async getClients() {
       const response = await fetch(
-        `http://localhost:8081/api/trainer/2/clients`,
+        `http://localhost:8081/api/trainer/1/clients`,
         {
           method: 'GET',
           headers: {
