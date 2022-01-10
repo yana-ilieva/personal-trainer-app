@@ -10,6 +10,7 @@ import com.fitbook.entity.program.*;
 import com.fitbook.entity.trainer.Trainer;
 import org.springframework.stereotype.Service;
 
+import java.util.Comparator;
 import java.util.stream.Collectors;
 
 @Service
@@ -115,12 +116,16 @@ public class Mapper {
     }
 
     public ProgramDto map(Program program) {
+        if (program == null) {
+            return null;
+        }
         ProgramDto programDto = new ProgramDto();
         programDto.setId(program.getId());
         programDto.setDescription(program.getDescription());
         programDto.setName(program.getName());
         if (program.getProgramParts() != null) {
-            programDto.setProgramParts(program.getProgramParts().stream().map(this::map).collect(Collectors.toList()));
+            programDto.setProgramParts(program.getProgramParts().stream().map(this::map)
+                    .sorted(Comparator.comparing(ProgramPartDto::getWeekDay )).collect(Collectors.toList()));
         }
         return programDto;
     }

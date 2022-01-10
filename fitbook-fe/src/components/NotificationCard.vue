@@ -35,27 +35,9 @@
 export default {
   props: ['type', 'clientName', 'trainerName', 'clientId', 'time'],
   methods: {
-    async getTrainerId() {
-      const response = await fetch(
-        `http://localhost:8081/api/trainer/user/${this.$store.getters['auth/userId']}`,
-        {
-          method: 'GET',
-          headers: {
-            Authorization: `Bearer ${this.$store.getters['auth/token']}`,
-          },
-        }
-      );
-      if (response.ok) {
-        let responseData = await response.json();
-        return responseData.id;
-      } else {
-        console.log('error getting user data');
-      }
-    },
     async acceptRequest() {
-      let trainerId = await this.getTrainerId();
       const response = await fetch(
-        `http://localhost:8081/api/trainer/user/${trainerId}/handle_request/${this.clientId}`,
+        `http://localhost:8081/api/trainer/user/${this.$store.getters['auth/userId']}/handle_request/${this.clientId}`,
         {
           method: 'GET',
           headers: {
