@@ -1,5 +1,5 @@
 <template>
-  <div class="relative">
+  <div class="relative w-full">
     <div
       v-if="isEdit"
       class="absolute w-full h-full top-0 left-0 z-10"
@@ -149,24 +149,24 @@
           v-if="role === 'ROLE_TRAINER'"
           class="mt-4 flex flex-col justify-center items-center"
         >
-          <p class="mb-3">First Name: {{ user.firstName || '' }}</p>
-          <p class="mb-3">Last Name: {{ user.lastName || '' }}</p>
-          <p class="mb-3">Birth Date: {{ user.birthDate || '' }}</p>
-          <p class="mb-3">Gender: {{ user.gender || '' }}</p>
-          <p class="mb-3">Description: {{ user.description || '' }}</p>
-          <p class="mb-3">City: {{ user.city || '' }}</p>
-          <p class="mb-3">Neighborhood: {{ user.neighborhood || '' }}</p>
+          <p class="mb-3">First Name: {{ user.firstName || "" }}</p>
+          <p class="mb-3">Last Name: {{ user.lastName || "" }}</p>
+          <p class="mb-3">Birth Date: {{ user.birthDate || "" }}</p>
+          <p class="mb-3">Gender: {{ user.gender || "" }}</p>
+          <p class="mb-3">Description: {{ user.description || "" }}</p>
+          <p class="mb-3">City: {{ user.city || "" }}</p>
+          <p class="mb-3">Neighborhood: {{ user.neighborhood || "" }}</p>
         </div>
         <div
           v-if="role === 'ROLE_CLIENT'"
           class="mt-4 flex flex-col justify-center items-center"
         >
-          <p class="mb-3">First Name: {{ user.firstName || '' }}</p>
-          <p class="mb-3">Last Name: {{ user.lastName || '' }}</p>
-          <p class="mb-3">Birth Date: {{ user.birthDate || '' }}</p>
-          <p class="mb-3">Gender: {{ user.gender || '' }}</p>
-          <p class="mb-3">Height: {{ user.height || '' }}</p>
-          <p class="mb-3">Description: {{ user.description || '' }}</p>
+          <p class="mb-3">First Name: {{ user.firstName || "" }}</p>
+          <p class="mb-3">Last Name: {{ user.lastName || "" }}</p>
+          <p class="mb-3">Birth Date: {{ user.birthDate || "" }}</p>
+          <p class="mb-3">Gender: {{ user.gender || "" }}</p>
+          <p class="mb-3">Height: {{ user.height || "" }}</p>
+          <p class="mb-3">Description: {{ user.description || "" }}</p>
         </div>
         <div class="mt-8">
           <button
@@ -195,8 +195,8 @@ export default {
   },
   computed: {
     role() {
-      console.log(this.$store.getters['auth/role']);
-      return this.$store.getters['auth/role'];
+      console.log(this.$store.getters["auth/role"]);
+      return this.$store.getters["auth/role"];
     },
   },
   methods: {
@@ -207,15 +207,15 @@ export default {
       this.isEdit = false;
     },
     parseDate(str) {
-      let arr = str.split('-');
-      let reversed = arr.reverse().join('-');
-      return new Date(reversed).toISOString().split('T')[0];
+      let arr = str.split("-");
+      let reversed = arr.reverse().join("-");
+      return new Date(reversed).toISOString().split("T")[0];
     },
     async submitEditUser(e) {
-      let url = '';
+      let url = "";
       let body = {};
       console.log(e.target.birthDateTrainer.value);
-      if (this.$store.getters['auth/role'] === 'ROLE_TRAINER') {
+      if (this.$store.getters["auth/role"] === "ROLE_TRAINER") {
         url = `http://localhost:8081/api/trainer/${this.user.id}`;
         body = {
           firstName: e.target.firstNameTrainer.value,
@@ -243,11 +243,11 @@ export default {
       }
       console.log(body);
       const response = await fetch(url, {
-        method: 'PUT',
-        mode: 'cors',
+        method: "PUT",
+        mode: "cors",
         headers: {
-          Authorization: `Bearer ${this.$store.getters['auth/token']}`,
-          'Content-Type': 'application/json',
+          Authorization: `Bearer ${this.$store.getters["auth/token"]}`,
+          "Content-Type": "application/json",
         },
         body: JSON.stringify({
           ...body,
@@ -259,21 +259,21 @@ export default {
         this.user = responseData;
         this.isBdateChanged = false;
       } else {
-        console.log('error editing user');
+        console.log("error editing user");
       }
       this.isEdit = false;
     },
     async getUser() {
-      let url = '';
-      if (this.$store.getters['auth/role'] === 'ROLE_TRAINER') {
-        url = `http://localhost:8081/api/trainer/user/${this.$store.getters['auth/userId']}`;
+      let url = "";
+      if (this.$store.getters["auth/role"] === "ROLE_TRAINER") {
+        url = `http://localhost:8081/api/trainer/user/${this.$store.getters["auth/userId"]}`;
       } else {
-        url = `http://localhost:8081/api/client/user/${this.$store.getters['auth/userId']}`;
+        url = `http://localhost:8081/api/client/user/${this.$store.getters["auth/userId"]}`;
       }
       const response = await fetch(url, {
-        method: 'GET',
+        method: "GET",
         headers: {
-          Authorization: `Bearer ${this.$store.getters['auth/token']}`,
+          Authorization: `Bearer ${this.$store.getters["auth/token"]}`,
         },
       });
       console.log(response);
@@ -281,16 +281,16 @@ export default {
         const responseData = await response.json();
         return responseData;
       } else {
-        console.log('error getting user data');
+        console.log("error getting user data");
         return {
-          firstName: '',
-          lastName: '',
-          birthDate: '',
-          gender: '',
-          height: '',
-          description: '',
-          city: '',
-          neighborhood: '',
+          firstName: "",
+          lastName: "",
+          birthDate: "",
+          gender: "",
+          height: "",
+          description: "",
+          city: "",
+          neighborhood: "",
         };
       }
     },

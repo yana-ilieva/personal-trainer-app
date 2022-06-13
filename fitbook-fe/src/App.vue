@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div>
+    <div class="flex min-h-screen">
       <the-header
         v-if="!$route.meta.hideHeader"
         @showNotifications="showNotifications"
