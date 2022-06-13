@@ -28,12 +28,14 @@ const routes = [
     component: Registration,
     meta: {
       requiresUnauth: true,
+      hideHeader: true,
     },
   },
   {
     path: '/login',
     component: Login,
     meta: {
+      hideHeader: true,
       requiresUnauth: true,
     },
   },

@@ -1,18 +1,23 @@
 <template>
   <div>
-    <the-header @showNotifications="showNotifications"></the-header>
-    <notifications
-      v-if="isNotifications"
-      @hideNotifications="hideNotifications"
-      class="absolute top-0 right-0 w-1/4 h-screen overflow-auto bg-gray-100"
-    ></notifications>
-    <router-view></router-view>
+    <div>
+      <the-header
+        v-if="!$route.meta.hideHeader"
+        @showNotifications="showNotifications"
+      ></the-header>
+      <notifications
+        v-if="isNotifications"
+        @hideNotifications="hideNotifications"
+        class="absolute top-0 right-0 w-1/4 h-screen overflow-auto bg-gray-100"
+      ></notifications>
+      <router-view></router-view>
+    </div>
   </div>
 </template>
 
 <script>
-import Notifications from './components/Notifications.vue';
-import TheHeader from './components/TheHeader.vue';
+import Notifications from "./components/Notifications.vue";
+import TheHeader from "./components/TheHeader.vue";
 export default {
   components: { TheHeader, Notifications },
   data() {
@@ -33,7 +38,7 @@ export default {
     },
   },
   created() {
-    this.$store.dispatch('auth/autoLogin');
+    this.$store.dispatch("auth/autoLogin");
   },
 };
 </script>

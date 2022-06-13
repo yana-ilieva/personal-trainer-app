@@ -1,14 +1,64 @@
 <template>
-  <div class="w-full p-12">
-    <div class="flex justify-center items-center">
-      <div class="flex w-full">
-        <div class="h-11/12 w-2/5 rounded-md bg-mint"></div>
-        <div class="h-10/12 w-full ml-10">
-          <div
-            class="p-20 border border-darkmint rounded-md flex flex-col items-center justify-center"
-          >
-            <!-- toggle button -->
-            <div class="mb-8 flex self-end">
+  <!--
+  This example requires Tailwind CSS v2.0+ 
+  
+  This example requires some changes to your config:
+  
+  ```
+  // tailwind.config.js
+  module.exports = {
+    // ...
+    plugins: [
+      // ...
+      require('@tailwindcss/forms'),
+    ],
+  }
+  ```
+-->
+  <!--
+  This example requires updating your template:
+
+  ```
+  <html class="h-full bg-white">
+  <body class="h-full">
+  ```
+-->
+  <div class="min-h-screen flex">
+    <div
+      class="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24"
+    >
+      <div class="mx-auto w-full max-w-sm lg:w-96">
+        <div>
+          <img
+            class="h-12 w-auto"
+            src="https://tailwindui.com/img/logos/workflow-mark-indigo-600.svg"
+            alt="Workflow"
+          />
+          <h2 class="mt-6 text-3xl font-extrabold text-gray-900">
+            Create your account
+          </h2>
+          <p class="mt-2 text-sm text-gray-600">
+            Already have an account?
+            <a
+              @click="redirectToLogin"
+              class="font-medium text-indigo-600 hover:text-indigo-500 cursor-pointer"
+            >
+              Login
+            </a>
+          </p>
+        </div>
+
+        <div class="mt-8">
+          <div class="mb-4 relative">
+            <div class="absolute inset-0 flex items-center" aria-hidden="true">
+              <div class="w-full border-t border-gray-300"></div>
+            </div>
+            <div class="relative flex justify-center text-sm">
+              <span class="px-2 bg-white text-gray-500"> Register as </span>
+            </div>
+          </div>
+          <div class="mb-8 flex w-full">
+            <div class="mx-auto flex">
               <div
                 @click="isTrainer = true"
                 class="border border-darkmint px-4 py-1 cursor-pointer rounded-tl-md rounded-bl-md"
@@ -24,90 +74,145 @@
                 Client
               </div>
             </div>
-            <!-- main elements -->
-            <div class="p-10 relative">
-              <h1 class="text-center mb-10 text-3xl">
-                Register as {{ isTrainer ? 'Trainer' : 'Client' }}
-              </h1>
-              <form @submit.prevent="submitForm" class="flex">
-                <div class="flex flex-col">
-                  <input
-                    v-model.trim="user.firstName"
-                    class="mb-8"
-                    type="text"
-                    placeholder="First Name"
-                  />
-                  <input
-                    v-model.trim="user.lastName"
-                    class="mb-8"
-                    type="text"
-                    placeholder="Last Name"
-                  />
-                  <input
-                    v-model.trim="user.password"
-                    class="mb-8"
-                    type="password"
-                    placeholder="Password"
-                  />
-                  <div class="flex items-center mb-4">
-                    <input
-                      type="radio"
-                      id="male"
-                      name="sex"
-                      value="male"
-                      v-model.trim="user.gender"
-                      checked
-                    />
-                    <label class="ml-4" for="male">Male</label>
-                  </div>
-                  <div class="flex items-center">
-                    <input
-                      v-model.trim="user.gender"
-                      type="radio"
-                      id="female"
-                      name="sex"
-                      value="female"
-                    />
-                    <label class="ml-4" for="female">Female</label>
-                  </div>
-                </div>
-                <div class="flex flex-col ml-10 items-center">
+          </div>
+
+          <div class="mt-6">
+            <form @submit.prevent="submitForm" class="space-y-6">
+              <div>
+                <label
+                  for="email"
+                  class="block text-sm font-medium text-gray-700"
+                >
+                  Email address
+                </label>
+                <div class="mt-1">
                   <input
                     v-model.trim="user.email"
-                    class="mb-8"
+                    id="email"
+                    name="email"
                     type="email"
-                    placeholder="Email"
+                    autocomplete="email"
+                    required
+                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
                   />
-                  <input
-                    v-if="isTrainer"
-                    v-model.trim="user.city"
-                    class="mb-8"
-                    type="text"
-                    placeholder="City"
-                  />
-                  <input
-                    class="mb-4 px-10 py-4 bg-mint hover:bg-darkmint cursor-pointer transition-all rounded-md text-white"
-                    type="submit"
-                    value="Register Now"
-                  />
-                  <router-link
-                    class="bg-lbeige hover:bg-beige cursor-pointer transition-all rounded-md w-max px-4 py-1"
-                    to="/login"
-                    >Login</router-link
-                  >
                 </div>
-              </form>
-              <div
-                v-if="isModal"
-                :class="isModalError ? 'bg-red-100' : 'bg-green-100'"
-                class="absolute bottom-0 left-0 px-3 py-0.5 rounded-md"
-              >
-                <p>{{ modalText }}</p>
               </div>
-            </div>
+
+              <div class="space-y-1">
+                <label
+                  for="password"
+                  class="block text-sm font-medium text-gray-700"
+                >
+                  Password
+                </label>
+                <div class="mt-1">
+                  <input
+                    v-model.trim="user.password"
+                    id="password"
+                    name="password"
+                    type="password"
+                    autocomplete="current-password"
+                    required
+                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  />
+                </div>
+              </div>
+              <div class="space-y-1">
+                <label
+                  for="firstName"
+                  class="block text-sm font-medium text-gray-700"
+                >
+                  First Name
+                </label>
+                <div class="mt-1">
+                  <input
+                    v-model.trim="user.firstName"
+                    id="firstName"
+                    name="firstName"
+                    type="firstName"
+                    required
+                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  />
+                </div>
+              </div>
+              <div class="space-y-1">
+                <label
+                  for="lastName"
+                  class="block text-sm font-medium text-gray-700"
+                >
+                  Last Name
+                </label>
+                <div class="mt-1">
+                  <input
+                    v-model.trim="user.lastName"
+                    id="lastName"
+                    name="lastName"
+                    type="text"
+                    required
+                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  />
+                </div>
+              </div>
+              <div class="space-y-1">
+                <label
+                  for="city"
+                  class="block text-sm font-medium text-gray-700"
+                >
+                  City
+                </label>
+                <div class="mt-1">
+                  <input
+                    v-model.trim="user.city"
+                    id="city"
+                    name="city"
+                    type="text"
+                    class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  />
+                </div>
+              </div>
+              <div class="space-y-1">
+                <div class="flex items-center mb-4">
+                  <input
+                    type="radio"
+                    id="male"
+                    name="sex"
+                    value="male"
+                    v-model.trim="user.gender"
+                    checked
+                  />
+                  <label class="ml-4" for="male">Male</label>
+                </div>
+                <div class="flex items-center">
+                  <input
+                    v-model.trim="user.gender"
+                    type="radio"
+                    id="female"
+                    name="sex"
+                    value="female"
+                  />
+                  <label class="ml-4" for="female">Female</label>
+                </div>
+              </div>
+
+              <div>
+                <button
+                  type="submit"
+                  class="w-full flex justify-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+                >
+                  Sign up
+                </button>
+              </div>
+            </form>
           </div>
         </div>
       </div>
+    </div>
+    <div class="hidden lg:block relative w-0 flex-1">
+      <img
+        class="absolute inset-0 h-full w-full object-cover"
+        src="@/assets/registration-image.jpg"
+        alt=""
+      />
     </div>
   </div>
 </template>
@@ -117,47 +222,51 @@ export default {
   data() {
     return {
       isModal: false,
-      modalText: '',
+      modalText: "",
       isModalError: false,
       formIsValid: false,
       isTrainer: true,
       user: {
-        firstName: '',
-        lastName: '',
-        gender: 'male',
-        city: '',
-        role: '',
-        email: '',
-        password: '',
+        firstName: "",
+        lastName: "",
+        gender: "male",
+        city: "",
+        role: "",
+        email: "",
+        password: "",
       },
     };
   },
   methods: {
+    redirectToLogin() {
+      this.$router.push({ path: "/login" });
+    },
     async submitForm() {
-      const role = this.isTrainer ? 'ROLE_TRAINER' : 'ROLE_CLIENT';
+      const role = this.isTrainer ? "ROLE_TRAINER" : "ROLE_CLIENT";
       this.formIsValid = true;
+      console.log("submit register form data: ", this.user);
       if (this.isTrainer) {
         if (
-          this.user.firstName === '' ||
-          this.user.lastName === '' ||
-          this.user.city === '' ||
-          this.user.email === '' ||
-          this.user.password === ''
+          this.user.firstName === "" ||
+          this.user.lastName === "" ||
+          this.user.city === "" ||
+          this.user.email === "" ||
+          this.user.password === ""
         ) {
           this.formIsValid = false;
           this.isModal = true;
-          this.modalText = 'Please, fill all fields.';
+          this.modalText = "Please, fill all fields.";
           this.isModalError = true;
           setTimeout(() => {
             this.isModal = false;
-            this.modalText = '';
+            this.modalText = "";
             this.isModalError = false;
           }, 3000);
           return;
         }
         try {
           await this.$store
-            .dispatch('auth/signup', {
+            .dispatch("auth/signup", {
               email: this.user.email,
               password: this.user.password,
               role: role,
@@ -169,19 +278,19 @@ export default {
             .then((res) => {
               if (res) {
                 this.isModal = true;
-                this.modalText = 'Registration successfull.';
+                this.modalText = "Registration successfull.";
                 this.isModalError = false;
                 setTimeout(() => {
                   this.isModal = false;
-                  this.modalText = '';
+                  this.modalText = "";
                 }, 3000);
               } else {
                 this.isModal = true;
-                this.modalText = 'Registration successfull.';
+                this.modalText = "Registration successfull.";
                 this.isModalError = true;
                 setTimeout(() => {
                   this.isModal = false;
-                  this.modalText = '';
+                  this.modalText = "";
                   this.isModalError = false;
                 }, 3000);
               }
@@ -193,25 +302,26 @@ export default {
         }
       } else {
         if (
-          this.user.firstName === '' ||
-          this.user.lastName === '' ||
-          this.user.email === '' ||
-          this.user.password === ''
+          this.user.firstName === "" ||
+          this.user.lastName === "" ||
+          this.user.email === "" ||
+          this.user.password === ""
         ) {
+          console.log("validation error: ", this.user);
           this.formIsValid = false;
           this.isModal = true;
-          this.modalText = 'Please, fill all fields.';
+          this.modalText = "Please, fill all fields.";
           this.isModalError = true;
           setTimeout(() => {
             this.isModal = false;
-            this.modalText = '';
+            this.modalText = "";
             this.isModalError = false;
           }, 3000);
           return;
         }
         try {
           await this.$store
-            .dispatch('auth/signup', {
+            .dispatch("auth/signup", {
               email: this.user.email,
               password: this.user.password,
               role: role,
@@ -221,26 +331,18 @@ export default {
             })
             .then((res) => {
               if (res) {
-                this.isModal = true;
-                this.modalText = 'Registration successfull.';
-                this.isModalError = false;
-                setTimeout(() => {
-                  this.isModal = false;
-                  this.modalText = '';
-                }, 3000);
+                this.$router.push({ path: "/login" });
               } else {
                 this.isModal = true;
-                this.modalText = 'Registration successfull.';
+                this.modalText = "Registration failed.";
                 this.isModalError = true;
                 setTimeout(() => {
                   this.isModal = false;
-                  this.modalText = '';
+                  this.modalText = "";
                   this.isModalError = false;
                 }, 3000);
               }
             });
-          //const redirectUrl = this.$route.query.redirect || 'coaches';
-          //this.$router.replace(`/${redirectUrl}`);
         } catch (err) {
           console.log(err);
         }
