@@ -41,7 +41,7 @@ public class SecurityAuthenticationProvider implements AuthenticationProvider {
             throw new IllegalArgumentException("Email or password are invalid.");
         }
 
-        return new UsernamePasswordAuthenticationToken(user, password, Collections.singletonList(user.getRole()));
+        return new UsernamePasswordAuthenticationToken(user.getEmail(), password, Collections.singletonList(user.getRole()));
     }
 
     public boolean supports(Class<?> authenticationToken) {

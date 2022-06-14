@@ -72,6 +72,6 @@ public class NotificationService {
 
     public void sendNotification(User user, NotificationType notificationType, Trainer trainer, Client client) {
         NotificationDto notificationDto = create(notificationType, trainer, client);
-        simpMessagingTemplate.convertAndSendToUser(user.toString(), "/queue/notifications", notificationDto);
+        simpMessagingTemplate.convertAndSendToUser(user.getEmail(), "/queue/notifications", notificationDto);
     }
 }
