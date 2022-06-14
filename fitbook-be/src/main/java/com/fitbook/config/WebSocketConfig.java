@@ -57,7 +57,8 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                            token = token.substring(7);
                            String email = jwtTokenUtil.getEmailFromToken(token);
                            User user = userService.findByEmail(email);
-                           UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(user, user.getPassword(), Collections.singletonList(user.getRole()));
+                           UsernamePasswordAuthenticationToken authentication =
+                                   new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword(), Collections.singletonList(user.getRole()));
                            accessor.setUser(authentication);
                        }
                    });

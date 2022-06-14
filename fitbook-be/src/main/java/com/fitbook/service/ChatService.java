@@ -76,8 +76,8 @@ public class ChatService {
             receiver = chat.getTrainer().getUser();
         }
 
-        simpMessagingTemplate.convertAndSendToUser(sender.toString(), "/queue/messages", msg);
-        simpMessagingTemplate.convertAndSendToUser(receiver.toString(), "/queue/messages", msg);
+        simpMessagingTemplate.convertAndSendToUser(sender.getEmail(), "/queue/messages", msg);
+        simpMessagingTemplate.convertAndSendToUser(receiver.getEmail(), "/queue/messages", msg);
     }
 
     public ChatDto initializeChat(ChatDto chatDto) {
