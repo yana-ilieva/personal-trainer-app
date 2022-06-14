@@ -2,176 +2,346 @@
   <div class="relative w-full">
     <div
       v-if="isEdit"
-      class="absolute w-full h-full top-0 left-0 z-10"
-      style="background-color: rgba(0, 0, 0, 0.6)"
-    ></div>
-    <div class="w-full py-16">
-      <div class="w-full absolute top-10 left-0 z-20" v-if="isEdit">
-        <div class="mx-auto w-7/12 p-6 bg-white">
-          <form @submit.prevent="submitEditUser" action="">
-            <div
-              v-if="role === 'ROLE_CLIENT'"
-              class="flex flex-col items-center"
-            >
-              <input
-                :value="user.firstName"
-                class="mb-4 border-b border-black"
-                type="text"
-                name="firstNameClient"
-                id="firstNameClient"
-                placeholder="First Name"
-              />
-              <input
-                :value="user.lastName"
-                class="mb-4 border-b border-black"
-                type="text"
-                name="lastNameClient"
-                id="lastNameClient"
-                placeholder="Last Name"
-              />
-              <input
-                @change="this.isBdateChanged = true"
-                :value="user.birthDate"
-                class="mb-4 border-b border-black"
-                type="text"
-                name="birthDateClient"
-                id="birthDateClient"
-                placeholder="Birth Date"
-              />
-              <input
-                :value="user.gender"
-                class="mb-4 border-b border-black"
-                type="text"
-                name="genderClient"
-                id="genderClient"
-                placeholder="Gender"
-              />
-              <input
-                :value="user.height"
-                class="mb-4 border-b border-black"
-                type="text"
-                name="heightClient"
-                id="heightClient"
-                placeholder="Height"
-              />
-              <textarea
-                :value="user.description"
-                class="w-1/3 mb-4 rounded-md border border-black"
-                type="text"
-                name="descClient"
-                id="descClient"
-                placeholder="Description"
-              />
+      class="relative z-10"
+      aria-labelledby="modal-title"
+      role="dialog"
+      aria-modal="true"
+    >
+      <!--
+    Background backdrop, show/hide based on modal state.
+
+    Entering: "ease-out duration-300"
+      From: "opacity-0"
+      To: "opacity-100"
+    Leaving: "ease-in duration-200"
+      From: "opacity-100"
+      To: "opacity-0"
+  -->
+      <div
+        class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
+      ></div>
+
+      <div class="fixed z-10 inset-0 overflow-y-auto">
+        <div
+          class="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0"
+        >
+          <!--
+        Modal panel, show/hide based on modal state.
+
+        Entering: "ease-out duration-300"
+          From: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+          To: "opacity-100 translate-y-0 sm:scale-100"
+        Leaving: "ease-in duration-200"
+          From: "opacity-100 translate-y-0 sm:scale-100"
+          To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
+      -->
+          <div class="bg-white shadow sm:rounded-lg z-20 w-72">
+            <div class="px-4 py-5 sm:p-6">
+              <h3 class="text-lg leading-6 font-medium text-gray-900">
+                Update your profile
+              </h3>
+
+              <form class="mt-5">
+                <div class="w-full">
+                  <div>
+                    <img
+                      ref="profileImageEdit"
+                      class="mx-auto h-24 w-24 ring-4 ring-white sm:h-32 sm:w-32 mb-3"
+                      alt=""
+                    />
+                    <div class="flex justify-center items-center mb-5">
+                      <input
+                        @change="fileChosen"
+                        type="file"
+                        accept="image/*"
+                        class="border border-gray-300 shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:secondary"
+                      />
+                    </div>
+                  </div>
+                  <div v-if="role === 'ROLE_CLIENT'">
+                    <!-- This example requires Tailwind CSS v2.0+ -->
+                    <ul role="list" class="divide-y divide-gray-200">
+                      <li class="py-2">
+                        <input
+                          :value="editUser.firstName"
+                          class="appearance-none rounded-none relative block w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 border border-transparent focus:border-indigo-500 focus:z-10 sm:text-sm"
+                          type="text"
+                          name="firstNameClient"
+                          id="firstNameClient"
+                          placeholder="First Name"
+                        />
+                      </li>
+                      <li class="py-2">
+                        <input
+                          :value="editUser.lastName"
+                          class="appearance-none rounded-none relative block w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 border border-transparent focus:border-indigo-500 focus:z-10 sm:text-sm"
+                          type="text"
+                          name="lastNameClient"
+                          id="lastNameClient"
+                          placeholder="Last Name"
+                        />
+                      </li>
+                      <li class="py-2">
+                        <input
+                          @change="this.isBdateChanged = true"
+                          :value="editUser.birthDate"
+                          class="appearance-none rounded-none relative block w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 border border-transparent focus:border-indigo-500 focus:z-10 sm:text-sm"
+                          type="text"
+                          name="birthDateClient"
+                          id="birthDateClient"
+                          placeholder="Birth Date"
+                        />
+                      </li>
+                      <li class="py-2">
+                        <input
+                          :value="editUser.height"
+                          class="appearance-none rounded-none relative block w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 border border-transparent focus:border-indigo-500 focus:z-10 sm:text-sm"
+                          type="text"
+                          name="heightClient"
+                          id="heightClient"
+                          placeholder="Height"
+                        />
+                      </li>
+                      <li class="py-3 px-3">
+                        <div class="flex items-center">
+                          <label for="gender" class="mr-3 text-sm"
+                            >Gender:</label
+                          >
+                          <div class="flex mr-1 items-center">
+                            <input
+                              type="radio"
+                              id="male"
+                              name="sex"
+                              value="male"
+                              v-model.trim="editUser.gender"
+                              checked
+                            />
+                            <label for="male" class="text-sm">Male</label>
+                          </div>
+                          <div class="flex items-center">
+                            <input
+                              v-model.trim="editUser.gender"
+                              type="radio"
+                              id="female"
+                              name="sex"
+                              value="female"
+                            />
+                            <label for="female" class="text-sm">Female</label>
+                          </div>
+                        </div>
+                      </li>
+                      <li class="py-2">
+                        <textarea
+                          :value="editUser.description"
+                          class="appearance-none rounded-none relative block w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 border border-transparent focus:border-indigo-500 focus:z-10 sm:text-sm"
+                          type="text"
+                          name="descClient"
+                          id="descClient"
+                          placeholder="Description"
+                        />
+                      </li>
+
+                      <!-- More items... -->
+                    </ul>
+                  </div>
+                  <div v-if="role === 'ROLE_TRAINER'">
+                    <!-- This example requires Tailwind CSS v2.0+ -->
+                    <ul role="list" class="divide-y divide-gray-200">
+                      <li class="py-2">
+                        <input
+                          :value="editUser.firstName"
+                          class="appearance-none rounded-none relative block w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 border border-transparent focus:border-indigo-500 focus:z-10 sm:text-sm"
+                          type="text"
+                          name="firstNameClient"
+                          id="firstNameClient"
+                          placeholder="First Name"
+                        />
+                      </li>
+                      <li class="py-2">
+                        <input
+                          :value="editUser.lastName"
+                          class="appearance-none rounded-none relative block w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 border border-transparent focus:border-indigo-500 focus:z-10 sm:text-sm"
+                          type="text"
+                          name="lastNameClient"
+                          id="lastNameClient"
+                          placeholder="Last Name"
+                        />
+                      </li>
+                      <li class="py-2">
+                        <input
+                          @change="this.isBdateChanged = true"
+                          :value="editUser.birthDate"
+                          class="appearance-none rounded-none relative block w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 border border-transparent focus:border-indigo-500 focus:z-10 sm:text-sm"
+                          type="text"
+                          name="birthDateClient"
+                          id="birthDateClient"
+                          placeholder="Birth Date"
+                        />
+                      </li>
+                      <li class="py-2">
+                        <input
+                          :value="editUser.city"
+                          class="appearance-none rounded-none relative block w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 border border-transparent focus:border-indigo-500 focus:z-10 sm:text-sm"
+                          type="text"
+                          name="cityTrainer"
+                          id="cityTrainer"
+                          placeholder="City"
+                        />
+                      </li>
+                      <li class="py-2">
+                        <input
+                          :value="editUser.neighborhood"
+                          class="appearance-none rounded-none relative block w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 border border-transparent focus:border-indigo-500 focus:z-10 sm:text-sm"
+                          type="text"
+                          name="neighborhood"
+                          id="neighborhood"
+                          placeholder="Neighborhood"
+                        />
+                      </li>
+                      <li class="py-3 px-3">
+                        <div class="flex items-center">
+                          <label for="gender" class="mr-3 text-sm"
+                            >Gender:</label
+                          >
+                          <div class="flex mr-1 items-center">
+                            <input
+                              type="radio"
+                              id="male"
+                              name="sex"
+                              value="male"
+                              v-model.trim="editUser.gender"
+                              checked
+                            />
+                            <label for="male" class="text-sm">Male</label>
+                          </div>
+                          <div class="flex items-center">
+                            <input
+                              v-model.trim="editUser.gender"
+                              type="radio"
+                              id="female"
+                              name="sex"
+                              value="female"
+                            />
+                            <label for="female" class="text-sm">Female</label>
+                          </div>
+                        </div>
+                      </li>
+                      <li class="py-2">
+                        <textarea
+                          :value="editUser.description"
+                          class="appearance-none rounded-none relative block w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 border border-transparent focus:border-indigo-500 focus:z-10 sm:text-sm"
+                          type="text"
+                          name="descClient"
+                          id="descClient"
+                          placeholder="Description"
+                        />
+                      </li>
+
+                      <!-- More items... -->
+                    </ul>
+                  </div>
+                </div>
+                <div class="flex justify-center">
+                  <button
+                    @click="saveEdit"
+                    type="button"
+                    class="inline-flex mr-3 justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm"
+                  >
+                    Save
+                  </button>
+                  <button
+                    @click="closeEdit"
+                    type="button"
+                    class="mt-3 inline-flex justify-center rounded-md border border-gray-300 shadow-sm px-4 py-2 bg-white text-base font-medium text-gray-700 hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:mt-0 sm:w-auto sm:text-sm"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </form>
             </div>
-            <div
-              v-if="role === 'ROLE_TRAINER'"
-              class="flex flex-col items-center"
-            >
-              <input
-                :value="user.firstName"
-                class="mb-4 border-b border-black"
-                type="text"
-                name="firstNameTrainer"
-                id="firstNameTrainer"
-                placeholder="First Name"
-              />
-              <input
-                :value="user.lastName"
-                class="mb-4 border-b border-black"
-                type="text"
-                name="lastNameTrainer"
-                id="lastNameTrainer"
-                placeholder="Last Name"
-              />
-              <input
-                @change="this.isBdateChanged = true"
-                :value="user.birthDate"
-                class="mb-4 border-b border-black"
-                type="text"
-                name="birthDateTrainer"
-                id="birthDateTrainer"
-                placeholder="Birth Date"
-              />
-              <input
-                :value="user.gender"
-                class="mb-4 border-b border-black"
-                type="text"
-                name="genderTrainer"
-                id="genderTrainer"
-                placeholder="Gender"
-              />
-              <textarea
-                :value="user.description"
-                class="w-1/3 mb-4 rounded-md border border-black"
-                type="text"
-                name="descTrainer"
-                id="descTrainer"
-                placeholder="Description"
-              />
-              <input
-                :value="user.city"
-                class="mb-4 border-b border-black"
-                type="text"
-                name="cityTrainer"
-                id="cityTrainer"
-                placeholder="City"
-              />
-              <input
-                :value="user.neighborhood"
-                class="mb-4 border-b border-black"
-                type="text"
-                name="neighTrainer"
-                id="neighTrainer"
-                placeholder="Neighborhood"
-              />
-            </div>
-            <div class="mt-5">
-              <input
-                class="mr-4 px-3 py-0.5 bg-darkmint rounded-md hover:darkermint text-darksyellow"
-                type="submit"
-                value="Save"
-              />
-              <button
-                @click="closeEdit"
-                class="px-3 py-0.5 bg-red-500 rounded-md hover:bg-red-600 text-white"
-              >
-                Cancel
-              </button>
-            </div>
-          </form>
+          </div>
         </div>
       </div>
+    </div>
+
+    <div class="w-full py-16">
       <div class="mx-auto w-1/2 flex flex-col items-center">
-        <div class="w-10/12 h-72 bg-mint">
-          <img src="" alt="" />
+        <div class="w-10/12 mx-auto flex justify-center items-center mb-2">
+          <img ref="profileImage" class="h-48 w-48 ring-4 ring-white" alt="" />
         </div>
+
         <div
           v-if="role === 'ROLE_TRAINER'"
-          class="mt-4 flex flex-col justify-center items-center"
+          class="bg-white shadow w-3/5 mx-auto overflow-hidden rounded-md"
         >
-          <p class="mb-3">First Name: {{ user.firstName || "" }}</p>
-          <p class="mb-3">Last Name: {{ user.lastName || "" }}</p>
-          <p class="mb-3">Birth Date: {{ user.birthDate || "" }}</p>
-          <p class="mb-3">Gender: {{ user.gender || "" }}</p>
-          <p class="mb-3">Description: {{ user.description || "" }}</p>
-          <p class="mb-3">City: {{ user.city || "" }}</p>
-          <p class="mb-3">Neighborhood: {{ user.neighborhood || "" }}</p>
+          <ul role="list" class="divide-y divide-gray-200">
+            <li class="px-6 py-4 w-full flex justify-between">
+              <p class="">First Name:</p>
+              <p>{{ user.firstName || "" }}</p>
+            </li>
+            <li class="px-6 py-4 w-full flex justify-between">
+              <p class="">Last Name:</p>
+              <p>{{ user.lastName || "" }}</p>
+            </li>
+            <li class="px-6 py-4 w-full flex justify-between">
+              <p class="">Birth Date:</p>
+              <p>{{ user.birthDate || "" }}</p>
+            </li>
+            <li class="px-6 py-4 w-full flex justify-between">
+              <p class="">Gender:</p>
+              <p>{{ user.gender || "" }}</p>
+            </li>
+            <li class="px-6 py-4 w-full flex justify-between">
+              <p class="">Description:</p>
+              <p>{{ user.description || "" }}</p>
+            </li>
+            <li class="px-6 py-4 w-full flex justify-between">
+              <p class="">City:</p>
+              <p>{{ user.city || "" }}</p>
+            </li>
+            <li class="px-6 py-4 w-full flex justify-between">
+              <p class="">Neighborhood:</p>
+              <p>{{ user.neighborhood || "" }}</p>
+            </li>
+          </ul>
         </div>
+
         <div
           v-if="role === 'ROLE_CLIENT'"
-          class="mt-4 flex flex-col justify-center items-center"
+          class="bg-white shadow w-3/5 mx-auto overflow-hidden rounded-md"
         >
-          <p class="mb-3">First Name: {{ user.firstName || "" }}</p>
-          <p class="mb-3">Last Name: {{ user.lastName || "" }}</p>
-          <p class="mb-3">Birth Date: {{ user.birthDate || "" }}</p>
-          <p class="mb-3">Gender: {{ user.gender || "" }}</p>
-          <p class="mb-3">Height: {{ user.height || "" }}</p>
-          <p class="mb-3">Description: {{ user.description || "" }}</p>
+          <ul role="list" class="w-full divide-y divide-gray-200">
+            <li class="px-6 py-4 w-full flex justify-between">
+              <p class="">First Name:</p>
+              <p>{{ user.firstName || "" }}</p>
+            </li>
+            <li class="px-6 py-4 w-full flex justify-between">
+              <p class="">Last Name:</p>
+              <p>{{ user.lastName || "" }}</p>
+            </li>
+            <li class="px-6 py-4 w-full flex justify-between">
+              <p class="">Birth Date:</p>
+              <p>{{ user.birthDate || "" }}</p>
+            </li>
+            <li class="px-6 py-4 w-full flex justify-between">
+              <p class="">Gender:</p>
+              <p>{{ user.gender || "" }}</p>
+            </li>
+            <li class="px-6 py-4 w-full flex justify-between">
+              <p class="">Height:</p>
+              <p>{{ user.height || "" }}</p>
+            </li>
+            <li class="px-6 py-4 w-full flex justify-between">
+              <p class="">Description:</p>
+              <p>{{ user.description || "" }}</p>
+            </li>
+          </ul>
         </div>
-        <div class="mt-8">
+        <div class="mt-8 w-3/5">
           <button
             @click="openEdit"
-            class="text-xl px-8 py-3 bg-darkmint text-syellow hover:bg-syellow hover:text-darkmint transition-all rounded-md"
+            type="button"
+            class="w-full py-1.5 border border-gray-300 shadow-sm text-base font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
           >
             Edit
           </button>
@@ -182,16 +352,20 @@
 </template>
 
 <script>
+import structuredClone from "@ungap/structured-clone";
 export default {
   data() {
     return {
       user: {},
+      editUser: {},
       isEdit: false,
       isBdateChanged: false,
     };
   },
   async mounted() {
-    this.user = await this.getUser();
+    const user = await this.getUser();
+    this.user = structuredClone(user);
+    this.editUser = structuredClone(user);
   },
   computed: {
     role() {
@@ -200,6 +374,7 @@ export default {
     },
   },
   methods: {
+    saveEdit() {},
     openEdit() {
       this.isEdit = true;
     },
