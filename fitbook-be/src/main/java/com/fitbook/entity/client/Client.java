@@ -2,6 +2,7 @@ package com.fitbook.entity.client;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
+import com.fitbook.entity.Payment;
 import com.fitbook.entity.chat.Chat;
 import com.fitbook.entity.program.NutritionPlan;
 import com.fitbook.entity.program.Program;
@@ -60,6 +61,12 @@ public class Client {
     @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
     @JsonManagedReference
     private List<Chat> chats;
+
+    @Column(name = "stripe_id")
+    private String stripeId;
+
+    @OneToMany(mappedBy = "client", fetch = FetchType.LAZY)
+    private List<Payment> payments;
 
     public Long getId() {
         return id;
@@ -163,5 +170,21 @@ public class Client {
 
     public void setChats(List<Chat> chats) {
         this.chats = chats;
+    }
+
+    public String getStripeId() {
+        return stripeId;
+    }
+
+    public void setStripeId(String stripeId) {
+        this.stripeId = stripeId;
+    }
+
+    public List<Payment> getPayments() {
+        return payments;
+    }
+
+    public void setPayments(List<Payment> payments) {
+        this.payments = payments;
     }
 }

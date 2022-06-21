@@ -2,6 +2,8 @@ package com.fitbook.service;
 
 import com.fitbook.dto.RegistrationDto;
 import com.fitbook.dto.UserDto;
+import com.fitbook.entity.client.Client;
+import com.fitbook.entity.trainer.Trainer;
 import com.fitbook.entity.user.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -15,11 +17,14 @@ public class RegistrationService {
 
     private final ClientService clientService;
 
+    private final PaymentService paymentService;
+
     @Autowired
-    public RegistrationService(UserService userService, TrainerService trainerService, ClientService clientService) {
+    public RegistrationService(UserService userService, TrainerService trainerService, ClientService clientService, PaymentService paymentService) {
         this.userService = userService;
         this.trainerService = trainerService;
         this.clientService = clientService;
+        this.paymentService = paymentService;
     }
 
     public void register(RegistrationDto registrationDto) {
@@ -35,10 +40,16 @@ public class RegistrationService {
 
     private void createEntity(User user, RegistrationDto registrationDto) {
         if (user.getRole().getName().equals("ROLE_TRAINER")) {
-            trainerService.create(user, registrationDto);
+            Trainer trainer = trainerService.create(user, registrationDto);
+            String stripeId = paymentService.createCustomer(trainer);
+            trainer.setStripeId(stripeId);
+            trainerService.save(trainer);
         }
         if (user.getRole().getName().equals("ROLE_CLIENT")) {
-            clientService.create(user, registrationDto);
+            Client client = clientService.create(user, registrationDto);
+            String stripeId = paymentService.createCustomer(client);
+            client.setStripeId(stripeId);
+            clientService.save(client);
         }
     }
 }
