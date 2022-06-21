@@ -1,5 +1,5 @@
 <template>
-  <li class="border-2 border-darkmint rounded-md">
+  <li class="border border-gray-100 rounded-md shadow-md">
     <div class="h-full p-4 flex flex-col justify-between">
       <div class="flex flex-col">
         <div>
@@ -30,7 +30,7 @@
 
 <script>
 export default {
-  props: ['name', 'desc'],
-  emits: ['editProgram', 'deleteProgram'],
+  props: ["name", "desc"],
+  emits: ["editProgram", "deleteProgram"],
 };
 </script>

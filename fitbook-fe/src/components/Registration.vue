@@ -1,29 +1,5 @@
 <template>
-  <!--
-  This example requires Tailwind CSS v2.0+ 
-  
-  This example requires some changes to your config:
-  
-  ```
-  // tailwind.config.js
-  module.exports = {
-    // ...
-    plugins: [
-      // ...
-      require('@tailwindcss/forms'),
-    ],
-  }
-  ```
--->
-  <!--
-  This example requires updating your template:
-
-  ```
-  <html class="h-full bg-white">
-  <body class="h-full">
-  ```
--->
-  <div class="min-h-screen flex">
+  <div class="min-h-screen flex w-full">
     <div
       class="flex-1 flex flex-col justify-center py-12 px-4 sm:px-6 lg:flex-none lg:px-20 xl:px-24"
     >
@@ -61,15 +37,19 @@
             <div class="mx-auto flex">
               <div
                 @click="isTrainer = true"
-                class="border border-darkmint px-4 py-1 cursor-pointer rounded-tl-md rounded-bl-md"
-                :class="isTrainer ? 'text-white bg-darkmint' : ''"
+                class="border border-indigo-600 px-4 py-1 cursor-pointer rounded-tl-sm rounded-bl-sm"
+                :class="
+                  isTrainer ? 'text-white bg-indigo-600' : 'hover:bg-gray-100'
+                "
               >
                 Trainer
               </div>
               <div
                 @click="isTrainer = false"
-                class="border border-darkmint cursor-pointer px-4 py-1 rounded-tr-md rounded-br-md"
-                :class="isTrainer ? '' : 'text-white bg-darkmint'"
+                class="border border-indigo-600 cursor-pointer px-4 py-1 rounded-tr-sm rounded-br-sm"
+                :class="
+                  isTrainer ? 'hover:bg-gray-100' : 'text-white bg-indigo-600'
+                "
               >
                 Client
               </div>
@@ -211,7 +191,7 @@
       <img
         class="absolute inset-0 h-full w-full object-cover"
         src="@/assets/registration-image.jpg"
-        alt=""
+        alt="registration-image"
       />
     </div>
   </div>

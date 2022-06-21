@@ -14,8 +14,8 @@
         <router-link
           v-if="isAuthenticated && role === 'ROLE_CLIENT'"
           href="#"
-          to="/progress"
-          class="bg-indigo-800 text-white group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+          to="/dashboard"
+          class="text-indigo-100 hover:bg-indigo-600 hover:bg-opacity-75 group flex items-center px-2 py-2 text-sm font-medium rounded-md"
         >
           <!-- Heroicon name: outline/home -->
           <svg
@@ -80,7 +80,7 @@
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
-              d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z"
+              d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"
             />
           </svg>
           <span> Trainers </span>
@@ -90,7 +90,7 @@
           v-if="isAuthenticated && role === 'ROLE_TRAINER'"
           to="/programs"
           href="#"
-          class="text-indigo-100 hover:bg-indigo-600 hover:bg-opacity-75 group flex items-center px-2 py-2 text-sm font-medium rounded-md"
+          class="active:bg-indigo-800 active:text-white text-indigo-100 hover:bg-indigo-600 hover:bg-opacity-75 group flex items-center px-2 py-2 text-sm font-medium rounded-md"
         >
           <!-- Heroicon name: outline/calendar -->
           <svg
@@ -118,20 +118,20 @@
         >
           <!-- Heroicon name: outline/inbox -->
           <svg
-            class="mr-3 flex-shrink-0 h-6 w-6 text-indigo-300"
             xmlns="http://www.w3.org/2000/svg"
+            class="mr-3 flex-shrink-0 h-6 w-6 text-indigo-300"
             fill="none"
             viewBox="0 0 24 24"
-            stroke-width="2"
             stroke="currentColor"
-            aria-hidden="true"
+            stroke-width="2"
           >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
-              d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"
+              d="M8 12h.01M12 12h.01M16 12h.01M21 12c0 4.418-4.03 8-9 8a9.863 9.863 0 01-4.255-.949L3 20l1.395-3.72C3.512 15.042 3 13.574 3 12c0-4.418 4.03-8 9-8s9 3.582 9 8z"
             />
           </svg>
+
           <span> Chat </span>
         </router-link>
 
@@ -141,18 +141,17 @@
         >
           <!-- Heroicon name: outline/chart-bar -->
           <svg
-            class="mr-3 flex-shrink-0 h-6 w-6 text-indigo-300"
             xmlns="http://www.w3.org/2000/svg"
+            class="mr-3 flex-shrink-0 h-6 w-6 text-indigo-300"
             fill="none"
             viewBox="0 0 24 24"
-            stroke-width="2"
             stroke="currentColor"
-            aria-hidden="true"
+            stroke-width="2"
           >
             <path
               stroke-linecap="round"
               stroke-linejoin="round"
-              d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"
+              d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"
             />
           </svg>
           <span> Notifications </span>
@@ -176,7 +175,7 @@
               />
             </div>
             <div class="ml-3">
-              <p class="text-sm font-medium text-white">Tom Cook</p>
+              <p class="text-sm font-medium text-white">{{ user.firstName }}</p>
               <p
                 class="text-xs font-medium text-indigo-200 group-hover:text-white"
               >
@@ -203,87 +202,51 @@
       </svg>
     </div>
   </div>
-  <!-- 
-  <header class="bg-darkmint text-syellow h-20 flex">
-    <nav class="flex w-full justify-center pl-2">
-      <ul class="w-full flex justify-start items-center list-none m-0 p-0">
-        <li v-if="isAuthenticated && role === 'ROLE_CLIENT'">
-          <router-link class="px-4 py-2 mr-4" to="/progress"
-            >Progress</router-link
-          >
-        </li>
-        <li v-if="isAuthenticated && role === 'ROLE_TRAINER'">
-          <router-link class="px-4 py-2 mr-4" to="/clients"
-            >Clients</router-link
-          >
-        </li>
-        <li v-if="isAuthenticated && role === 'ROLE_CLIENT'">
-          <router-link class="px-4 py-2 mr-4" to="/trainers"
-            >Trainers</router-link
-          >
-        </li>
-        <li v-if="isAuthenticated && role === 'ROLE_TRAINER'">
-          <router-link class="px-4 py-2 mr-4" to="/programs"
-            >Programs</router-link
-          >
-        </li>
-        <li v-if="isAuthenticated">
-          <router-link class="px-4 py-2 mr-4" to="/chat">Chat</router-link>
-        </li>
-        <li v-if="isAuthenticated">
-          <router-link class="px-4 py-2 mr-4" to="/my-profile"
-            >My Profile</router-link
-          >
-        </li>
-        <li v-if="!isAuthenticated">
-          <router-link class="px-4 py-2 mr-4" to="/registration"
-            >Registration</router-link
-          >
-        </li>
-        <li v-if="!isAuthenticated">
-          <router-link class="px-4 py-2 mr-4" to="/login">Login</router-link>
-        </li>
-      </ul>
-      <div class="flex items-center">
-        <div v-if="isAuthenticated">
-          <button
-            @click="logout"
-            class="text-white text-sm border-b border-transparent hover:border-white mr-6"
-          >
-            Logout
-          </button>
-        </div>
-        <div
-          v-if="isAuthenticated"
-          @click="$emit('showNotifications')"
-          class="self-center mr-4"
-        >
-          <svg
-            class="cursor-pointer"
-            xmlns="http://www.w3.org/2000/svg"
-            height="36px"
-            viewBox="0 0 24 24"
-            width="36px"
-            fill="#f7dc70"
-          >
-            <path d="M0 0h24v24H0V0z" fill="none" />
-            <path
-              d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"
-            />
-          </svg>
-        </div>
-      </div>
-    </nav>
-  </header> -->
 </template>
 
 <script>
 export default {
   emits: ["showNotifications"],
+  data() {
+    return {
+      user: {},
+    };
+  },
   methods: {
     logout() {
       this.$store.dispatch("auth/logout");
       location.reload();
+    },
+    async getUser() {
+      let url = "";
+      if (this.$store.getters["auth/role"] === "ROLE_TRAINER") {
+        url = `http://localhost:8081/api/trainer/user/${this.$store.getters["auth/userId"]}`;
+      } else {
+        url = `http://localhost:8081/api/client/user/${this.$store.getters["auth/userId"]}`;
+      }
+      const response = await fetch(url, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${this.$store.getters["auth/token"]}`,
+        },
+      });
+      console.log(response);
+      if (response.ok) {
+        const responseData = await response.json();
+        return responseData;
+      } else {
+        console.log("error getting user data");
+        return {
+          firstName: "",
+          lastName: "",
+          birthDate: "",
+          gender: "",
+          height: "",
+          description: "",
+          city: "",
+          neighborhood: "",
+        };
+      }
     },
   },
   computed: {
@@ -294,16 +257,15 @@ export default {
       return this.$store.getters["auth/role"];
     },
   },
+  async mounted() {
+    this.user = await this.getUser();
+  },
 };
 </script>
 
 <style scoped>
-header a:hover,
-header a:focus,
-header a.router-link-active {
-  border-radius: 0.25rem;
-  color: #547d6d;
-  background-color: #f7dc70;
-  padding: 0.5rem, 1rem, 0.5rem, 1rem;
+a.router-link-active {
+  color: #fff;
+  background-color: rgb(55 48 163);
 }
 </style>

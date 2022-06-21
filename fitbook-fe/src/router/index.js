@@ -14,10 +14,10 @@ const routes = [
   {
     path: '/',
     redirect:
-      store.getters['auth/role'] === 'ROLE_TRAINER' ? '/clients' : '/progress',
+      store.getters['auth/role'] === 'ROLE_TRAINER' ? '/clients' : '/dashboard',
   },
   {
-    path: '/progress',
+    path: '/dashboard',
     component: Progress,
     meta: {
       requiresAuth: true,
@@ -95,9 +95,9 @@ router.beforeEach((to, _, next) => {
   } else if (to.meta.requiresUnauth && store.getters['auth/isAuthenticated']) {
     console.log(store.getters['auth/role']);
     if (store.getters['auth/role'] === 'ROLE_TRAINER') {
-      next('/progress');
+      next('/dashboard');
     } else {
-      next('/progress');
+      next('/dashboard');
     }
   } else {
     next();

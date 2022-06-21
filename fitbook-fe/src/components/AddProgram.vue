@@ -1,7 +1,7 @@
 <template>
   <div class="absolute left-0 top-10 w-full my-auto z-20">
-    <div class="w-9/12 mx-auto px-20 py-5 bg-white rounded-md">
-      <form class="flex flex-col items-center justify-center">
+    <div class="w-9/12 mx-auto px-10 py-5 bg-white rounded-md">
+      <!-- <form class="flex flex-col items-center justify-center">
         <div>
           <input
             class="px-4 py-1 border-2 border-black rounded-md"
@@ -457,19 +457,80 @@
             Cancel
           </button>
         </div>
-      </form>
+      </form> -->
+      <add-program-name
+        :class="step == 0 ? '' : 'hidden'"
+        @nextStep="handleNextStep"
+      ></add-program-name>
+      <add-program-content
+        :class="step == 1 ? '' : 'hidden'"
+        @nextStep="handleNextStep"
+      ></add-program-content>
+      <div class="mt-4">
+        <nav aria-label="Progress">
+          <ol role="list" class="space-y-4 md:flex md:space-y-0 md:space-x-8">
+            <li class="md:flex-1">
+              <!-- Completed Step -->
+              <a
+                class="group pl-4 py-2 flex flex-col border-l-4 border-indigo-600 md:pl-0 md:pt-4 md:pb-0 md:border-l-0 md:border-t-4"
+              >
+                <span
+                  class="text-xs text-indigo-600 font-semibold tracking-wide uppercase group-hover:text-indigo-800"
+                  >Step 1</span
+                >
+                <span class="text-sm font-medium">Name and Description</span>
+              </a>
+            </li>
+
+            <li class="md:flex-1">
+              <!-- Current Step -->
+              <a
+                :class="step >= 1 ? 'border-indigo-600' : 'border-gray-200'"
+                class="pl-4 py-2 flex flex-col border-l-4 md:pl-0 md:pt-4 md:pb-0 md:border-l-0 md:border-t-4"
+                aria-current="step"
+              >
+                <span
+                  :class="step >= 1 ? 'text-indigo-600' : 'text-gray-500'"
+                  class="text-xs font-semibold tracking-wide uppercase"
+                  >Step 2</span
+                >
+                <span class="text-sm font-medium">Program</span>
+              </a>
+            </li>
+
+            <li class="md:flex-1">
+              <!-- Upcoming Step -->
+              <a
+                :class="step == 2 ? 'border-indigo-600' : 'border-gray-200'"
+                class="group pl-4 py-2 flex flex-col border-l-4 md:pl-0 md:pt-4 md:pb-0 md:border-l-0 md:border-t-4"
+              >
+                <span
+                  :class="step == 2 ? 'text-indigo-600' : 'text-gray-500'"
+                  class="text-xs font-semibold tracking-wide uppercase group-hover:text-gray-700"
+                  >Step 3</span
+                >
+                <span class="text-sm font-medium">Preview</span>
+              </a>
+            </li>
+          </ol>
+        </nav>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import AddProgramName from "./AddProgramName.vue";
+import AddProgramContent from "./AddProgramContent.vue";
 export default {
-  emits: ['cancelAddProgram', 'saveAddProgram'],
+  emits: ["cancelAddProgram", "saveAddProgram"],
+  components: { AddProgramName, AddProgramContent },
   data() {
     return {
+      step: 0,
       exercises: [],
-      programName: '',
-      programDesc: '',
+      programName: "",
+      programDesc: "",
       mondayId: 0,
       tuesdayId: 0,
       wednesdayId: 0,
@@ -497,11 +558,14 @@ export default {
     this.exercises = await this.getExercises();
   },
   methods: {
+    handleNextStep() {
+      this.step++;
+    },
     async getExercises() {
       const response = await fetch(`http://localhost:8081/api/exercise`, {
-        method: 'GET',
+        method: "GET",
         headers: {
-          Authorization: `Bearer ${this.$store.getters['auth/token']}`,
+          Authorization: `Bearer ${this.$store.getters["auth/token"]}`,
         },
       });
       if (response.ok) {
@@ -509,7 +573,7 @@ export default {
 
         return responseData;
       } else {
-        console.log('error getting user data');
+        console.log("error getting user data");
       }
     },
     async submitAddProgram() {
@@ -552,13 +616,13 @@ export default {
       }
 
       let arr = [
-        { weekDay: 'MONDAY', exerciseUnits: mEx },
-        { weekDay: 'TUESDAY', exerciseUnits: tuEx },
-        { weekDay: 'WEDNESDAY', exerciseUnits: wEx },
-        { weekDay: 'THURSDAY', exerciseUnits: thEx },
-        { weekDay: 'FRIDAY', exerciseUnits: fEx },
-        { weekDay: 'SATURDAY', exerciseUnits: saEx },
-        { weekDay: 'SUNDAY', exerciseUnits: suEx },
+        { weekDay: "MONDAY", exerciseUnits: mEx },
+        { weekDay: "TUESDAY", exerciseUnits: tuEx },
+        { weekDay: "WEDNESDAY", exerciseUnits: wEx },
+        { weekDay: "THURSDAY", exerciseUnits: thEx },
+        { weekDay: "FRIDAY", exerciseUnits: fEx },
+        { weekDay: "SATURDAY", exerciseUnits: saEx },
+        { weekDay: "SUNDAY", exerciseUnits: suEx },
       ];
 
       if (this.isMonday) {
@@ -606,13 +670,13 @@ export default {
       }
       console.log(JSON.stringify({ ...body }));
       const response = await fetch(
-        `http://localhost:8081/api/program/user/${this.$store.getters['auth/userId']}`,
+        `http://localhost:8081/api/program/user/${this.$store.getters["auth/userId"]}`,
         {
-          method: 'POST',
-          mode: 'cors',
+          method: "POST",
+          mode: "cors",
           headers: {
-            Authorization: `Bearer ${this.$store.getters['auth/token']}`,
-            'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.$store.getters["auth/token"]}`,
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             ...body,
@@ -624,7 +688,7 @@ export default {
       if (response.ok) {
         location.reload();
       } else {
-        console.log('error getting user data');
+        console.log("error getting user data");
       }
     },
     addEx() {
@@ -698,24 +762,24 @@ export default {
     },
     getDay() {
       if (this.isMonday) {
-        return 'Monday';
+        return "Monday";
       } else if (this.isTuesday) {
-        return 'Tuesday';
+        return "Tuesday";
       } else if (this.isWednesday) {
-        return 'Wednesday';
+        return "Wednesday";
       } else if (this.isThursday) {
-        return 'Thursday';
+        return "Thursday";
       } else if (this.isFriday) {
-        return 'Friday';
+        return "Friday";
       } else if (this.isSaturday) {
-        return 'Saturday';
+        return "Saturday";
       } else {
-        return 'Sunday';
+        return "Sunday";
       }
     },
     changeDay(day) {
       switch (day) {
-        case 'Monday':
+        case "Monday":
           this.isMonday = true;
           this.isTuesday = false;
           this.isWednesday = false;
@@ -724,7 +788,7 @@ export default {
           this.isSaturday = false;
           this.isSunday = false;
           break;
-        case 'Tuesday':
+        case "Tuesday":
           this.isMonday = false;
           this.isTuesday = true;
           this.isWednesday = false;
@@ -733,7 +797,7 @@ export default {
           this.isSaturday = false;
           this.isSunday = false;
           break;
-        case 'Wednesday':
+        case "Wednesday":
           this.isMonday = false;
           this.isTuesday = false;
           this.isWednesday = true;
@@ -742,7 +806,7 @@ export default {
           this.isSaturday = false;
           this.isSunday = false;
           break;
-        case 'Thursday':
+        case "Thursday":
           this.isMonday = false;
           this.isTuesday = false;
           this.isWednesday = false;
@@ -751,7 +815,7 @@ export default {
           this.isSaturday = false;
           this.isSunday = false;
           break;
-        case 'Friday':
+        case "Friday":
           this.isMonday = false;
           this.isTuesday = false;
           this.isWednesday = false;
@@ -760,7 +824,7 @@ export default {
           this.isSaturday = false;
           this.isSunday = false;
           break;
-        case 'Saturday':
+        case "Saturday":
           this.isMonday = false;
           this.isTuesday = false;
           this.isWednesday = false;
@@ -769,7 +833,7 @@ export default {
           this.isSaturday = true;
           this.isSunday = false;
           break;
-        case 'Sunday':
+        case "Sunday":
           this.isMonday = false;
           this.isTuesday = false;
           this.isWednesday = false;

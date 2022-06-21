@@ -1,5 +1,5 @@
 <template>
-  <div class="relative">
+  <div class="relative w-full">
     <div v-if="isSuccessModalOpen" class="rounded-md bg-green-50 p-4">
       <div class="flex">
         <div class="flex-shrink-0">
@@ -159,7 +159,7 @@ export default {
               if (this.$store.getters["auth/role"] === "ROLE_TRAINER") {
                 this.$router.push({ path: `/clients` });
               } else {
-                this.$router.push({ path: `/progress` });
+                this.$router.push({ path: `/dashboard` });
               }
             } else {
               this.isModal = true;

@@ -1,10 +1,13 @@
 <template>
-  <div class="w-full flex">
-    <div class="w-3/12 px-4">
-      <div class="w-full mt-8">
-        <form @submit.prevent="submitSearchForm" action="">
-          <h4 class="text-lg mb-2">Filter By:</h4>
-          <div class="relative mb-4">
+  <div class="w-full">
+    <div class="w-10/12 mx-auto px-4">
+      <div class="w-10/12 mx-auto mt-8">
+        <h4 class="text-lg mb-2">Filter By:</h4>
+        <form
+          @submit.prevent="submitSearchForm"
+          class="flex flex-col items-start"
+        >
+          <div class="self-center w-full relative mb-4">
             <svg
               class="absolute left-2 top-0 bottom-0 my-auto"
               xmlns="http://www.w3.org/2000/svg"
@@ -66,14 +69,32 @@
             <label for="genderFilterAll">All</label>
           </div>
           <input
-            class="w-max mt-4 cursor-pointer transition-all px-4 py-1 text-lg rounded-md bg-mint text-syellow hover:bg-darkmint"
+            class="self-start w-max mt-2 cursor-pointer underline bg-transparent"
             type="submit"
             value="Filter"
           />
         </form>
       </div>
     </div>
-    <div class="w-7/12 ml-10 mt-8">
+    <!-- This example requires Tailwind CSS v2.0+ -->
+    <div
+      class="mt-5 w-10/12 mx-auto bg-white shadow overflow-hidden sm:rounded-md"
+    >
+      <ul role="list" class="divide-y divide-gray-200">
+        <trainer-card
+          @sendRequest="sendRequest"
+          v-for="trainer in trainers"
+          :key="trainer.id"
+          :id="trainer.id"
+          :name="trainer.firstName + ' ' + trainer.lastName"
+          :bDate="trainer.birthDate"
+          :gender="trainer.gender"
+          :desc="trainer.description"
+        ></trainer-card>
+      </ul>
+    </div>
+
+    <!-- <div class="w-7/12 ml-10 mt-8">
       <ul class="w-full">
         <trainer-card
           @sendRequest="sendRequest"
@@ -87,12 +108,12 @@
           class="w-full h-44 border border-darkmint rounded-md"
         ></trainer-card>
       </ul>
-    </div>
+    </div> -->
   </div>
 </template>
 
 <script>
-import TrainerCard from '../components/TrainerCard.vue';
+import TrainerCard from "../components/TrainerCard.vue";
 
 export default {
   components: { TrainerCard },
@@ -109,11 +130,11 @@ export default {
       const response = await fetch(
         `http://localhost:8081/api/trainer?page=0&size=10`,
         {
-          method: 'POST',
-          mode: 'cors',
+          method: "POST",
+          mode: "cors",
           headers: {
-            Authorization: `Bearer ${this.$store.getters['auth/token']}`,
-            'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.$store.getters["auth/token"]}`,
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({}),
         }
@@ -122,7 +143,7 @@ export default {
       if (response.ok) {
         return await response.json();
       } else {
-        console.log('error getting trainers data');
+        console.log("error getting trainers data");
         return [];
       }
     },
@@ -130,17 +151,17 @@ export default {
       const response = await fetch(
         `http://localhost:8081/api/trainer?page=0&size=10`,
         {
-          method: 'POST',
-          mode: 'cors',
+          method: "POST",
+          mode: "cors",
           headers: {
-            Authorization: `Bearer ${this.$store.getters['auth/token']}`,
-            'Content-Type': 'application/json',
+            Authorization: `Bearer ${this.$store.getters["auth/token"]}`,
+            "Content-Type": "application/json",
           },
           body: JSON.stringify({
             name: e.target.search.value,
             city: e.target.addressFilter.value,
             gender:
-              e.target.genderFilter.value == 'All'
+              e.target.genderFilter.value == "All"
                 ? null
                 : e.target.genderFilter.value.toUpperCase(),
           }),
@@ -149,25 +170,25 @@ export default {
       if (response.ok) {
         this.trainers = await response.json();
       } else {
-        console.log('error getting trainers data');
+        console.log("error getting trainers data");
         this.trainers = [];
       }
     },
     async sendRequest(id) {
       const response = await fetch(
-        `http://localhost:8081/api/trainer/${id}/request/user/${this.$store.getters['auth/userId']}`,
+        `http://localhost:8081/api/trainer/${id}/request/user/${this.$store.getters["auth/userId"]}`,
         {
-          method: 'GET',
+          method: "GET",
 
           headers: {
-            Authorization: `Bearer ${this.$store.getters['auth/token']}`,
+            Authorization: `Bearer ${this.$store.getters["auth/token"]}`,
           },
         }
       );
       if (response.ok) {
-        alert('Request sent Successfully.');
+        alert("Request sent Successfully.");
       } else {
-        alert('Failure. Try again.');
+        alert("Failure. Try again.");
       }
     },
   },
