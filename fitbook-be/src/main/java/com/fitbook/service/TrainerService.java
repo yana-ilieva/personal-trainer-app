@@ -136,14 +136,14 @@ public class TrainerService {
         return trainerOpt.get();
     }
 
-    public Long create(User user, RegistrationDto registrationDto) {
+    public Trainer create(User user, RegistrationDto registrationDto) {
         Trainer trainer = new Trainer();
         trainer.setUser(user);
         trainer.setFirstName(registrationDto.getFirstName());
         trainer.setLastName(registrationDto.getLastName());
         trainer.setCity(registrationDto.getCity());
         trainer.setGender(registrationDto.getGender());
-        return trainerRepository.save(trainer).getId();
+        return trainerRepository.save(trainer);
     }
 
     public TrainerDto update(Long id, TrainerDto trainerDto) {

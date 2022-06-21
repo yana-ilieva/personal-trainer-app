@@ -95,13 +95,13 @@ public class ClientService {
         }
     }
 
-    public Long create(User user, RegistrationDto registrationDto) {
+    public Client create(User user, RegistrationDto registrationDto) {
         Client client = new Client();
         client.setUser(user);
         client.setFirstName(registrationDto.getFirstName());
         client.setLastName(registrationDto.getLastName());
         client.setGender(registrationDto.getGender());
-        return clientRepository.save(client).getId();
+        return clientRepository.save(client);
     }
 
     public Client update(Client client) {
@@ -171,12 +171,17 @@ public class ClientService {
     }
 
     public List<ChatDto> getChats(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
+        String email = (String) authentication.getPrincipal();
+        User user = userService.findByEmail(email);
         Client client = clientRepository.findByUser(user);
         if (client == null) {
             throw new ResourceNotFoundException(String.format("Client with user id %d not found", user.getId()));
         }
 
         return client.getChats().stream().map(mapper::map).collect(Collectors.toList());
+    }
+
+    public Client save(Client client) {
+        return clientRepository.save(client);
     }
 }
