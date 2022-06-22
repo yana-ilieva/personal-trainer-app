@@ -14,6 +14,7 @@ import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
@@ -166,7 +167,7 @@ public class ClientService {
 
 
     public List<ProgressDto> getProgress(Long id, int page, int size) {
-        return clientRepository.getProgress(id, PageRequest.of(page, size)).stream()
+        return clientRepository.getProgress(id, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdTimestamp"))).stream()
                 .map(mapper::map).collect(Collectors.toList());
     }
 

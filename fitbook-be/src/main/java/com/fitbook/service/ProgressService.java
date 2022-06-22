@@ -33,7 +33,9 @@ public class ProgressService {
         progress.setClient(clientService.findById(progressDto.getClientId()));
         Integer height = progress.getClient().getHeight();
         if (height != null && progress.getWeight() != null) {
-            progress.setBmi(progressDto.getWeight() / (Math.pow(height, 2)));
+            double meters = (double) height / 100;
+            double bmi = progressDto.getWeight() / (Math.pow(meters, 2));
+            progress.setBmi(Math.round(bmi * 100d) / 100d);
         }
 
         return mapper.map(progressRepository.save(progress));
