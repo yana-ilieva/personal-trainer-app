@@ -27,20 +27,12 @@ public class Progress {
     @JoinColumn(name = "client_id", referencedColumnName = "id")
     private Client client;
 
+    @Column(name = "weight")
     private Double weight;
 
-    @Column(name = "chest_measurement")
-    private Double chestMeasurement;
+    @Column(name = "calories_burned")
+    private Long caloriesBurned;
 
-    @Column(name = "waist_measurement")
-    private Double waistMeasurement;
-
-    @Column(name = "hip_measurement")
-    private Double hipMeasurement;
-
-    @Column(name = "thigh_measurement")
-    private Double thighMeasurement;
-
-    @Column(name = "upper_arm_measurement")
-    private Double upperArmMeasurement;
+    @Column(name = "bmi")
+    private Double bmi;
 }

@@ -19,13 +19,7 @@ public class ProgressDto {
 
     private Double weight;
 
-    private Double chestMeasurement;
+    private Long caloriesBurned;
 
-    private Double waistMeasurement;
-
-    private Double hipMeasurement;
-
-    private Double thighMeasurement;
-
-    private Double upperArmMeasurement;
+    private Double bmi;
 }

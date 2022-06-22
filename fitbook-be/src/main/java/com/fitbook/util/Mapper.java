@@ -164,11 +164,8 @@ public class Mapper {
         progressDto.setClientId(progress.getClient().getId());
         progressDto.setCreatedTimestamp(progress.getCreatedTimestamp());
         progressDto.setWeight(progress.getWeight());
-        progressDto.setChestMeasurement(progress.getChestMeasurement());
-        progressDto.setHipMeasurement(progress.getHipMeasurement());
-        progressDto.setThighMeasurement(progress.getThighMeasurement());
-        progressDto.setWaistMeasurement(progress.getWaistMeasurement());
-        progressDto.setUpperArmMeasurement(progress.getUpperArmMeasurement());
+        progressDto.setCaloriesBurned(progress.getCaloriesBurned());
+        progressDto.setBmi(progress.getBmi());
         return progressDto;
     }
 
@@ -176,21 +173,15 @@ public class Mapper {
         Progress progress = new Progress();
         progress.setId(progressDto.getId());
         progress.setWeight(progressDto.getWeight());
-        progress.setChestMeasurement(progressDto.getChestMeasurement());
-        progress.setHipMeasurement(progressDto.getHipMeasurement());
-        progress.setThighMeasurement(progressDto.getThighMeasurement());
-        progress.setWaistMeasurement(progressDto.getWaistMeasurement());
-        progress.setUpperArmMeasurement(progressDto.getUpperArmMeasurement());
+        progress.setCaloriesBurned(progressDto.getCaloriesBurned());
+        progress.setBmi(progressDto.getBmi());
         return progress;
     }
 
     public void map(ProgressDto progressDto, Progress progress) {
         progress.setWeight(progressDto.getWeight());
-        progress.setChestMeasurement(progressDto.getChestMeasurement());
-        progress.setHipMeasurement(progressDto.getHipMeasurement());
-        progress.setThighMeasurement(progressDto.getThighMeasurement());
-        progress.setWaistMeasurement(progressDto.getWaistMeasurement());
-        progress.setUpperArmMeasurement(progressDto.getUpperArmMeasurement());
+        progress.setCaloriesBurned(progressDto.getCaloriesBurned());
+        progress.setBmi(progressDto.getBmi());
     }
 
     public void map(ProgramDto programDto, Program program) {
