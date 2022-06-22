@@ -63,7 +63,7 @@
                     <ul role="list" class="divide-y divide-gray-200">
                       <li class="py-2">
                         <input
-                          :value="editUser.firstName"
+                          v-model="editUser.firstName"
                           class="appearance-none rounded-none relative block w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 border border-transparent focus:border-indigo-500 focus:z-10 sm:text-sm"
                           type="text"
                           name="firstNameClient"
@@ -73,7 +73,7 @@
                       </li>
                       <li class="py-2">
                         <input
-                          :value="editUser.lastName"
+                          v-model="editUser.lastName"
                           class="appearance-none rounded-none relative block w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 border border-transparent focus:border-indigo-500 focus:z-10 sm:text-sm"
                           type="text"
                           name="lastNameClient"
@@ -84,7 +84,7 @@
                       <li class="py-2">
                         <input
                           @change="this.isBdateChanged = true"
-                          :value="editUser.birthDate"
+                          v-model="editUser.birthDate"
                           class="appearance-none rounded-none relative block w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 border border-transparent focus:border-indigo-500 focus:z-10 sm:text-sm"
                           type="text"
                           name="birthDateClient"
@@ -94,7 +94,7 @@
                       </li>
                       <li class="py-2">
                         <input
-                          :value="editUser.height"
+                          v-model="editUser.height"
                           class="appearance-none rounded-none relative block w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 border border-transparent focus:border-indigo-500 focus:z-10 sm:text-sm"
                           type="text"
                           name="heightClient"
@@ -132,7 +132,7 @@
                       </li>
                       <li class="py-2">
                         <textarea
-                          :value="editUser.description"
+                          v-model="editUser.description"
                           class="appearance-none rounded-none relative block w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 border border-transparent focus:border-indigo-500 focus:z-10 sm:text-sm"
                           type="text"
                           name="descClient"
@@ -149,7 +149,7 @@
                     <ul role="list" class="divide-y divide-gray-200">
                       <li class="py-2">
                         <input
-                          :value="editUser.firstName"
+                          v-model="editUser.firstName"
                           class="appearance-none rounded-none relative block w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 border border-transparent focus:border-indigo-500 focus:z-10 sm:text-sm"
                           type="text"
                           name="firstNameClient"
@@ -159,7 +159,7 @@
                       </li>
                       <li class="py-2">
                         <input
-                          :value="editUser.lastName"
+                          v-model="editUser.lastName"
                           class="appearance-none rounded-none relative block w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 border border-transparent focus:border-indigo-500 focus:z-10 sm:text-sm"
                           type="text"
                           name="lastNameClient"
@@ -170,7 +170,7 @@
                       <li class="py-2">
                         <input
                           @change="this.isBdateChanged = true"
-                          :value="editUser.birthDate"
+                          v-model="editUser.birthDate"
                           class="appearance-none rounded-none relative block w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 border border-transparent focus:border-indigo-500 focus:z-10 sm:text-sm"
                           type="text"
                           name="birthDateClient"
@@ -180,7 +180,7 @@
                       </li>
                       <li class="py-2">
                         <input
-                          :value="editUser.city"
+                          v-model="editUser.city"
                           class="appearance-none rounded-none relative block w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 border border-transparent focus:border-indigo-500 focus:z-10 sm:text-sm"
                           type="text"
                           name="cityTrainer"
@@ -190,7 +190,7 @@
                       </li>
                       <li class="py-2">
                         <input
-                          :value="editUser.neighborhood"
+                          v-model="editUser.neighborhood"
                           class="appearance-none rounded-none relative block w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 border border-transparent focus:border-indigo-500 focus:z-10 sm:text-sm"
                           type="text"
                           name="neighborhood"
@@ -228,7 +228,7 @@
                       </li>
                       <li class="py-2">
                         <textarea
-                          :value="editUser.description"
+                          v-model="editUser.description"
                           class="appearance-none rounded-none relative block w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 border border-transparent focus:border-indigo-500 focus:z-10 sm:text-sm"
                           type="text"
                           name="descClient"
@@ -243,7 +243,7 @@
                 </div>
                 <div class="flex justify-center">
                   <button
-                    @click="saveEdit"
+                    @click="submitEditUser"
                     type="button"
                     class="inline-flex mr-3 justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-indigo-600 text-base font-medium text-white hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 sm:col-start-2 sm:text-sm"
                   >
@@ -389,34 +389,34 @@ export default {
     async submitEditUser(e) {
       let url = "";
       let body = {};
-      console.log(e.target.birthDateTrainer.value);
+      console.log("editUser: ", this.editUser);
       if (this.$store.getters["auth/role"] === "ROLE_TRAINER") {
         url = `http://localhost:8081/api/trainer/${this.user.id}`;
         body = {
-          firstName: e.target.firstNameTrainer.value,
-          lastName: e.target.lastNameTrainer.value,
-          gender: e.target.genderTrainer.value,
+          firstName: this.editUser.firstName,
+          lastName: this.editUser.lastName,
+          gender: this.editUser.gender.toUpperCase(),
           birthDate: this.isBdateChanged
-            ? this.parseDate(e.target.birthDateTrainer.value)
-            : e.target.birthDateTrainer.value,
-          description: e.target.descTrainer.value,
-          city: e.target.cityTrainer.value,
-          neighborhood: e.target.neighTrainer.value,
+            ? this.parseDate(this.editUser.birthDate)
+            : this.editUser.birthDate,
+          description: this.editUser.description,
+          city: this.editUser.city,
+          neighborhood: this.editUser.neighborhood,
         };
       } else {
         url = `http://localhost:8081/api/client/${this.user.id}`;
         body = {
-          firstName: e.target.firstNameClient.value,
-          lastName: e.target.lastNameClient.value,
-          gender: e.target.genderClient.value,
+          firstName: this.editUser.firstName,
+          lastName: this.editUser.lastName,
+          gender: this.editUser.gender.toUpperCase(),
           birthDate: this.isBdateChanged
-            ? this.parseDate(e.target.birthDateTrainer.value)
-            : e.target.birthDateTrainer.value,
-          description: e.target.descClient.value,
-          height: +e.target.heightClient.value,
+            ? this.parseDate(this.editUser.birthDate)
+            : this.editUser.birthDate,
+          description: this.editUser.description,
+          height: this.editUser.height,
         };
       }
-      console.log(body);
+      console.log("edit user body: ", body);
       const response = await fetch(url, {
         method: "PUT",
         mode: "cors",
