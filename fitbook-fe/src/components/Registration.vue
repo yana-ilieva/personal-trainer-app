@@ -211,7 +211,6 @@ export default {
         lastName: "",
         gender: "male",
         city: "",
-        role: "",
         email: "",
         password: "",
       },
@@ -244,41 +243,26 @@ export default {
           }, 3000);
           return;
         }
-        try {
-          await this.$store
-            .dispatch("auth/signup", {
-              email: this.user.email,
-              password: this.user.password,
-              role: role,
-              firstName: this.user.firstName,
-              lastName: this.user.lastName,
-              city: this.user.city,
-              gender: this.user.gender.toUpperCase(),
-            })
-            .then((res) => {
-              if (res) {
-                this.isModal = true;
-                this.modalText = "Registration successfull.";
-                this.isModalError = false;
-                setTimeout(() => {
-                  this.isModal = false;
-                  this.modalText = "";
-                }, 3000);
-              } else {
-                this.isModal = true;
-                this.modalText = "Registration successfull.";
-                this.isModalError = true;
-                setTimeout(() => {
-                  this.isModal = false;
-                  this.modalText = "";
-                  this.isModalError = false;
-                }, 3000);
-              }
-            });
-          //const redirectUrl = this.$route.query.redirect || 'coaches';
-          //this.$router.replace(`/${redirectUrl}`);
-        } catch (err) {
-          console.log(err);
+        const res = await this.$store.dispatch("auth/signup", {
+          email: this.user.email,
+          password: this.user.password,
+          role: role,
+          firstName: this.user.firstName,
+          lastName: this.user.lastName,
+          city: this.user.city,
+          gender: this.user.gender.toUpperCase(),
+        });
+        if (res) {
+          this.$router.push({ path: "login", query: { registration: true } });
+        } else {
+          this.isModal = true;
+          this.modalText = "Registration failed.";
+          this.isModalError = true;
+          setTimeout(() => {
+            this.isModal = false;
+            this.modalText = "";
+            this.isModalError = false;
+          }, 3000);
         }
       } else {
         if (
@@ -299,32 +283,26 @@ export default {
           }, 3000);
           return;
         }
-        try {
-          await this.$store
-            .dispatch("auth/signup", {
-              email: this.user.email,
-              password: this.user.password,
-              role: role,
-              firstName: this.user.firstName,
-              lastName: this.user.lastName,
-              gender: this.user.gender.toUpperCase(),
-            })
-            .then((res) => {
-              if (res) {
-                this.$router.push({ path: "/login" });
-              } else {
-                this.isModal = true;
-                this.modalText = "Registration failed.";
-                this.isModalError = true;
-                setTimeout(() => {
-                  this.isModal = false;
-                  this.modalText = "";
-                  this.isModalError = false;
-                }, 3000);
-              }
-            });
-        } catch (err) {
-          console.log(err);
+        const res = await this.$store.dispatch("auth/signup", {
+          email: this.user.email,
+          password: this.user.password,
+          role: role,
+          firstName: this.user.firstName,
+          lastName: this.user.lastName,
+          city: this.user.city,
+          gender: this.user.gender.toUpperCase(),
+        });
+        if (res) {
+          this.$router.push({ path: "login", query: { registration: true } });
+        } else {
+          this.isModal = true;
+          this.modalText = "Registration failed.";
+          this.isModalError = true;
+          setTimeout(() => {
+            this.isModal = false;
+            this.modalText = "";
+            this.isModalError = false;
+          }, 3000);
         }
       }
     },

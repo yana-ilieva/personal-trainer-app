@@ -13,6 +13,7 @@
     "chartjs": "^0.3.24",
     "core-js": "^3.6.5",
     "flowbite": "^1.4.7",
+    "flowbite-datepicker": "^1.2.1",
     "postcss": "^7.0.39",
     "sockjs-client": "^1.5.2",
     "tailwindcss": "npm:@tailwindcss/postcss7-compat@^2.2.17",

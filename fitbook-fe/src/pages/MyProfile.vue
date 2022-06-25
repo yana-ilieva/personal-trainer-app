@@ -7,16 +7,6 @@
       role="dialog"
       aria-modal="true"
     >
-      <!--
-    Background backdrop, show/hide based on modal state.
-
-    Entering: "ease-out duration-300"
-      From: "opacity-0"
-      To: "opacity-100"
-    Leaving: "ease-in duration-200"
-      From: "opacity-100"
-      To: "opacity-0"
-  -->
       <div
         class="fixed inset-0 bg-gray-500 bg-opacity-75 transition-opacity"
       ></div>
@@ -25,16 +15,6 @@
         <div
           class="flex items-end sm:items-center justify-center min-h-full p-4 text-center sm:p-0"
         >
-          <!--
-        Modal panel, show/hide based on modal state.
-
-        Entering: "ease-out duration-300"
-          From: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-          To: "opacity-100 translate-y-0 sm:scale-100"
-        Leaving: "ease-in duration-200"
-          From: "opacity-100 translate-y-0 sm:scale-100"
-          To: "opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
-      -->
           <div class="bg-white shadow sm:rounded-lg z-20 w-72">
             <div class="px-4 py-5 sm:p-6">
               <h3 class="text-lg leading-6 font-medium text-gray-900">
@@ -82,15 +62,30 @@
                         />
                       </li>
                       <li class="py-2">
-                        <input
-                          @change="this.isBdateChanged = true"
-                          v-model="editUser.birthDate"
-                          class="appearance-none rounded-none relative block w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 border border-transparent focus:border-indigo-500 focus:z-10 sm:text-sm"
-                          type="text"
-                          name="birthDateClient"
-                          id="birthDateClient"
-                          placeholder="Birth Date"
-                        />
+                        <div class="relative">
+                          <div
+                            class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+                          >
+                            <svg
+                              class="w-5 h-5 text-gray-500 dark:text-gray-400"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                fill-rule="evenodd"
+                                d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                                clip-rule="evenodd"
+                              ></path>
+                            </svg>
+                          </div>
+                          <input
+                            datepicker
+                            type="text"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Select date"
+                          />
+                        </div>
                       </li>
                       <li class="py-2">
                         <input
@@ -168,15 +163,30 @@
                         />
                       </li>
                       <li class="py-2">
-                        <input
-                          @change="this.isBdateChanged = true"
-                          v-model="editUser.birthDate"
-                          class="appearance-none rounded-none relative block w-full px-3 py-2 placeholder-gray-500 text-gray-900 focus:outline-none focus:ring-indigo-500 border border-transparent focus:border-indigo-500 focus:z-10 sm:text-sm"
-                          type="text"
-                          name="birthDateClient"
-                          id="birthDateClient"
-                          placeholder="Birth Date"
-                        />
+                        <div class="relative">
+                          <div
+                            class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none"
+                          >
+                            <svg
+                              class="w-5 h-5 text-gray-500 dark:text-gray-400"
+                              fill="currentColor"
+                              viewBox="0 0 20 20"
+                              xmlns="http://www.w3.org/2000/svg"
+                            >
+                              <path
+                                fill-rule="evenodd"
+                                d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"
+                                clip-rule="evenodd"
+                              ></path>
+                            </svg>
+                          </div>
+                          <input
+                            datepicker
+                            type="text"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full pl-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                            placeholder="Select date"
+                          />
+                        </div>
                       </li>
                       <li class="py-2">
                         <input
