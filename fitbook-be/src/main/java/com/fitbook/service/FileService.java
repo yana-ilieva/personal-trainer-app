@@ -43,6 +43,11 @@ public class FileService {
         return mapper.mapFile(user);
     }
 
+    public FileDto getFileInfo(Authentication authentication) {
+        User user = userService.findByEmail((String) authentication.getPrincipal());
+        return mapper.mapFile(user);
+    }
+
     public void get(Long userId, ServletOutputStream outputStream) {
         User user = userService.findById(userId);
 

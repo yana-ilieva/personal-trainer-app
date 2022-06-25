@@ -26,23 +26,23 @@ public class FileController {
         this.fileService = fileService;
     }
 
-    @GetMapping("/note_user/{id}")
-    public Boolean get(@PathVariable("id") Long noteUserId, HttpServletResponse response) throws IOException {
-        FileDto fileInfo = fileService.getFileInfo(noteUserId);
+    @GetMapping("/user/{id}")
+    public Boolean get(@PathVariable("id") Long userId, HttpServletResponse response) throws IOException {
+        FileDto fileInfo = fileService.getFileInfo(userId);
         if (fileInfo != null) {
             response.setContentType(fileInfo.getMimeType());
             response.setHeader("Content-Disposition", "inline; filename=\"" + fileInfo.getName() + "\"");
 
             ServletOutputStream outputStream = response.getOutputStream();
-            fileService.get(noteUserId, outputStream);
+            fileService.get(userId, outputStream);
             return true;
         }
         return false;
     }
 
     @GetMapping
-    public Boolean get(HttpServletResponse response) throws IOException {
-        FileDto fileInfo = fileService.getFileInfo(null);
+    public Boolean get(HttpServletResponse response, Authentication authentication) throws IOException {
+        FileDto fileInfo = fileService.getFileInfo(authentication);
         if (fileInfo != null) {
             response.setContentType(fileInfo.getMimeType());
             response.setHeader("Content-Disposition", "inline; filename=\"" + fileInfo.getName() + "\"");
