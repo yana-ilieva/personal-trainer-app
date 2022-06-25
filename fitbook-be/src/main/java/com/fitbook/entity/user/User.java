@@ -1,5 +1,6 @@
 package com.fitbook.entity.user;
 
+import com.fitbook.entity.File;
 import lombok.*;
 
 import javax.persistence.*;
@@ -16,6 +17,7 @@ public class User {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
+    @Column(name = "email", unique = true)
     private String email;
 
     private String username;
@@ -27,5 +29,7 @@ public class User {
 
     private Boolean deleted;
 
-    private String stripeId;
+    @OneToOne(cascade = CascadeType.ALL)
+    @JoinColumn(name = "profile_picture_id", referencedColumnName = "id")
+    private File profilePicture;
 }

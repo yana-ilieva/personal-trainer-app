@@ -8,6 +8,7 @@ import com.fitbook.entity.client.Progress;
 import com.fitbook.entity.notification.Notification;
 import com.fitbook.entity.program.*;
 import com.fitbook.entity.trainer.Trainer;
+import com.fitbook.entity.user.User;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
@@ -298,5 +299,17 @@ public class Mapper {
         dto.setTrainerName(notification.getTrainer().getFirstName() + " " + notification.getTrainer().getLastName());
         dto.setClientName(notification.getClient().getFirstName() + " " + notification.getClient().getLastName());
         return dto;
+    }
+
+    public FileDto mapFile(User user) {
+        if (user == null) {
+            return null;
+        }
+        FileDto fileDto = new FileDto();
+        fileDto.setId(user.getProfilePicture().getId());
+        fileDto.setMimeType(user.getProfilePicture().getMimeType());
+        fileDto.setName(user.getProfilePicture().getName());
+        fileDto.setUserId(user.getId());
+        return fileDto;
     }
 }
