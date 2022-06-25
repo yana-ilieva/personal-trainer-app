@@ -87,7 +87,11 @@
     </div>
     <div class="mt-4 w-full mx-auto justify-end flex">
       <button
-        @click="this.$emit('nextStep')"
+        @click="
+          this.$emit('nextStep', {
+            type: 'content',
+          })
+        "
         type="button"
         class="inline-flex items-center px-4 py-2 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
       >

@@ -459,18 +459,18 @@
         </div>
       </form> -->
       <add-program-name
-        :class="step == 0 ? '' : 'hidden'"
+        v-if="step == 0"
         @nextStep="handleNextStep"
       ></add-program-name>
       <add-program-content
-        :class="step == 1 ? '' : 'hidden'"
+        v-else-if="step == 1"
         @nextStep="handleNextStep"
       ></add-program-content>
+      <add-program-review v-else-if="step == 2"></add-program-review>
       <div class="mt-4">
         <nav aria-label="Progress">
           <ol role="list" class="space-y-4 md:flex md:space-y-0 md:space-x-8">
             <li class="md:flex-1">
-              <!-- Completed Step -->
               <a
                 class="group pl-4 py-2 flex flex-col border-l-4 border-indigo-600 md:pl-0 md:pt-4 md:pb-0 md:border-l-0 md:border-t-4"
               >
@@ -483,7 +483,6 @@
             </li>
 
             <li class="md:flex-1">
-              <!-- Current Step -->
               <a
                 :class="step >= 1 ? 'border-indigo-600' : 'border-gray-200'"
                 class="pl-4 py-2 flex flex-col border-l-4 md:pl-0 md:pt-4 md:pb-0 md:border-l-0 md:border-t-4"
@@ -499,7 +498,6 @@
             </li>
 
             <li class="md:flex-1">
-              <!-- Upcoming Step -->
               <a
                 :class="step == 2 ? 'border-indigo-600' : 'border-gray-200'"
                 class="group pl-4 py-2 flex flex-col border-l-4 md:pl-0 md:pt-4 md:pb-0 md:border-l-0 md:border-t-4"
@@ -522,9 +520,10 @@
 <script>
 import AddProgramName from "./AddProgramName.vue";
 import AddProgramContent from "./AddProgramContent.vue";
+import AddProgramReview from "./AddProgramReview.vue";
 export default {
   emits: ["cancelAddProgram", "saveAddProgram"],
-  components: { AddProgramName, AddProgramContent },
+  components: { AddProgramName, AddProgramContent, AddProgramReview },
   data() {
     return {
       step: 0,
@@ -558,7 +557,13 @@ export default {
     this.exercises = await this.getExercises();
   },
   methods: {
-    handleNextStep() {
+    handleNextStep(payload) {
+      if (payload.type === "name") {
+        this.$store.dispatch("program/setNameAndDesc", {
+          name: payload.name,
+          description: payload.description,
+        });
+      }
       this.step++;
     },
     async getExercises() {
