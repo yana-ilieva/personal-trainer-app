@@ -12,4 +12,6 @@ public class TrainerShortDto {
     private Long id;
 
     private String name;
+
+    private Long profilePictureId;
 }

@@ -27,6 +27,7 @@ public class Mapper {
         trainerDto.setCity(trainer.getCity());
         trainerDto.setNeighborhood(trainer.getNeighborhood());
         trainerDto.setDescription(trainer.getDescription());
+        trainerDto.setProfilePictureId(trainer.getUser().getProfilePicture().getId());
         return trainerDto;
     }
 
@@ -58,6 +59,7 @@ public class Mapper {
         clientDto.setGender(client.getGender());
         clientDto.setHeight(client.getHeight());
         clientDto.setDescription(client.getDescription());
+        clientDto.setProfilePictureId(client.getUser().getProfilePicture().getId());
         return clientDto;
     }
 
@@ -72,6 +74,7 @@ public class Mapper {
         clientDto.setDescription(client.getDescription());
         clientDto.setProgramDto(map(client.getProgram()));
         clientDto.setNutritionPlanDto(map(client.getNutritionPlan()));
+        clientDto.setProfilePictureId(client.getUser().getProfilePicture().getId());
         return clientDto;
     }
 
@@ -261,6 +264,7 @@ public class Mapper {
         ClientShortDto clientShortDto = new ClientShortDto();
         clientShortDto.setId(client.getId());
         clientShortDto.setName(client.getFirstName() + " " + client.getLastName());
+        clientShortDto.setProfilePictureId(client.getUser().getProfilePicture().getId());
         return clientShortDto;
     }
 
@@ -268,6 +272,7 @@ public class Mapper {
         TrainerShortDto trainerShortDto = new TrainerShortDto();
         trainerShortDto.setId(trainer.getId());
         trainerShortDto.setName(trainer.getFirstName() + " " + trainer.getLastName());
+        trainerShortDto.setProfilePictureId(trainer.getUser().getProfilePicture().getId());
         return trainerShortDto;
     }
 

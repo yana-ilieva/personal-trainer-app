@@ -27,4 +27,6 @@ public class TrainerDto {
     private String city;
 
     private String neighborhood;
+
+    private Long profilePictureId;
 }

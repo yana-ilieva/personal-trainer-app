@@ -26,5 +26,5 @@ public class ClientFullDto {
 
     private NutritionPlanDto nutritionPlanDto;
 
-
+    private Long profilePictureId;
 }
