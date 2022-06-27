@@ -12,4 +12,6 @@ public class ClientShortDto {
     private Long id;
 
     private String name;
+
+    private Long profilePictureId;
 }

@@ -25,4 +25,6 @@ public class ClientDto {
     private Integer height;
 
     private String description;
+
+    private Long profilePictureId;
 }
