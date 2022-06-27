@@ -27,7 +27,9 @@ public class Mapper {
         trainerDto.setCity(trainer.getCity());
         trainerDto.setNeighborhood(trainer.getNeighborhood());
         trainerDto.setDescription(trainer.getDescription());
-        trainerDto.setProfilePictureId(trainer.getUser().getProfilePicture().getId());
+        if (trainer.getUser().getProfilePicture() != null) {
+            trainerDto.setProfilePictureId(trainer.getUser().getProfilePicture().getId());
+        }
         return trainerDto;
     }
 
@@ -74,7 +76,9 @@ public class Mapper {
         clientDto.setDescription(client.getDescription());
         clientDto.setProgramDto(map(client.getProgram()));
         clientDto.setNutritionPlanDto(map(client.getNutritionPlan()));
-        clientDto.setProfilePictureId(client.getUser().getProfilePicture().getId());
+        if (client.getUser().getProfilePicture() != null) {
+            clientDto.setProfilePictureId(client.getUser().getProfilePicture().getId());
+        }
         return clientDto;
     }
 
@@ -264,7 +268,9 @@ public class Mapper {
         ClientShortDto clientShortDto = new ClientShortDto();
         clientShortDto.setId(client.getId());
         clientShortDto.setName(client.getFirstName() + " " + client.getLastName());
-        clientShortDto.setProfilePictureId(client.getUser().getProfilePicture().getId());
+        if (client.getUser().getProfilePicture() != null) {
+            clientShortDto.setProfilePictureId(client.getUser().getProfilePicture().getId());
+        }
         return clientShortDto;
     }
 
@@ -272,7 +278,9 @@ public class Mapper {
         TrainerShortDto trainerShortDto = new TrainerShortDto();
         trainerShortDto.setId(trainer.getId());
         trainerShortDto.setName(trainer.getFirstName() + " " + trainer.getLastName());
-        trainerShortDto.setProfilePictureId(trainer.getUser().getProfilePicture().getId());
+        if (trainer.getUser().getProfilePicture() != null) {
+            trainerShortDto.setProfilePictureId(trainer.getUser().getProfilePicture().getId());
+        }
         return trainerShortDto;
     }
 
@@ -311,10 +319,12 @@ public class Mapper {
             return null;
         }
         FileDto fileDto = new FileDto();
-        fileDto.setId(user.getProfilePicture().getId());
-        fileDto.setMimeType(user.getProfilePicture().getMimeType());
-        fileDto.setName(user.getProfilePicture().getName());
-        fileDto.setUserId(user.getId());
+        if (user.getProfilePicture() != null) {
+            fileDto.setId(user.getProfilePicture().getId());
+            fileDto.setMimeType(user.getProfilePicture().getMimeType());
+            fileDto.setName(user.getProfilePicture().getName());
+            fileDto.setUserId(user.getId());
+        }
         return fileDto;
     }
 }
