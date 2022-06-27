@@ -78,7 +78,11 @@
           </nav>
         </div>
       </div>
-      <add-program-content-table :day="day"></add-program-content-table>
+      <add-program-content-table
+        @saveDayExercises="saveDayExercises"
+        :key="day"
+        :day="day"
+      ></add-program-content-table>
     </div>
     <div class="relative">
       <div class="absolute inset-0 flex items-center" aria-hidden="true">
@@ -129,6 +133,11 @@ export default {
   methods: {
     changeDay(day) {
       this.day = day;
+    },
+    saveDayExercises(payload) {
+      console.log("payload: ", payload);
+      this.excercises[payload.day] = payload.exercises;
+      console.log("after save exercises: ", this.excercises);
     },
   },
 };

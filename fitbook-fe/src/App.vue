@@ -62,7 +62,7 @@
           </div>
         </div>
       </div>
-      <router-view></router-view>
+      <router-view @openNotifications="showNotifications"></router-view>
     </div>
   </div>
 </template>
