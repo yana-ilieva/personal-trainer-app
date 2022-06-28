@@ -26,12 +26,14 @@
             <div>
               <div class="flex flex-col items-start">
                 <button
+                  @click="this.$emit('initializeChat')"
                   type="button"
                   class="mb-2 inline-flex items-center px-4 py-1 border border-gray-300 shadow-sm text-xs font-medium rounded text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >
                   Chat
                 </button>
                 <button
+                  @click="this.$emit('sendRequest')"
                   type="button"
                   class="inline-flex items-center px-4 py-1.5 border border-transparent shadow-sm text-sm leading-4 font-medium rounded text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
                 >

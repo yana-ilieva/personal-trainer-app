@@ -1,20 +1,21 @@
 <template>
   <li
-    class="w-full h-32 border-b border-darkmint p-2 hover:bg-syellow cursor-pointer active:bg-syellow"
+    @click="this.$emit('getChatMessages')"
+    class="py-4 px-2 flex cursor-pointer hover:bg-gray-100 active:bg-gray-100 items-center"
   >
-    <div class="flex">
-      <div class="w-20 h-28 bg-mint">
-        <img src="" alt="" />
-      </div>
-      <div class="ml-4 flex my-auto justify-center items-center">
-        <h4>{{ name }}</h4>
-      </div>
+    <img
+      class="h-10 w-10 rounded-full"
+      src="https://images.unsplash.com/photo-1491528323818-fdd1faba62cc?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=facearea&facepad=2&w=256&h=256&q=80"
+      alt=""
+    />
+    <div class="ml-3">
+      <p class="text-sm font-medium text-gray-900">{{ name }}</p>
     </div>
   </li>
 </template>
 
 <script>
 export default {
-  props: ['name'],
+  props: ["name"],
 };
 </script>

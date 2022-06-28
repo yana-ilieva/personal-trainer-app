@@ -158,7 +158,8 @@ public class TrainerService {
     }
 
     public List<ChatDto> getChats(Authentication authentication) {
-        User user = (User) authentication.getPrincipal();
+        String email = (String) authentication.getPrincipal();
+        User user = userService.findByEmail(email);
         Trainer trainer = trainerRepository.findByUser(user);
         if (trainer == null) {
             throw new ResourceNotFoundException(String.format("Trainer with user id %d not found.", user.getId()));
@@ -194,7 +195,8 @@ public class TrainerService {
 
     public boolean removeProgramFromList(Long programId, Authentication authentication) {
         try {
-            User user = (User) authentication.getPrincipal();
+            String email = (String) authentication.getPrincipal();
+            User user = userService.findByEmail(email);
             Trainer trainer = findTrainerByUser(user);
             trainer.getPrograms().removeIf(p -> p.getId().equals(programId));
             trainerRepository.save(trainer);

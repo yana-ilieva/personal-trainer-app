@@ -50,7 +50,7 @@
           <div class="relative mt-6 flex-1 px-4 sm:px-6">
             <ul role="list">
               <notification-card
-                v-for="notification in notifications"
+                v-for="notification of notifications"
                 :key="notification.id"
                 :clientName="notification.clientName"
                 :trainerName="notification.trainerName"
@@ -112,7 +112,7 @@ export default {
   },
   async mounted() {
     this.notifications = await this.getNotifications();
-    console.log(this.notifications);
+    console.log("notifications: ", this.notifications);
   },
 };
 </script>

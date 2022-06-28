@@ -61,7 +61,9 @@ public class Mapper {
         clientDto.setGender(client.getGender());
         clientDto.setHeight(client.getHeight());
         clientDto.setDescription(client.getDescription());
-        clientDto.setProfilePictureId(client.getUser().getProfilePicture().getId());
+        if (client.getUser().getProfilePicture() != null) {
+            clientDto.setProfilePictureId(client.getUser().getProfilePicture().getId());
+        }
         return clientDto;
     }
 

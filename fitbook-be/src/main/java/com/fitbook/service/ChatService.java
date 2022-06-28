@@ -20,7 +20,6 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,16 +38,19 @@ public class ChatService {
     private final TrainerService trainerService;
 
     private final MessageRepository messageRepository;
+    
+    private final UserService userService;
 
     @Autowired
     public ChatService(SimpMessagingTemplate simpMessagingTemplate, ChatRepository chatRepository, Mapper mapper,
-                       ClientService clientService, TrainerService trainerService, MessageRepository messageRepository) {
+                       ClientService clientService, TrainerService trainerService, MessageRepository messageRepository, UserService userService) {
         this.simpMessagingTemplate = simpMessagingTemplate;
         this.chatRepository = chatRepository;
         this.mapper = mapper;
         this.clientService = clientService;
         this.trainerService = trainerService;
         this.messageRepository = messageRepository;
+        this.userService = userService;
     }
 
     @Transactional
@@ -67,7 +69,8 @@ public class ChatService {
 
         MessageDto msg = mapper.map(message);
 
-        User sender = (User) authentication.getPrincipal();
+        String senderEmail = (String) authentication.getPrincipal();
+        User sender = userService.findByEmail(senderEmail);
         User receiver;
 
         if (sender.getRole().getName().equals("ROLE_TRAINER")) {
@@ -76,7 +79,7 @@ public class ChatService {
             receiver = chat.getTrainer().getUser();
         }
 
-        simpMessagingTemplate.convertAndSendToUser(sender.getEmail(), "/queue/messages", msg);
+        simpMessagingTemplate.convertAndSendToUser(senderEmail, "/queue/messages", msg);
         simpMessagingTemplate.convertAndSendToUser(receiver.getEmail(), "/queue/messages", msg);
     }
 

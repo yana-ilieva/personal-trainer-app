@@ -82,7 +82,6 @@
     >
       <ul role="list" class="divide-y divide-gray-200">
         <trainer-card
-          @sendRequest="sendRequest"
           v-for="trainer in trainers"
           :key="trainer.id"
           :id="trainer.id"
@@ -90,25 +89,11 @@
           :bDate="trainer.birthDate"
           :gender="trainer.gender"
           :desc="trainer.description"
+          @sendRequest="sendRequest(trainer.id)"
+          @initializeChat="initializeChat(trainer.id)"
         ></trainer-card>
       </ul>
     </div>
-
-    <!-- <div class="w-7/12 ml-10 mt-8">
-      <ul class="w-full">
-        <trainer-card
-          @sendRequest="sendRequest"
-          v-for="trainer in trainers"
-          :key="trainer.id"
-          :id="trainer.id"
-          :name="trainer.firstName + ' ' + trainer.lastName"
-          :bDate="trainer.birthDate"
-          :gender="trainer.gender"
-          :desc="trainer.description"
-          class="w-full h-44 border border-darkmint rounded-md"
-        ></trainer-card>
-      </ul>
-    </div> -->
   </div>
 </template>
 
@@ -120,10 +105,12 @@ export default {
   data() {
     return {
       trainers: [],
+      currentUser: {},
     };
   },
   async mounted() {
     this.trainers = await this.getTrainers();
+    this.currentUser = await this.getUser();
   },
   methods: {
     async getTrainers() {
@@ -145,6 +132,23 @@ export default {
       } else {
         console.log("error getting trainers data");
         return [];
+      }
+    },
+    async getUser() {
+      const response = await fetch(
+        `http://localhost:8081/api/client/user/${this.$store.getters["auth/userId"]}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${this.$store.getters["auth/token"]}`,
+          },
+        }
+      );
+      console.log(response);
+      if (response.ok) {
+        return await response.json();
+      } else {
+        console.log("error getting user data");
       }
     },
     async submitSearchForm(e) {
@@ -174,12 +178,37 @@ export default {
         this.trainers = [];
       }
     },
+    async initializeChat(id) {
+      console.log("initialize id: ", this.currentUser);
+      const response = await fetch(`http://localhost:8081/api/chat`, {
+        method: "POST",
+        mode: "cors",
+        headers: {
+          Authorization: `Bearer ${this.$store.getters["auth/token"]}`,
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          trainer: { id },
+          client: { id: this.currentUser.id },
+        }),
+      });
+      console.log(response);
+      if (response.ok) {
+        const data = await response.json();
+        this.$router.push({
+          path: "chat",
+          query: { user: data.trainer.name, id: data.id },
+        });
+      } else {
+        console.log("error getting user data");
+      }
+    },
     async sendRequest(id) {
+      console.log("trainer id: ", id);
       const response = await fetch(
         `http://localhost:8081/api/trainer/${id}/request/user/${this.$store.getters["auth/userId"]}`,
         {
           method: "GET",
-
           headers: {
             Authorization: `Bearer ${this.$store.getters["auth/token"]}`,
           },
