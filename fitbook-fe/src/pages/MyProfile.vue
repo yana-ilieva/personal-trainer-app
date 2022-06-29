@@ -26,6 +26,7 @@
                   <div>
                     <img
                       ref="profileImageEdit"
+                      :src="user.photo"
                       class="mx-auto h-24 w-24 ring-4 ring-white sm:h-32 sm:w-32 mb-3"
                       alt=""
                     />
@@ -345,6 +346,13 @@ export default {
     this.user = structuredClone(user);
     console.log("user: ", user);
     this.editUser = structuredClone(user);
+    const photoSrc = await this.fetchUserPhoto();
+    this.user.photo = photoSrc
+      ? photoSrc
+      : "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png";
+    this.$refs.profileImage.src = photoSrc
+      ? photoSrc
+      : "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png";
   },
   computed: {
     role() {
@@ -364,6 +372,31 @@ export default {
       let arr = str.split("-");
       let reversed = arr.reverse().join("-");
       return new Date(reversed).toISOString().split("T")[0];
+    },
+    async fileChosen(e) {
+      const fr = new FileReader();
+      fr.addEventListener("load", (e) => {
+        this.$refs.profileImageEdit.src = e.currentTarget.result;
+      });
+      fr.readAsDataURL(e.target.files[0]);
+      const token = this.$store.getters["auth/token"];
+      const formData = new FormData();
+      formData.append("file", e.target.files[0]);
+      console.log("file to be uploaded: ", e.target.files[0]);
+      const res = await fetch(`http://localhost:8081/api/file`, {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+      });
+      if (res.ok) {
+        const resData = await res.json();
+        console.log("file uploaded: ", resData);
+        return resData;
+      } else {
+        console.error("error uploading file");
+      }
     },
     async submitEditUser(e) {
       let url = "";
@@ -411,11 +444,34 @@ export default {
       if (response.ok) {
         const responseData = await response.json();
         this.user = responseData;
+        const photoSrc = await this.fetchUserPhoto();
+        this.user.photo = photoSrc
+          ? photoSrc
+          : "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png";
+        this.$refs.profileImage.src = photoSrc
+          ? photoSrc
+          : "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png";
         this.isBdateChanged = false;
       } else {
         console.log("error editing user");
       }
       this.isEdit = false;
+    },
+    async fetchUserPhoto() {
+      const res = await fetch(`http://localhost:8081/api/file`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${this.$store.getters["auth/token"]}`,
+        },
+      });
+      if (res.ok) {
+        const resData = await res.blob();
+        const imgUrl = URL.createObjectURL(resData);
+        console.log("photo get: ", imgUrl);
+        return imgUrl;
+      } else {
+        return null;
+      }
     },
     async getUser() {
       let url = "";

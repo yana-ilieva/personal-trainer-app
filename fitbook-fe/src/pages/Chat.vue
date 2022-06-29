@@ -7,6 +7,7 @@
           <chat-card
             v-for="chat of chats"
             :key="chat.client.id"
+            :photo="chat.client.photo"
             :name="chat.client.name"
             @click="getChatMessages(chat)"
             :class="currentChatName === chat.client.name ? 'bg-gray-100' : ''"
@@ -17,6 +18,7 @@
             v-for="chat of chats"
             :key="chat.trainer.id"
             :name="chat.trainer.name"
+            :photo="chat.trainer.photo"
             :class="currentChatName === chat.trainer.name ? 'bg-gray-100' : ''"
             @click="getChatMessages(chat)"
           ></chat-card>
@@ -150,6 +152,7 @@ export default {
       });
     }
     this.chats = await this.getChats();
+    console.log("chats get: ", this.chats);
     this.currentUser = await this.getUser();
     this.subscribe();
   },
@@ -236,6 +239,21 @@ export default {
         console.log("error getting user data");
       }
     },
+    async fetchUserPhoto(id) {
+      const res = await fetch(`http://localhost:8081/api/file/${id}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${this.$store.getters["auth/token"]}`,
+        },
+      });
+      if (res.ok) {
+        const resData = await res.blob();
+        const imgUrl = URL.createObjectURL(resData);
+        return imgUrl;
+      } else {
+        return null;
+      }
+    },
     async getChats() {
       let url = "";
       if (this.$store.getters["auth/role"] === "ROLE_TRAINER") {
@@ -251,7 +269,26 @@ export default {
       });
       console.log(response);
       if (response.ok) {
-        return await response.json();
+        const chats = await response.json();
+        for (const chat of chats) {
+          if (this.$store.getters["auth/role"] === "ROLE_TRAINER") {
+            const photo = await this.fetchUserPhoto(
+              chat.client.profilePictureId
+            );
+            chat.client.photo = photo
+              ? photo
+              : "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png";
+          } else {
+            const photo = await this.fetchUserPhoto(
+              chat.trainer.profilePictureId
+            );
+            console.log("trainer photo: ", photo);
+            chat.trainer.photo = photo
+              ? photo
+              : "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png";
+          }
+        }
+        return chats;
       } else {
         console.log("error getting user data");
       }

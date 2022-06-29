@@ -4,6 +4,7 @@ import com.fitbook.dto.FileDto;
 import com.fitbook.entity.File;
 import com.fitbook.entity.user.User;
 import com.fitbook.exception.RequestProcessingException;
+import com.fitbook.exception.ResourceNotFoundException;
 import com.fitbook.repository.FileRepository;
 import com.fitbook.util.Mapper;
 import org.springframework.beans.factory.annotation.Value;
@@ -18,6 +19,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -46,6 +48,14 @@ public class FileService {
     public FileDto getFileInfo(Authentication authentication) {
         User user = userService.findByEmail((String) authentication.getPrincipal());
         return mapper.mapFile(user);
+    }
+
+    public FileDto getFile(Long id) {
+        Optional<File> fileOpt = fileRepository.findById(id);
+        if (fileOpt.isEmpty()) {
+            throw new ResourceNotFoundException("File is not found");
+        }
+        return mapper.mapFile(fileOpt.get());
     }
 
     public void get(Long userId, ServletOutputStream outputStream) {

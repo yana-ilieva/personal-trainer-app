@@ -16,6 +16,7 @@
             :gender="client.gender"
             :height="client.height"
             :desc="client.description"
+            :photo="client.photo"
             @initializeChat="initializeChat(client.id)"
           ></client-card>
         </ul>
@@ -95,6 +96,21 @@ export default {
         console.log("error getting user data");
       }
     },
+    async fetchUserPhoto(id) {
+      const res = await fetch(`http://localhost:8081/api/file/${id}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${this.$store.getters["auth/token"]}`,
+        },
+      });
+      if (res.ok) {
+        const resData = await res.blob();
+        const imgUrl = URL.createObjectURL(resData);
+        return imgUrl;
+      } else {
+        return null;
+      }
+    },
     async getClients() {
       const response = await fetch(
         `http://localhost:8081/api/trainer/user/${this.$store.getters["auth/userId"]}/clients`,
@@ -107,7 +123,17 @@ export default {
       );
       console.log(response);
       if (response.ok) {
-        return await response.json();
+        const data = await response.json();
+        console.log("clients data: ", data);
+        for (const client of data) {
+          const photo = await this.fetchUserPhoto(client.profilePictureId);
+          if (photo) {
+            client.photo = photo;
+          } else {
+            client.photo = null;
+          }
+        }
+        return data;
       } else {
         console.log("error getting user data");
       }

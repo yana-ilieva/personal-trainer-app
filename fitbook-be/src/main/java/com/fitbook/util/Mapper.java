@@ -1,6 +1,7 @@
 package com.fitbook.util;
 
 import com.fitbook.dto.*;
+import com.fitbook.entity.File;
 import com.fitbook.entity.chat.Chat;
 import com.fitbook.entity.chat.Message;
 import com.fitbook.entity.client.Client;
@@ -327,6 +328,18 @@ public class Mapper {
             fileDto.setName(user.getProfilePicture().getName());
             fileDto.setUserId(user.getId());
         }
+        return fileDto;
+    }
+
+    public FileDto mapFile(File file) {
+        if (file == null) {
+            return null;
+        }
+        FileDto fileDto = new FileDto();
+        fileDto.setId(file.getId());
+        fileDto.setMimeType(file.getMimeType());
+        fileDto.setName(file.getName());
+        fileDto.setUserId(file.getUser().getId());
         return fileDto;
     }
 }

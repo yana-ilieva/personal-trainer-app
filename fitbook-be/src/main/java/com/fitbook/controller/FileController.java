@@ -17,6 +17,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/api/file")
+@CrossOrigin(origins = "http://localhost:8080")
 public class FileController {
 
     private final FileService fileService;
@@ -43,6 +44,21 @@ public class FileController {
     @GetMapping
     public Boolean get(HttpServletResponse response, Authentication authentication) throws IOException {
         FileDto fileInfo = fileService.getFileInfo(authentication);
+        if (fileInfo != null) {
+            response.setContentType(fileInfo.getMimeType());
+            response.setHeader("Content-Disposition", "inline; filename=\"" + fileInfo.getName() + "\"");
+
+            ServletOutputStream outputStream = response.getOutputStream();
+            fileService.get(fileInfo.getUserId(), outputStream);
+            return true;
+        }
+        return false;
+    }
+
+    @GetMapping("/{id}")
+    public Boolean get(HttpServletResponse response, @PathVariable("id") Long id,
+                       Authentication authentication) throws IOException {
+        FileDto fileInfo = fileService.getFile(id);
         if (fileInfo != null) {
             response.setContentType(fileInfo.getMimeType());
             response.setHeader("Content-Disposition", "inline; filename=\"" + fileInfo.getName() + "\"");

@@ -85,6 +85,7 @@
           v-for="trainer in trainers"
           :key="trainer.id"
           :id="trainer.id"
+          :photo="trainer.photo"
           :name="trainer.firstName + ' ' + trainer.lastName"
           :bDate="trainer.birthDate"
           :gender="trainer.gender"
@@ -128,7 +129,16 @@ export default {
       );
       console.log(response);
       if (response.ok) {
-        return await response.json();
+        const data = await response.json();
+        for (const trainer of data) {
+          const photo = await this.fetchUserPhoto(trainer.profilePictureId);
+          if (photo) {
+            trainer.photo = photo;
+          } else {
+            trainer.photo = null;
+          }
+        }
+        return data;
       } else {
         console.log("error getting trainers data");
         return [];
@@ -176,6 +186,21 @@ export default {
       } else {
         console.log("error getting trainers data");
         this.trainers = [];
+      }
+    },
+    async fetchUserPhoto(id) {
+      const res = await fetch(`http://localhost:8081/api/file/${id}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${this.$store.getters["auth/token"]}`,
+        },
+      });
+      if (res.ok) {
+        const resData = await res.blob();
+        const imgUrl = URL.createObjectURL(resData);
+        return imgUrl;
+      } else {
+        return null;
       }
     },
     async initializeChat(id) {
