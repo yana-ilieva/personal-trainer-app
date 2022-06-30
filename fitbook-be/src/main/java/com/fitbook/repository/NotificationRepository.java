@@ -18,5 +18,6 @@ public interface NotificationRepository extends JpaRepository<Notification, Long
 
     List<Notification> findAllByNotificationTypeAndTrainerAndResolvedFalse(NotificationType type, Trainer trainer, Pageable pageable);
 
-    List<Notification> findByClientAndTrainerAndNotificationTypeResolvedFalse(Client client, Trainer trainer, NotificationType type);
+    List<Notification> findByClientAndTrainerAndNotificationTypeAndResolvedFalse(Client client, Trainer trainer, NotificationType type);
+
 }

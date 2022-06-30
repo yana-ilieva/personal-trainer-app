@@ -72,7 +72,7 @@ public class NotificationService {
     }
 
     private void resolveNotification(Client client, Trainer trainer) {
-        List<Notification> notifications = notificationRepository.findByClientAndTrainerAndNotificationTypeResolvedFalse(client, trainer, NotificationType.REQUEST_SENT);
+        List<Notification> notifications = notificationRepository.findByClientAndTrainerAndNotificationTypeAndResolvedFalse(client, trainer, NotificationType.REQUEST_SENT);
         for (Notification notification : notifications) {
             notification.setResolved(true);
         }
