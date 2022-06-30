@@ -1,11 +1,14 @@
 package com.fitbook.service;
 
 import com.fitbook.dto.ProgramDto;
+import com.fitbook.entity.program.Exercise;
+import com.fitbook.entity.program.ExerciseUnit;
 import com.fitbook.entity.program.Program;
 import com.fitbook.entity.program.ProgramPart;
 import com.fitbook.entity.trainer.Trainer;
 import com.fitbook.entity.user.User;
 import com.fitbook.exception.ResourceNotFoundException;
+import com.fitbook.repository.ExerciseRepository;
 import com.fitbook.repository.ProgramRepository;
 import com.fitbook.util.Mapper;
 import com.fitbook.util.ProgramPartUtil;
@@ -27,13 +30,17 @@ public class ProgramService {
 
     private final TrainerService trainerService;
 
+    private final ExerciseRepository exerciseRepository;
+
     @Autowired
-    public ProgramService(ProgramRepository programRepository, Mapper mapper, ProgramPartUtil programPartUtil, UserService userService, TrainerService trainerService) {
+    public ProgramService(ProgramRepository programRepository, Mapper mapper, ProgramPartUtil programPartUtil, UserService userService,
+                          TrainerService trainerService, ExerciseRepository exerciseRepository) {
         this.programRepository = programRepository;
         this.mapper = mapper;
         this.programPartUtil = programPartUtil;
         this.userService = userService;
         this.trainerService = trainerService;
+        this.exerciseRepository = exerciseRepository;
     }
 
     public Program findById(Long id) {
@@ -47,6 +54,24 @@ public class ProgramService {
 
     public ProgramDto create(ProgramDto programDto, Long trainerUserId) {
         Program program = mapper.map(programDto);
+
+        if (program != null && program.getProgramParts() != null) {
+            for (int i = 0; i < program.getProgramParts().size(); i++) {
+                if (program.getProgramParts().get(i) != null) {
+                    if (program.getProgramParts().get(i).getExerciseUnits() != null) {
+                        for (int i1 = 0; i1 < program.getProgramParts().get(i).getExerciseUnits().size(); i1++) {
+                            if (program.getProgramParts().get(i).getExerciseUnits().get(i1) != null) {
+                                Optional<Exercise> exerciseOpt = exerciseRepository.findByName(program.getProgramParts().get(i).getExerciseUnits().get(i1).getExercise().getName());
+                                if (exerciseOpt.isPresent()) {
+                                    program.getProgramParts().get(i).getExerciseUnits().get(i1).getExercise().setId(exerciseOpt.get().getId());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
+
 
         List<ProgramPart> programParts = program.getProgramParts();
 
@@ -82,6 +107,23 @@ public class ProgramService {
         Program program = programOpt.get();
         mapper.map(programDto, program);
         program.setId(id);
+
+        if (program.getProgramParts() != null) {
+            for (int i = 0; i < program.getProgramParts().size(); i++) {
+                if (program.getProgramParts().get(i) != null) {
+                    if (program.getProgramParts().get(i).getExerciseUnits() != null) {
+                        for (int i1 = 0; i1 < program.getProgramParts().get(i).getExerciseUnits().size(); i1++) {
+                            if (program.getProgramParts().get(i).getExerciseUnits().get(i1) != null) {
+                                Optional<Exercise> exerciseOpt = exerciseRepository.findByName(program.getProgramParts().get(i).getExerciseUnits().get(i1).getExercise().getName());
+                                if (exerciseOpt.isPresent()) {
+                                    program.getProgramParts().get(i).getExerciseUnits().get(i1).getExercise().setId(exerciseOpt.get().getId());
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+        }
 
         return mapper.map(programRepository.save(program));
     }

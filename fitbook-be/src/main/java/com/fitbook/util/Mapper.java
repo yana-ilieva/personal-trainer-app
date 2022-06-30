@@ -101,9 +101,9 @@ public class Mapper {
         programPart.setWeekDay(programPartDto.getWeekDay());
         if (programPartDto.getExerciseUnits() != null) {
             programPart.setExerciseUnits(programPartDto.getExerciseUnits().stream().map(this::map).collect(Collectors.toList()));
-            for (ExerciseUnit exerciseUnit : programPart.getExerciseUnits()) {
+            /*for (ExerciseUnit exerciseUnit : programPart.getExerciseUnits()) {
                 exerciseUnit.setProgramPart(programPart);
-            }
+            }*/
         }
         return programPart;
     }
