@@ -10,10 +10,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface NotificationRepository extends JpaRepository<Notification, Long> {
-    List<Notification> findAllByNotificationTypeAndClient(NotificationType type, Client client, Pageable pageable);
+    List<Notification> findAllByNotificationTypeAndClientAndResolvedFalse(NotificationType type, Client client, Pageable pageable);
 
-    List<Notification> findAllByNotificationTypeAndTrainer(NotificationType type, Trainer trainer, Pageable pageable);
+    List<Notification> findAllByNotificationTypeAndTrainerAndResolvedFalse(NotificationType type, Trainer trainer, Pageable pageable);
+
+    List<Notification> findByClientAndTrainerAndNotificationTypeResolvedFalse(Client client, Trainer trainer, NotificationType type);
 }

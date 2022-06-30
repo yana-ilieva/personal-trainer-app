@@ -33,4 +33,7 @@ public class Notification {
     @ManyToOne
     @JoinColumn(name = "client_id", referencedColumnName = "id")
     private Client client;
+
+    @Column(name = "resolved")
+    private Boolean resolved;
 }

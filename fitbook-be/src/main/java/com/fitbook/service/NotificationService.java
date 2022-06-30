@@ -52,11 +52,11 @@ public class NotificationService {
         PageRequest pageRequest = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdTimestamp"));
         if (user.getRole().getName().equals("ROLE_CLIENT")) {
             Client client = clientService.findClientByUser(user);
-            return notificationRepository.findAllByNotificationTypeAndClient(NotificationType.REQUEST_ACCEPTED, client, pageRequest).stream()
+            return notificationRepository.findAllByNotificationTypeAndClientAndResolvedFalse(NotificationType.REQUEST_ACCEPTED, client, pageRequest).stream()
                     .map(mapper::map).collect(Collectors.toList());
         }
         Trainer trainer = trainerService.findTrainerByUser(user);
-        return notificationRepository.findAllByNotificationTypeAndTrainer(NotificationType.REQUEST_SENT, trainer, pageRequest).stream()
+        return notificationRepository.findAllByNotificationTypeAndTrainerAndResolvedFalse(NotificationType.REQUEST_SENT, trainer, pageRequest).stream()
                 .map(mapper::map).collect(Collectors.toList());
     }
 
@@ -66,12 +66,24 @@ public class NotificationService {
         notification.setCreatedTimestamp(DateUtil.now());
         notification.setClient(client);
         notification.setTrainer(trainer);
+        notification.setResolved(false);
 
         return mapper.map(notificationRepository.save(notification));
     }
 
+    private void resolveNotification(Client client, Trainer trainer) {
+        List<Notification> notifications = notificationRepository.findByClientAndTrainerAndNotificationTypeResolvedFalse(client, trainer, NotificationType.REQUEST_SENT);
+        for (Notification notification : notifications) {
+            notification.setResolved(true);
+        }
+        notificationRepository.saveAll(notifications);
+    }
+
     public void sendNotification(User user, NotificationType notificationType, Trainer trainer, Client client) {
         NotificationDto notificationDto = create(notificationType, trainer, client);
+        if (notificationType == NotificationType.REQUEST_ACCEPTED) {
+            resolveNotification(client, trainer);
+        }
         simpMessagingTemplate.convertAndSendToUser(user.getEmail(), "/queue/notifications", notificationDto);
     }
 }
