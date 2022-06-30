@@ -5,7 +5,7 @@ export default {
     setDescription(state, payload) {
         state.description = payload.description
     },
-    setExcercises(state, payload) {
-        state.excercises = payload
+    setExercises(state, payload) {
+        state.exercises = payload
     }
 }

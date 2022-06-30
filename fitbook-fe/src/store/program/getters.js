@@ -1,10 +1,14 @@
 export default {
     getName(state) {
-        console.log('state name: ', state.name);
         return state.name
     },
     getDescription(state) {
-        console.log('state description: ', state.description);
         return state.description
     },
+    getExercises(state) {
+        return state.exercises
+    },
+    getProgram(state) {
+        return {name: state.name, description: state.description, exercises: state.exercises}
+    }
 }

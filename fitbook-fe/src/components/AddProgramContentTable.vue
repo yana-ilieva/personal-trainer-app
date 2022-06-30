@@ -67,7 +67,7 @@
               class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-300 focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm rounded-md"
             >
               <option v-for="type of exerciseTypes" :key="type">
-                {{ type }}
+                {{ type.name }}
               </option>
             </select>
           </div>
@@ -138,17 +138,16 @@
 </template>
 
 <script>
-import structuredClone from "@ungap/structured-clone";
 export default {
-  props: ["day"],
+  props: ["day", "currentExercises"],
   data() {
     return {
       addExerciseOpen: false,
       isExerciseInputOpen: false,
-      exercises: [],
+      exercises: this.currentExercises,
       exerciseRepsInput: 0,
-      exerciseTypeInput: "arms",
-      exerciseTypes: ["arms", "legs", "back", "abs", "shoulders"],
+      exerciseTypeInput: "",
+      exerciseTypes: [],
     };
   },
   methods: {
@@ -169,6 +168,7 @@ export default {
       }
     },
     addExercise() {
+      console.log("add exercise in table: ");
       this.exercises.push({
         reps: this.exerciseRepsInput,
         type: this.exerciseTypeInput,
@@ -200,19 +200,24 @@ export default {
     },
   },
   async mounted() {
-    // this.exerciseTypes = await this.getExerciseTypes();
-    // console.log("exercises: ", this.exerciseTypes);
+    const exerciseTypes = await this.getExerciseTypes();
+    this.exerciseTypes = exerciseTypes;
+    this.exerciseTypeInput = exerciseTypes[0].name;
   },
   beforeUnmount() {
-    const exerciseArray = [];
-    for (const exercise of this.exercises) {
-      exerciseArray.push(JSON.parse(JSON.stringify(exercise)));
+    if (this.exercises.length > 0) {
+      const exerciseArray = [];
+      for (const exercise of this.exercises) {
+        exerciseArray.push(JSON.parse(JSON.stringify(exercise)));
+      }
+      console.log("table save exercise: ", exerciseArray);
+      this.$emit("saveDayExercises", {
+        day: this.day,
+        exercises: exerciseArray,
+      });
+    } else {
+      console.log("empty training day!");
     }
-    console.log("exercises before unmount: ", exerciseArray);
-    this.$emit("saveDayExercises", {
-      day: this.day,
-      exercises: this.exercises,
-    });
   },
 };
 </script>

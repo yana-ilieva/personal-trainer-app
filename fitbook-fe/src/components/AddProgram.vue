@@ -28,7 +28,10 @@
         v-else-if="step == 1"
         @nextStep="handleNextStep"
       ></add-program-content>
-      <add-program-review v-else-if="step == 2"></add-program-review>
+      <add-program-review
+        @nextStep="handleNextStep"
+        v-else-if="step == 2"
+      ></add-program-review>
       <div class="mt-4">
         <nav aria-label="Progress">
           <ol role="list" class="space-y-4 md:flex md:space-y-0 md:space-x-8">
@@ -94,108 +97,71 @@ export default {
     };
   },
   methods: {
-    handleNextStep(payload) {
+    async handleNextStep(payload) {
+      console.log("next step: ", payload.type);
       if (payload.type === "name") {
         this.$store.dispatch("program/setNameAndDesc", {
           name: payload.name,
           description: payload.description,
         });
+        this.step++;
       }
-      this.step++;
+      console.log("save exercises into store: ", payload);
+      if (payload.type === "content") {
+        this.$store.dispatch("program/setExercises", {
+          exercises: payload.exercises,
+        });
+        this.step++;
+      }
+      if (payload.type === "save") {
+        await this.saveProgram();
+        this.step = 0;
+      }
     },
-    async submitAddProgram() {
-      let body = {};
-      let mEx = JSON.parse(JSON.stringify(this.mondayEx));
-      let tuEx = JSON.parse(JSON.stringify(this.tuesdayEx));
-      let wEx = JSON.parse(JSON.stringify(this.wednesdayEx));
-      let thEx = JSON.parse(JSON.stringify(this.thursdayEx));
-      let fEx = JSON.parse(JSON.stringify(this.fridayEx));
-      let saEx = JSON.parse(JSON.stringify(this.saturdayEx));
-      let suEx = JSON.parse(JSON.stringify(this.sundayEx));
+    parseDay(day) {
+      switch (day) {
+        case "mon":
+          return "MONDAY";
+        case "tue":
+          return "TUESDAY";
+        case "wed":
+          return "WEDNESDAY";
+        case "thu":
+          return "THURSDAY";
+        case "fri":
+          return "FRIDAY";
+        case "sat":
+          return "SATURDAY";
+        case "sun":
+          return "SUNDAY";
 
-      for (const [element, value] of Object.entries(mEx)) {
-        console.log(element);
-        value.cid = null;
+        default:
+          break;
       }
-      for (const [element, value] of Object.entries(tuEx)) {
-        console.log(element);
-        value.cid = null;
+    },
+    async saveProgram() {
+      const dataFromStore = this.$store.getters["program/getProgram"];
+      console.log("data from store: ", dataFromStore);
+      let programParts = [];
+      for (const exercise of dataFromStore.exercises.exercises) {
+        let exUnits = [];
+        for (const unit of exercise[1]) {
+          exUnits.push({
+            repetitions: unit.reps,
+            exercise: { name: unit.type },
+          });
+        }
+        programParts.push({
+          weekDay: this.parseDay(exercise[0]),
+          exerciseUnits: exUnits,
+        });
       }
-      for (const [element, value] of Object.entries(wEx)) {
-        console.log(element);
-        value.cid = null;
-      }
-      for (const [element, value] of Object.entries(thEx)) {
-        console.log(element);
-        value.cid = null;
-      }
-      for (const [element, value] of Object.entries(fEx)) {
-        console.log(element);
-        value.cid = null;
-      }
-      for (const [element, value] of Object.entries(saEx)) {
-        console.log(element);
-        value.cid = null;
-      }
-      for (const [element, value] of Object.entries(suEx)) {
-        console.log(element);
-        value.cid = null;
-      }
-
-      let arr = [
-        { weekDay: "MONDAY", exerciseUnits: mEx },
-        { weekDay: "TUESDAY", exerciseUnits: tuEx },
-        { weekDay: "WEDNESDAY", exerciseUnits: wEx },
-        { weekDay: "THURSDAY", exerciseUnits: thEx },
-        { weekDay: "FRIDAY", exerciseUnits: fEx },
-        { weekDay: "SATURDAY", exerciseUnits: saEx },
-        { weekDay: "SUNDAY", exerciseUnits: suEx },
-      ];
-
-      if (this.isMonday) {
-        body = {
-          name: this.programName,
-          description: this.programDesc,
-          programParts: arr,
-        };
-      } else if (this.isTuesday) {
-        body = {
-          name: this.programName,
-          description: this.programDesc,
-          programParts: arr,
-        };
-      } else if (this.isWednesday) {
-        body = {
-          name: this.programName,
-          description: this.programDesc,
-          programParts: arr,
-        };
-      } else if (this.isThursday) {
-        body = {
-          name: this.programName,
-          description: this.programDesc,
-          programParts: arr,
-        };
-      } else if (this.isFriday) {
-        body = {
-          name: this.programName,
-          description: this.programDesc,
-          programParts: arr,
-        };
-      } else if (this.isSaturday) {
-        body = {
-          name: this.programName,
-          description: this.programDesc,
-          programParts: arr,
-        };
-      } else {
-        body = {
-          name: this.programName,
-          description: this.programDesc,
-          programParts: arr,
-        };
-      }
-      console.log(JSON.stringify({ ...body }));
+      const program = {
+        name: dataFromStore.name,
+        description: dataFromStore.description,
+        programParts,
+      };
+      console.log("body to send: ", program);
       const response = await fetch(
         `http://localhost:8081/api/program/user/${this.$store.getters["auth/userId"]}`,
         {
@@ -205,9 +171,7 @@ export default {
             Authorization: `Bearer ${this.$store.getters["auth/token"]}`,
             "Content-Type": "application/json",
           },
-          body: JSON.stringify({
-            ...body,
-          }),
+          body: JSON.stringify(program),
         }
       );
       console.log(response);
@@ -216,162 +180,6 @@ export default {
         location.reload();
       } else {
         console.log("error getting user data");
-      }
-    },
-    addEx() {
-      if (this.isMonday) {
-        this.mondayEx.push({
-          cid: this.mondayId++,
-          repetitions: 0,
-          exercise: {},
-          restBetweenExercises: 0,
-        });
-      } else if (this.isTuesday) {
-        this.tuesdayEx.push({
-          cid: this.tuesdayId++,
-          repetitions: 0,
-          exercise: {},
-          restBetweenExercises: 0,
-        });
-      } else if (this.isWednesday) {
-        this.wednesdayEx.push({
-          cid: this.wednesdayId++,
-          repetitions: 0,
-          exercise: {},
-          restBetweenExercises: 0,
-        });
-      } else if (this.isThursday) {
-        this.thursdayEx.push({
-          cid: this.thursdayId++,
-          repetitions: 0,
-          exercise: {},
-          restBetweenExercises: 0,
-        });
-      } else if (this.isFriday) {
-        this.fridayEx.push({
-          cid: this.fridayId++,
-          repetitions: 0,
-          exercise: {},
-          restBetweenExercises: 0,
-        });
-      } else if (this.isSaturday) {
-        this.saturdayEx.push({
-          cid: this.saturdayId++,
-          repetitions: 0,
-          exercise: {},
-          restBetweenExercises: 0,
-        });
-      } else {
-        this.sundayEx.push({
-          cid: this.sundayId++,
-          repetitions: 0,
-          exercise: {},
-          restBetweenExercises: 0,
-        });
-      }
-    },
-    getEx() {
-      if (this.isMonday) {
-        return this.mondayEx;
-      } else if (this.isTuesday) {
-        return this.tuesdayEx;
-      } else if (this.isWednesday) {
-        return this.wednesdayEx;
-      } else if (this.isThursday) {
-        return this.thursdayEx;
-      } else if (this.isFriday) {
-        return this.fridayEx;
-      } else if (this.isSaturday) {
-        return this.saturdayEx;
-      } else {
-        return this.sundayEx;
-      }
-    },
-    getDay() {
-      if (this.isMonday) {
-        return "Monday";
-      } else if (this.isTuesday) {
-        return "Tuesday";
-      } else if (this.isWednesday) {
-        return "Wednesday";
-      } else if (this.isThursday) {
-        return "Thursday";
-      } else if (this.isFriday) {
-        return "Friday";
-      } else if (this.isSaturday) {
-        return "Saturday";
-      } else {
-        return "Sunday";
-      }
-    },
-    changeDay(day) {
-      switch (day) {
-        case "Monday":
-          this.isMonday = true;
-          this.isTuesday = false;
-          this.isWednesday = false;
-          this.isThursday = false;
-          this.isFriday = false;
-          this.isSaturday = false;
-          this.isSunday = false;
-          break;
-        case "Tuesday":
-          this.isMonday = false;
-          this.isTuesday = true;
-          this.isWednesday = false;
-          this.isThursday = false;
-          this.isFriday = false;
-          this.isSaturday = false;
-          this.isSunday = false;
-          break;
-        case "Wednesday":
-          this.isMonday = false;
-          this.isTuesday = false;
-          this.isWednesday = true;
-          this.isThursday = false;
-          this.isFriday = false;
-          this.isSaturday = false;
-          this.isSunday = false;
-          break;
-        case "Thursday":
-          this.isMonday = false;
-          this.isTuesday = false;
-          this.isWednesday = false;
-          this.isThursday = true;
-          this.isFriday = false;
-          this.isSaturday = false;
-          this.isSunday = false;
-          break;
-        case "Friday":
-          this.isMonday = false;
-          this.isTuesday = false;
-          this.isWednesday = false;
-          this.isThursday = false;
-          this.isFriday = true;
-          this.isSaturday = false;
-          this.isSunday = false;
-          break;
-        case "Saturday":
-          this.isMonday = false;
-          this.isTuesday = false;
-          this.isWednesday = false;
-          this.isThursday = false;
-          this.isFriday = false;
-          this.isSaturday = true;
-          this.isSunday = false;
-          break;
-        case "Sunday":
-          this.isMonday = false;
-          this.isTuesday = false;
-          this.isWednesday = false;
-          this.isThursday = false;
-          this.isFriday = false;
-          this.isSaturday = false;
-          this.isSunday = true;
-          break;
-
-        default:
-          break;
       }
     },
   },

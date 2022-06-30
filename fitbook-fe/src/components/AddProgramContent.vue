@@ -6,9 +6,9 @@
           <nav class="-mb-px flex space-x-8" aria-label="Tabs">
             <!-- Current: "border-indigo-500 text-indigo-600", Default: "border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300" -->
             <a
-              @click="changeDay(0)"
+              @click="changeDay('mon')"
               :class="
-                day === 0
+                day === 'mon'
                   ? 'border-indigo-500 text-indigo-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               "
@@ -16,9 +16,9 @@
               >Mon</a
             >
             <a
-              @click="changeDay(1)"
+              @click="changeDay('tue')"
               :class="
-                day === 1
+                day === 'tue'
                   ? 'border-indigo-500 text-indigo-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               "
@@ -26,9 +26,9 @@
               >Tue</a
             >
             <a
-              @click="changeDay(2)"
+              @click="changeDay('wed')"
               :class="
-                day === 2
+                day === 'wed'
                   ? 'border-indigo-500 text-indigo-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               "
@@ -36,9 +36,9 @@
               >Wed</a
             >
             <a
-              @click="changeDay(3)"
+              @click="changeDay('thu')"
               :class="
-                day === 3
+                day === 'thu'
                   ? 'border-indigo-500 text-indigo-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               "
@@ -46,9 +46,9 @@
               >Thu</a
             >
             <a
-              @click="changeDay(4)"
+              @click="changeDay('fri')"
               :class="
-                day === 4
+                day === 'fri'
                   ? 'border-indigo-500 text-indigo-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               "
@@ -56,9 +56,9 @@
               >Fri</a
             >
             <a
-              @click="changeDay(5)"
+              @click="changeDay('sat')"
               :class="
-                day === 5
+                day === 'sat'
                   ? 'border-indigo-500 text-indigo-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               "
@@ -66,9 +66,9 @@
               >Sat</a
             >
             <a
-              @click="changeDay(6)"
+              @click="changeDay('sun')"
               :class="
-                day === 6
+                day === 'sun'
                   ? 'border-indigo-500 text-indigo-600'
                   : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300'
               "
@@ -82,6 +82,7 @@
         @saveDayExercises="saveDayExercises"
         :key="day"
         :day="day"
+        :currentExercises="excercises[day] ? excercises[day] : []"
       ></add-program-content-table>
     </div>
     <div class="relative">
@@ -94,6 +95,7 @@
         @click="
           this.$emit('nextStep', {
             type: 'content',
+            exercises: parseProxy(excercises),
           })
         "
         type="button"
@@ -126,8 +128,8 @@ export default {
   components: { AddProgramContentTable },
   data() {
     return {
-      day: 0,
-      excercises: [],
+      day: "mon",
+      excercises: {},
     };
   },
   methods: {
@@ -135,9 +137,18 @@ export default {
       this.day = day;
     },
     saveDayExercises(payload) {
-      console.log("payload: ", payload);
+      console.log("save day exrcise: ", payload);
       this.excercises[payload.day] = payload.exercises;
-      console.log("after save exercises: ", this.excercises);
+    },
+    parseProxy(exercisesProxy) {
+      let exerciseArray = [];
+      console.log("exercises proxy: ", exercisesProxy);
+      for (const exercise of Object.entries(exercisesProxy)) {
+        if (exercise) {
+          exerciseArray.push(JSON.parse(JSON.stringify(exercise)));
+        }
+      }
+      return exerciseArray;
     },
   },
 };
