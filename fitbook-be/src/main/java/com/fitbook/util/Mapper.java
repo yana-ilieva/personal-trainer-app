@@ -2,6 +2,7 @@ package com.fitbook.util;
 
 import com.fitbook.dto.*;
 import com.fitbook.entity.File;
+import com.fitbook.entity.Payment;
 import com.fitbook.entity.chat.Chat;
 import com.fitbook.entity.chat.Message;
 import com.fitbook.entity.client.Client;
@@ -342,5 +343,13 @@ public class Mapper {
         fileDto.setName(file.getName());
         fileDto.setUserId(file.getUser().getId());
         return fileDto;
+    }
+
+    public PaymentDto map(Payment payment) {
+        PaymentDto dto = new PaymentDto();
+        dto.setChargeId(payment.getChargeId());
+        dto.setChargeAmount(payment.getAmount());
+        dto.setTrainerId(payment.getTrainer().getId());
+        return dto;
     }
 }

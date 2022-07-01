@@ -9,10 +9,11 @@ import com.fitbook.exception.DuplicateErrorException;
 import com.fitbook.exception.RequestProcessingException;
 import com.fitbook.repository.PaymentRepository;
 import com.fitbook.util.DateUtil;
+import com.fitbook.util.Mapper;
 import com.stripe.Stripe;
 import com.stripe.exception.*;
-import com.stripe.model.Charge;
 import com.stripe.model.Customer;
+import com.stripe.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.security.core.Authentication;
@@ -32,82 +33,84 @@ public class PaymentService {
 
     private final PaymentRepository paymentRepository;
 
+    private final Mapper mapper;
+
     @Autowired
     public PaymentService(UserService userService, ClientService clientService, TrainerService trainerService,
-                          PaymentRepository paymentRepository) {
+                          PaymentRepository paymentRepository, Mapper mapper) {
         this.userService = userService;
         this.clientService = clientService;
         this.trainerService = trainerService;
         this.paymentRepository = paymentRepository;
+        this.mapper = mapper;
         Stripe.apiKey = System.getenv("stripe_secretkey");
     }
 
-    public String createCustomer(Trainer trainer) {
-        return createCustomer(trainer.getFirstName() + " " + trainer.getLastName(), trainer.getUser().getEmail());
-    }
-
     public String createCustomer(Client client) {
-        return createCustomer(client.getFirstName() + " " + client.getLastName(), client.getUser().getEmail());
-    }
-
-    private String createCustomer(String name, String email) {
         Map<String, Object> customerParams = new HashMap<>();
-        customerParams.put("description", name);
-        customerParams.put("email", email);
+        customerParams.put("description", client.getFirstName() + " " + client.getLastName());
+        customerParams.put("email", client.getUser().getEmail());
 
         try {
             Customer stripeCustomer = Customer.create(customerParams);
-            System.out.println(stripeCustomer.getId());
             return stripeCustomer.getId();
         } catch (Exception e) {
             throw new RequestProcessingException("Payment failed.");
         }
     }
 
-    public String chargeCreditCard(PaymentDto paymentDto, Authentication authentication) {
-        String email = (String) authentication.getPrincipal();
-        User user = userService.findByEmail(email);
-        Client client = clientService.findClientByUser(user);
+    public ProductData createProduct(Trainer trainer) {
+        Map<String, Object> product = new HashMap<>();
+        product.put("name", "Services");
+        product.put("description", trainer.getFirstName() + " " + trainer.getLastName());
+        Map<String, String> metadata = new HashMap<>();
+        metadata.put("trainer_id", trainer.getId().toString());
+        product.put("metadata", metadata);
 
-        Trainer trainer = trainerService.findById(paymentDto.getTrainerId());
+        Map<String, Object> defaultPriceData = new HashMap<>();
+        defaultPriceData.put("currency", "EUR");
+        defaultPriceData.put("unit_amount", "1000");
 
-        int chargeAmountCents = (int) (paymentDto.getChargeAmount().doubleValue() * 100);
+        Map<String, String> recurringMap = new HashMap<>();
+        recurringMap.put("interval", "month");
+        recurringMap.put("interval_count", "1");
 
-        Map<String, Object> chargeParams = new HashMap<>();
-        chargeParams.put("amount", chargeAmountCents);
-        chargeParams.put("currency", "usd");
-        chargeParams.put("description", "Monthly Charges");
-        chargeParams.put("customer", client.getStripeId());
+        defaultPriceData.put("recurring", recurringMap);
+
+        product.put("default_price_data", defaultPriceData);
 
         try {
-            Charge charge = Charge.create(chargeParams);
-            System.out.println(charge);
-            Payment payment = createPayment(paymentDto.getChargeAmount(), client, trainer, charge.getId());
-            save(payment);
-            return charge.getId();
-        } catch (CardException e) {
-            throw new RequestProcessingException(e.getMessage());
-        } catch (Exception e) {
-            throw new RequestProcessingException("Payment failed.");
+            Product stripeProduct = Product.create(product);
+            return new ProductData(stripeProduct.getId(), stripeProduct.getDefaultPrice());
+        } catch (StripeException e) {
+            throw new RequestProcessingException("Failed to create product");
         }
     }
 
-    private Payment save(Payment payment) {
-        try {
-            return paymentRepository.save(payment);
-        } catch (DataIntegrityViolationException e) {
-            throw new DuplicateErrorException("Payment is already processed.");
+    static class ProductData {
+        private final String productId;
+        private final String priceId;
+
+        public ProductData(String productId, String priceId) {
+            this.productId = productId;
+            this.priceId = priceId;
+        }
+
+        public String getProductId() {
+            return productId;
+        }
+
+        public String getPriceId() {
+            return priceId;
         }
     }
 
-    private Payment createPayment(Double amount, Client client, Trainer trainer, String chargeId) {
-        Payment payment = new Payment();
-        payment.setAmount(amount);
-        payment.setClient(client);
-        payment.setTrainer(trainer);
-        payment.setChargeId(chargeId);
-        payment.setDate(DateUtil.now());
-        return payment;
+    public String getPriceIdByClientId(Long clientId) {
+        Client client = clientService.findById(clientId);
+        if (client.getTrainer() != null) {
+            return client.getTrainer().getPriceId();
+        }
+        return "";
     }
 }
 

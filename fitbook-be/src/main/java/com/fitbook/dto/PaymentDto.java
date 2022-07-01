@@ -6,6 +6,8 @@ public class PaymentDto {
 
     private Long trainerId;
 
+    private String chargeId;
+
     public Double getChargeAmount() {
         return chargeAmount;
     }
@@ -20,5 +22,13 @@ public class PaymentDto {
 
     public void setTrainerId(Long trainerId) {
         this.trainerId = trainerId;
+    }
+
+    public String getChargeId() {
+        return chargeId;
+    }
+
+    public void setChargeId(String chargeId) {
+        this.chargeId = chargeId;
     }
 }

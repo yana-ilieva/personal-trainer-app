@@ -52,8 +52,11 @@ public class Trainer {
     @OneToMany(orphanRemoval = true)
     private List<Program> programs;
 
-    @Column(name = "stripe_id")
-    private String stripeId;
+    @Column(name = "product_id")
+    private String productId;
+
+    @Column(name = "price_id")
+    private String priceId;
 
     @OneToMany(mappedBy = "trainer", fetch = FetchType.LAZY)
     private List<Payment> payments;
@@ -154,12 +157,20 @@ public class Trainer {
         this.programs = programs;
     }
 
-    public String getStripeId() {
-        return stripeId;
+    public String getProductId() {
+        return productId;
     }
 
-    public void setStripeId(String stripeId) {
-        this.stripeId = stripeId;
+    public void setProductId(String productId) {
+        this.productId = productId;
+    }
+
+    public String getPriceId() {
+        return priceId;
+    }
+
+    public void setPriceId(String priceId) {
+        this.priceId = priceId;
     }
 
     public List<Payment> getPayments() {

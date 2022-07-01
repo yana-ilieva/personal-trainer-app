@@ -4,10 +4,10 @@ import com.fitbook.dto.*;
 import com.fitbook.entity.client.Client;
 import com.fitbook.entity.program.NutritionPlan;
 import com.fitbook.entity.program.Program;
-import com.fitbook.entity.program.ProgramPart;
 import com.fitbook.entity.user.User;
 import com.fitbook.exception.ResourceNotFoundException;
 import com.fitbook.repository.ClientRepository;
+import com.fitbook.repository.ProgressRepository;
 import com.fitbook.repository.UserRepository;
 import com.fitbook.util.Mapper;
 import org.apache.commons.lang3.SerializationUtils;
@@ -38,15 +38,19 @@ public class ClientService {
 
     private final UserService userService;
 
+    private final ProgressRepository progressRepository;
+
     @Autowired
     public ClientService(ClientRepository clientRepository, Mapper mapper, @Lazy ProgramService programService,
-                         NutritionPlanService nutritionPlanService, UserRepository userRepository, UserService userService) {
+                         NutritionPlanService nutritionPlanService, UserRepository userRepository, UserService userService,
+                         ProgressRepository progressRepository) {
         this.clientRepository = clientRepository;
         this.mapper = mapper;
         this.programService = programService;
         this.nutritionPlanService = nutritionPlanService;
         this.userRepository = userRepository;
         this.userService = userService;
+        this.progressRepository = progressRepository;
     }
 
     public ClientFullDto getFullDto(Long id) {
@@ -167,8 +171,9 @@ public class ClientService {
 
 
     public List<ProgressDto> getProgress(Long id, int page, int size) {
-        return clientRepository.getProgress(id, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdTimestamp"))).stream()
-                .map(mapper::map).collect(Collectors.toList());
+        Client client = findById(id);
+        return progressRepository.findByClient(client, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdTimestamp")))
+                .stream().map(mapper::map).collect(Collectors.toList());
     }
 
     public List<ChatDto> getChats(Authentication authentication) {

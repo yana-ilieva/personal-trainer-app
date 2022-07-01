@@ -41,8 +41,9 @@ public class RegistrationService {
     private void createEntity(User user, RegistrationDto registrationDto) {
         if (user.getRole().getName().equals("ROLE_TRAINER")) {
             Trainer trainer = trainerService.create(user, registrationDto);
-            String stripeId = paymentService.createCustomer(trainer);
-            trainer.setStripeId(stripeId);
+            PaymentService.ProductData productData = paymentService.createProduct(trainer);
+            trainer.setProductId(productData.getProductId());
+            trainer.setPriceId(productData.getPriceId());
             trainerService.save(trainer);
         }
         if (user.getRole().getName().equals("ROLE_CLIENT")) {
