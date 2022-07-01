@@ -61,6 +61,10 @@ public class FileService {
     public void get(Long userId, ServletOutputStream outputStream) {
         User user = userService.findById(userId);
 
+        if (user == null) {
+            throw new ResourceNotFoundException("User not found");
+        }
+
         String name = user.getProfilePicture().getName();
 
         String filePath = fileStore + java.io.File.separator + name;

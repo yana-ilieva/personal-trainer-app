@@ -36,6 +36,9 @@ public class UserService {
     }
 
     public User findById(Long id) {
+        if (id == null) {
+            return null;
+        }
         Optional<User> userOpt = userRepository.findById(id);
         if (userOpt.isEmpty()) {
             throw new ResourceNotFoundException(String.format("User with id %d not found", id));

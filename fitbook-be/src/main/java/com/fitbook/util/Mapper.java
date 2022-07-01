@@ -100,7 +100,7 @@ public class Mapper {
         programPart.setId(programPartDto.getId());
         programPart.setWeekDay(programPartDto.getWeekDay());
         if (programPartDto.getExerciseUnits() != null) {
-            programPart.setExerciseUnits(programPartDto.getExerciseUnits().stream().map(this::map).collect(Collectors.toList()));
+            programPart.setExerciseUnits(programPartDto.getExerciseUnits().stream().map(eu -> map(eu, programPart)).collect(Collectors.toList()));
             /*for (ExerciseUnit exerciseUnit : programPart.getExerciseUnits()) {
                 exerciseUnit.setProgramPart(programPart);
             }*/
@@ -108,7 +108,7 @@ public class Mapper {
         return programPart;
     }
 
-    private ExerciseUnit map(ExerciseUnitDto exerciseUnitDto) {
+    private ExerciseUnit map(ExerciseUnitDto exerciseUnitDto, ProgramPart programPart) {
         ExerciseUnit exerciseUnit = new ExerciseUnit();
         exerciseUnit.setId(exerciseUnitDto.getId());
         exerciseUnit.setRepetitions(exerciseUnitDto.getRepetitions());
@@ -116,6 +116,7 @@ public class Mapper {
         if (exerciseUnitDto.getExercise() != null) {
             exerciseUnit.setExercise(map(exerciseUnitDto.getExercise()));
         }
+        exerciseUnit.setProgramPart(programPart);
         return exerciseUnit;
     }
 
