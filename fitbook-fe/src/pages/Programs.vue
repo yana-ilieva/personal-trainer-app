@@ -87,7 +87,12 @@ export default {
       isEdit: false,
       isAdd: false,
       programs: [],
-      programToEdit: {},
+      programToEdit: {
+        id: 0,
+        name: "",
+        description: "",
+        exercises: [],
+      },
     };
   },
   async mounted() {
@@ -97,7 +102,16 @@ export default {
   methods: {
     editProgram(program) {
       this.isEdit = true;
-      this.programToEdit = program;
+      console.log("program to edit: ", program);
+      this.programToEdit.id = program.id;
+      this.programToEdit.name = program.name;
+      this.programToEdit.description = program.description;
+      let exercises = [];
+      for (const part of program.programParts) {
+        exercises[this.parseDay(part.weekDay)] = part.exerciseUnits;
+      }
+      this.programToEdit.exercises = exercises;
+      console.log("parsed program: ", this.programToEdit);
     },
     addProgram() {
       this.isAdd = true;
@@ -107,6 +121,27 @@ export default {
     },
     cancelAddProgram() {
       this.isAdd = false;
+    },
+    parseDay(day) {
+      switch (day) {
+        case "MONDAY":
+          return "mon";
+        case "TUESDAY":
+          return "tue";
+        case "WEDNESDAY":
+          return "wed";
+        case "THURSDAY":
+          return "thu";
+        case "FRIDAY":
+          return "fri";
+        case "SATURDAY":
+          return "sat";
+        case "SUNDAY":
+          return "sun";
+
+        default:
+          break;
+      }
     },
     async deleteProgram(id) {
       const response = await fetch(

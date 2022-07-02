@@ -9,6 +9,7 @@
   },
   "dependencies": {
     "@ungap/structured-clone": "^1.0.1",
+    "@vue-stripe/vue-stripe": "^4.4.2",
     "autoprefixer": "^9.8.8",
     "chartjs": "^0.3.24",
     "core-js": "^3.6.5",

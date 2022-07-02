@@ -8,7 +8,6 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "exercise_units")
-@Data
 @NoArgsConstructor
 public class ExerciseUnit implements Serializable {
 
@@ -26,4 +25,44 @@ public class ExerciseUnit implements Serializable {
 
     @OneToOne
     private Exercise exercise;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public Integer getRepetitions() {
+        return repetitions;
+    }
+
+    public void setRepetitions(Integer repetitions) {
+        this.repetitions = repetitions;
+    }
+
+    public ProgramPart getProgramPart() {
+        return programPart;
+    }
+
+    public void setProgramPart(ProgramPart programPart) {
+        this.programPart = programPart;
+    }
+
+    public Integer getRestBetweenExercises() {
+        return restBetweenExercises;
+    }
+
+    public void setRestBetweenExercises(Integer restBetweenExercises) {
+        this.restBetweenExercises = restBetweenExercises;
+    }
+
+    public Exercise getExercise() {
+        return exercise;
+    }
+
+    public void setExercise(Exercise exercise) {
+        this.exercise = exercise;
+    }
 }

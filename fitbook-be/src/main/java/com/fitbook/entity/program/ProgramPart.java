@@ -10,7 +10,6 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "program_parts")
@@ -29,4 +28,36 @@ public class ProgramPart implements Serializable {
     @ManyToOne
     @JoinColumn(name = "program_id")
     private Program program;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public WeekDay getWeekDay() {
+        return weekDay;
+    }
+
+    public void setWeekDay(WeekDay weekDay) {
+        this.weekDay = weekDay;
+    }
+
+    public List<ExerciseUnit> getExerciseUnits() {
+        return exerciseUnits;
+    }
+
+    public void setExerciseUnits(List<ExerciseUnit> exerciseUnits) {
+        this.exerciseUnits = exerciseUnits;
+    }
+
+    public Program getProgram() {
+        return program;
+    }
+
+    public void setProgram(Program program) {
+        this.program = program;
+    }
 }

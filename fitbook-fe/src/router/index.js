@@ -8,6 +8,7 @@ import MyProfile from '../pages/MyProfile.vue';
 import Login from '../components/Login.vue';
 import Registration from '../components/Registration.vue';
 import Progress from '../pages/Progress.vue';
+import Payment from '../pages/Payment.vue';
 import store from '../store/index';
 
 const routes = [
@@ -37,6 +38,13 @@ const routes = [
     meta: {
       hideHeader: true,
       requiresUnauth: true,
+    },
+  },
+  {
+    path: '/payment',
+    component: Payment,
+    meta: {
+      requiresAuth: true,
     },
   },
   {

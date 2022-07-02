@@ -10,7 +10,6 @@ import java.io.Serializable;
 import java.util.List;
 import java.util.stream.Collectors;
 
-@Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "programs")
@@ -27,4 +26,36 @@ public class Program implements Serializable {
     private String name;
 
     private String description;
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public List<ProgramPart> getProgramParts() {
+        return programParts;
+    }
+
+    public void setProgramParts(List<ProgramPart> programParts) {
+        this.programParts = programParts;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
 }

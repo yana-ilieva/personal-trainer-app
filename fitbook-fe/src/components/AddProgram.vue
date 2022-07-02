@@ -115,7 +115,6 @@ export default {
       }
       if (payload.type === "save") {
         await this.saveProgram();
-        this.step = 0;
       }
     },
     parseDay(day) {
