@@ -2,16 +2,13 @@ package com.fitbook.service;
 
 import com.fitbook.dto.*;
 import com.fitbook.entity.client.Client;
-import com.fitbook.entity.trainer.Request;
 import com.fitbook.entity.trainer.Trainer;
 import com.fitbook.entity.user.User;
 import com.fitbook.enums.NotificationType;
 import com.fitbook.exception.ResourceNotFoundException;
-import com.fitbook.repository.RequestRepository;
 import com.fitbook.repository.TrainerRepository;
 import com.fitbook.repository.TrainerSpecification;
 import com.fitbook.repository.UserRepository;
-import com.fitbook.util.DateUtil;
 import com.fitbook.util.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -29,8 +26,6 @@ public class TrainerService {
 
     private final Mapper mapper;
 
-    private final RequestRepository requestRepository;
-
     private final ClientService clientService;
 
     private final NotificationService notificationService;
@@ -40,10 +35,10 @@ public class TrainerService {
     private final UserService userService;
 
     @Autowired
-    public TrainerService(TrainerRepository trainerRepository, Mapper mapper, RequestRepository requestRepository, ClientService clientService, NotificationService notificationService, UserRepository userRepository, UserService userService) {
+    public TrainerService(TrainerRepository trainerRepository, Mapper mapper, ClientService clientService,
+                          NotificationService notificationService, UserRepository userRepository, UserService userService) {
         this.trainerRepository = trainerRepository;
         this.mapper = mapper;
-        this.requestRepository = requestRepository;
         this.clientService = clientService;
         this.notificationService = notificationService;
         this.userRepository = userRepository;
@@ -116,10 +111,7 @@ public class TrainerService {
         Client client = clientService.findClientByUser(user);
         Trainer trainer = findById(trainerId);
 
-        Request request = Request.builder().client(client).trainer(trainer).submitTime(DateUtil.now()).build();
-
         try {
-            requestRepository.save(request);
             notificationService.sendNotification(trainer.getUser(), NotificationType.REQUEST_SENT, trainer, client);
             return true;
         } catch (Exception e) {

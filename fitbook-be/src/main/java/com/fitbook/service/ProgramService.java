@@ -7,6 +7,7 @@ import com.fitbook.entity.program.Program;
 import com.fitbook.entity.program.ProgramPart;
 import com.fitbook.entity.trainer.Trainer;
 import com.fitbook.entity.user.User;
+import com.fitbook.exception.RequestProcessingException;
 import com.fitbook.exception.ResourceNotFoundException;
 import com.fitbook.repository.ExerciseRepository;
 import com.fitbook.repository.ProgramRepository;
@@ -55,7 +56,11 @@ public class ProgramService {
     public ProgramDto create(ProgramDto programDto, Long trainerUserId) {
         Program program = mapper.map(programDto);
 
-        if (program != null && program.getProgramParts() != null) {
+        if (program == null) {
+            throw new RequestProcessingException("Program could not be created");
+        }
+
+        if (program.getProgramParts() != null) {
             for (int i = 0; i < program.getProgramParts().size(); i++) {
                 if (program.getProgramParts().get(i) != null) {
                     if (program.getProgramParts().get(i).getExerciseUnits() != null) {
@@ -76,12 +81,16 @@ public class ProgramService {
 
         List<ProgramPart> programParts = program.getProgramParts();
 
-        program.setProgramParts(programPartUtil.transformProgramParts(programParts));
-        for (ProgramPart programPart : program.getProgramParts()) {
-            programPart.setProgram(program);
-            if (programPart.getExerciseUnits() != null) {
-                for (ExerciseUnit exerciseUnit : programPart.getExerciseUnits()) {
-                    exerciseUnit.setProgramPart(programPart);
+        if (programParts != null) {
+            program.setProgramParts(programPartUtil.transformProgramParts(programParts));
+        }
+        if (program.getProgramParts() != null) {
+            for (ProgramPart programPart : program.getProgramParts()) {
+                programPart.setProgram(program);
+                if (programPart.getExerciseUnits() != null) {
+                    for (ExerciseUnit exerciseUnit : programPart.getExerciseUnits()) {
+                        exerciseUnit.setProgramPart(programPart);
+                    }
                 }
             }
         }

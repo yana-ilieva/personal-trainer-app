@@ -1,22 +1,13 @@
 package com.fitbook.service;
 
-import com.fitbook.dto.PaymentDto;
-import com.fitbook.entity.Payment;
 import com.fitbook.entity.client.Client;
 import com.fitbook.entity.trainer.Trainer;
-import com.fitbook.entity.user.User;
-import com.fitbook.exception.DuplicateErrorException;
 import com.fitbook.exception.RequestProcessingException;
-import com.fitbook.repository.PaymentRepository;
-import com.fitbook.util.DateUtil;
-import com.fitbook.util.Mapper;
 import com.stripe.Stripe;
 import com.stripe.exception.*;
 import com.stripe.model.Customer;
 import com.stripe.model.Product;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.dao.DataIntegrityViolationException;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.HashMap;
@@ -25,24 +16,11 @@ import java.util.Map;
 @Service
 public class PaymentService {
 
-    private final UserService userService;
-
     private final ClientService clientService;
 
-    private final TrainerService trainerService;
-
-    private final PaymentRepository paymentRepository;
-
-    private final Mapper mapper;
-
     @Autowired
-    public PaymentService(UserService userService, ClientService clientService, TrainerService trainerService,
-                          PaymentRepository paymentRepository, Mapper mapper) {
-        this.userService = userService;
+    public PaymentService(ClientService clientService) {
         this.clientService = clientService;
-        this.trainerService = trainerService;
-        this.paymentRepository = paymentRepository;
-        this.mapper = mapper;
         Stripe.apiKey = System.getenv("stripe_secretkey");
     }
 

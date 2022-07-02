@@ -12,7 +12,6 @@ import com.fitbook.repository.ClientRepository;
 import com.fitbook.repository.ProgressRepository;
 import com.fitbook.repository.UserRepository;
 import com.fitbook.util.Mapper;
-import org.apache.commons.lang3.SerializationUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.PageRequest;
@@ -143,7 +142,6 @@ public class ClientService {
         }
         Program program = programService.findById(programId);
         Program programCopy = programCopy(program);
-        //programCopy = programService.create(programCopy);
         clientOpt.get().setProgram(programCopy);
         Client save = clientRepository.save(clientOpt.get());
         return mapper.map(save);

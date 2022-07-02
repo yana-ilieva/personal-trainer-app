@@ -1,9 +1,7 @@
 package com.fitbook.controller;
 
 import com.fitbook.dto.*;
-import com.fitbook.entity.program.NutritionPlan;
 import com.fitbook.service.ClientService;
-import com.fitbook.service.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
 import org.springframework.security.core.Authentication;
