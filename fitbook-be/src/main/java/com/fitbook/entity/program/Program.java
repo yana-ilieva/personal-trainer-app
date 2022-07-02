@@ -1,5 +1,6 @@
 package com.fitbook.entity.program;
 
+import com.fitbook.entity.client.Client;
 import com.fitbook.entity.trainer.Trainer;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -20,12 +21,15 @@ public class Program implements Serializable {
     @GeneratedValue(strategy = GenerationType.SEQUENCE)
     private Long id;
 
-    @OneToMany(mappedBy = "program", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.DETACH}, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "program", cascade = {CascadeType.ALL})
     private List<ProgramPart> programParts;
 
     private String name;
 
     private String description;
+
+    @OneToOne(mappedBy = "program")
+    private Client client;
 
     public Long getId() {
         return id;
@@ -57,5 +61,13 @@ public class Program implements Serializable {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public Client getClient() {
+        return client;
+    }
+
+    public void setClient(Client client) {
+        this.client = client;
     }
 }

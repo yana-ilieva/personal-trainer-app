@@ -47,11 +47,11 @@ public class Client {
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User user;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "program_id", referencedColumnName = "id")
     private Program program;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "nutrition_plan_id", referencedColumnName = "id")
     private NutritionPlan nutritionPlan;
 

@@ -1,5 +1,12 @@
 <template>
-  <div class="w-full">
+  <div class="w-full relative">
+    <assign-program-modal
+      v-if="isAssignModalOpen"
+      :name="assignClient.firstName + ' ' + assignClient.lastName"
+      @assign="assignProgram"
+      @closeModal="closeAssignModal"
+    >
+    </assign-program-modal>
     <div class="w-10/12 mx-auto mt-8">
       <div
         v-if="clients.length > 0"
@@ -17,7 +24,9 @@
             :height="client.height"
             :desc="client.description"
             :photo="client.photo"
+            :program="client.program"
             @initializeChat="initializeChat(client.id)"
+            @openAssignProgram="openAssignModal(client.id)"
           ></client-card>
         </ul>
       </div>
@@ -63,21 +72,48 @@
 
 <script>
 import ClientCard from "../components/ClientCard.vue";
+import AssignProgramModal from "../components/AssignProgramModal";
 export default {
-  components: { ClientCard },
+  components: { ClientCard, AssignProgramModal },
   data() {
     return {
       user: {},
       clients: [],
+      assignClient: {},
+      isAssignModalOpen: false,
     };
   },
   async mounted() {
     this.clients = await this.getClients();
     this.user = await this.getUser();
+    console.log("clients:", this.clients);
   },
   methods: {
     redirectToEditProfile() {
       this.$router.push({ path: "/my-profile" });
+    },
+    openAssignModal(id) {
+      this.assignClient = this.clients.find((el) => el.id === id);
+      this.isAssignModalOpen = true;
+    },
+    closeAssignModal() {
+      this.isAssignModalOpen = false;
+    },
+    async assignProgram(program) {
+      const response = await fetch(
+        `http://localhost:8081/api/client/${this.assignClient.id}/program/${program}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${this.$store.getters["auth/token"]}`,
+          },
+        }
+      );
+      if (response.ok) {
+        location.reload();
+      } else {
+        console.error("error assigning program");
+      }
     },
     async getUser() {
       const response = await fetch(
@@ -124,13 +160,18 @@ export default {
       console.log(response);
       if (response.ok) {
         const data = await response.json();
-        console.log("clients data: ", data);
         for (const client of data) {
           const photo = await this.fetchUserPhoto(client.profilePictureId);
           if (photo) {
             client.photo = photo;
           } else {
             client.photo = null;
+          }
+          const program = await this.getProgram(client.id);
+          if (program) {
+            client.program = program.programDto;
+          } else {
+            client.program = null;
           }
         }
         return data;
@@ -139,7 +180,6 @@ export default {
       }
     },
     async initializeChat(id) {
-      console.log("initialize id: ", id);
       const response = await fetch(`http://localhost:8081/api/chat`, {
         method: "POST",
         mode: "cors",
@@ -159,6 +199,19 @@ export default {
           path: "chat",
           query: { user: data.client.name, id: data.id },
         });
+      } else {
+        console.log("error getting user data");
+      }
+    },
+    async getProgram(id) {
+      const response = await fetch(`http://localhost:8081/api/client/${id}`, {
+        method: "GET",
+        headers: {
+          Authorization: `Bearer ${this.$store.getters["auth/token"]}`,
+        },
+      });
+      if (response.ok) {
+        return await response.json();
       } else {
         console.log("error getting user data");
       }

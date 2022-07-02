@@ -25,6 +25,9 @@
                 <p :class="bDate ? 'ml-3' : ''" class="truncate">
                   {{ gender }}
                 </p>
+                <p class="truncate ml-3">
+                  {{ program.name }}
+                </p>
               </div>
             </div>
             <div>
@@ -36,11 +39,12 @@
                 >
                   Chat
                 </button>
-                <router-link
-                  :to="{ name: 'edit', params: { id: id } }"
+                <button
+                  @click="this.$emit('openAssignProgram')"
                   class="inline-flex items-center px-4 py-1.5 border border-transparent shadow-sm text-sm leading-4 font-medium rounded text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
-                  >Edit</router-link
                 >
+                  Assign Program
+                </button>
               </div>
             </div>
           </div>
@@ -52,7 +56,16 @@
 
 <script>
 export default {
-  props: ["id", "firstName", "lastName", "bDate", "gender", "desc", "photo"],
-  emits: ["initializeChat"],
+  props: [
+    "id",
+    "firstName",
+    "lastName",
+    "bDate",
+    "gender",
+    "desc",
+    "photo",
+    "program",
+  ],
+  emits: ["initializeChat", "openAssignProgram"],
 };
 </script>

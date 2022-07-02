@@ -1,5 +1,6 @@
 package com.fitbook.entity.program;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fitbook.enums.WeekDay;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -22,9 +23,9 @@ public class ProgramPart implements Serializable {
 
     private WeekDay weekDay;
 
-    @OneToMany(mappedBy = "programPart", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.DETACH}, fetch = FetchType.EAGER, orphanRemoval = true)
+    @OneToMany(mappedBy = "programPart", cascade = {CascadeType.ALL}, orphanRemoval = true)
     private List<ExerciseUnit> exerciseUnits;
-
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "program_id")
     private Program program;

@@ -1,5 +1,6 @@
 package com.fitbook.entity.program;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -16,7 +17,7 @@ public class ExerciseUnit implements Serializable {
     private Long id;
 
     private Integer repetitions;
-
+    @JsonIgnore
     @ManyToOne
     @JoinColumn(name = "program_part_id")
     private ProgramPart programPart;

@@ -2,8 +2,10 @@ package com.fitbook.service;
 
 import com.fitbook.dto.*;
 import com.fitbook.entity.client.Client;
+import com.fitbook.entity.program.ExerciseUnit;
 import com.fitbook.entity.program.NutritionPlan;
 import com.fitbook.entity.program.Program;
+import com.fitbook.entity.program.ProgramPart;
 import com.fitbook.entity.user.User;
 import com.fitbook.exception.ResourceNotFoundException;
 import com.fitbook.repository.ClientRepository;
@@ -19,6 +21,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -140,18 +143,46 @@ public class ClientService {
         }
         Program program = programService.findById(programId);
         Program programCopy = programCopy(program);
-        programCopy = programService.create(programCopy);
+        //programCopy = programService.create(programCopy);
         clientOpt.get().setProgram(programCopy);
-
-        return mapper.map(clientRepository.save(clientOpt.get()));
+        Client save = clientRepository.save(clientOpt.get());
+        return mapper.map(save);
     }
 
     private Program programCopy(Program program) {
-        Program newProgram = SerializationUtils.clone(program);
-        newProgram.setId(null);
-        newProgram.getProgramParts().forEach(part -> part.setId(null));
-        newProgram.getProgramParts().forEach(part -> part.getExerciseUnits().forEach(unit -> unit.setId(null)));
+        Program newProgram = new Program();
+        newProgram.setName(program.getName());
+        newProgram.setDescription(program.getDescription());
+        newProgram.setProgramParts(copyProgramParts(program.getProgramParts(), newProgram));
         return newProgram;
+    }
+
+    private List<ProgramPart> copyProgramParts(List<ProgramPart> programParts, Program parent) {
+        List<ProgramPart> parts = new ArrayList<>();
+        if (programParts != null) {
+            for (ProgramPart programPart : programParts) {
+                ProgramPart newProgramPart = new ProgramPart();
+                newProgramPart.setWeekDay(programPart.getWeekDay());
+                newProgramPart.setProgram(parent);
+                newProgramPart.setExerciseUnits(copyExerciseUnits(programPart.getExerciseUnits(), newProgramPart));
+                parts.add(newProgramPart);
+            }
+        }
+        return parts;
+    }
+
+    private List<ExerciseUnit> copyExerciseUnits(List<ExerciseUnit> exerciseUnits, ProgramPart parent) {
+        List<ExerciseUnit> units = new ArrayList<>();
+        if (exerciseUnits != null) {
+            for (ExerciseUnit exerciseUnit : exerciseUnits) {
+                ExerciseUnit newUnit = new ExerciseUnit();
+                newUnit.setRepetitions(exerciseUnit.getRepetitions());
+                newUnit.setExercise(exerciseUnit.getExercise());
+                newUnit.setProgramPart(parent);
+                units.add(newUnit);
+            }
+        }
+        return units;
     }
 
     public ClientDto assignNutritionPlanToClient(Long clientId, Long nutritionPlanId) {
