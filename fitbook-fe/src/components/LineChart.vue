@@ -42,18 +42,6 @@ export default {
     Line,
   },
   props: {
-    weight: {
-      type: Array,
-      Default: [],
-    },
-    calories: {
-      type: Array,
-      Default: [],
-    },
-    bmi: {
-      type: Array,
-      Default: [],
-    },
     chartId: {
       type: String,
       default: "bar-chart",
@@ -86,30 +74,22 @@ export default {
   data() {
     return {
       chartData: {
-        labels: [
-          "January",
-          "February",
-          "March",
-          "April",
-          "May",
-          "June",
-          "July",
-        ],
+        labels: [],
         datasets: [
           {
             label: "Weight",
             backgroundColor: "#84B7F5",
-            data: this.weight,
+            data: [],
           },
           {
             label: "BMI",
             backgroundColor: "#F584B7",
-            data: this.bmi,
+            data: [],
           },
           {
             label: "Calories",
             backgroundColor: "#B7F584",
-            data: this.calories,
+            data: [],
           },
         ],
       },
@@ -118,6 +98,70 @@ export default {
         maintainAspectRatio: false,
       },
     };
+  },
+  methods: {
+    async getClientId() {
+      const response = await fetch(
+        `http://localhost:8081/api/client/user/${this.$store.getters["auth/userId"]}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${this.$store.getters["auth/token"]}`,
+          },
+        }
+      );
+      if (response.ok) {
+        let responseData = await response.json();
+        return responseData.id;
+      } else {
+        console.log("error getting user data");
+      }
+    },
+    async getProgresses(clientId) {
+      const response = await fetch(
+        `http://localhost:8081/api/client/${clientId}/progress`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${this.$store.getters["auth/token"]}`,
+          },
+        }
+      );
+      if (response.ok) {
+        let responseData = await response.json();
+
+        return responseData;
+      } else {
+        console.log("error getting progresses");
+      }
+    },
+  },
+  async mounted() {
+    const clientId = await this.getClientId();
+    const progresses = await this.getProgresses(clientId);
+    this.progresses = progresses;
+    let weightArr = [];
+    let bmiArr = [];
+    let caloriesArr = [];
+    let labelsArr = [];
+    for (const progress of this.progresses) {
+      weightArr.push(progress.weight);
+      bmiArr.push(progress.bmi);
+      caloriesArr.push(progress.caloriesBurned);
+      labelsArr.push(progress.createdTimestamp.substring(0, 10));
+    }
+    for (const data of this.chartData.datasets) {
+      console.log("data: ", data);
+      if (data.label === "Weight") {
+        data.data = weightArr;
+      } else if (data.label === "BMI") {
+        data.data = bmiArr;
+      } else {
+        data.data = caloriesArr;
+      }
+    }
+    this.chartData.labels = labelsArr;
+    console.log("new dashboard dataset: ", this.chartData.datasets);
   },
 };
 </script>

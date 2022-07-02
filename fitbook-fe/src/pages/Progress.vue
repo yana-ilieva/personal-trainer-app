@@ -134,6 +134,7 @@
         </div>
         <div class="mx-auto mb-4">
           <line-chart
+            :client="client"
             :weight="weight"
             :calories="caloriesBurnt"
             :bmi="bmi"
@@ -154,17 +155,15 @@ export default {
       progresses: [],
       weightInput: 0,
       caloriesInput: 0,
-      caloriesBurnt: [800, 850, 750, 900],
-      weight: [70, 72, 75, 80],
-      bmi: [14, 15, 14, 13],
+      caloriesBurnt: [100, 200, 300],
+      weight: [80, 85, 90],
+      bmi: [20, 30, 40],
       client: null,
       isAddProgress: false,
     };
   },
   async mounted() {
     this.client = await this.getClientId();
-    this.progresses = await this.getProgresses();
-    console.log("progresses: ", this.progresses);
   },
   methods: {
     async addProgress(e) {

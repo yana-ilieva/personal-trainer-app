@@ -170,10 +170,6 @@ export default {
       exercisesInput: [],
     };
   },
-  async mounted() {
-    this.exercises = await this.getExercises();
-    console.log("program in edit: ", this.program);
-  },
   methods: {
     async getExercises() {
       const response = await fetch(`http://localhost:8081/api/exercise`, {
@@ -194,7 +190,6 @@ export default {
       let programParts = [];
       console.log("save edit: ", this.exercisesInput);
       for (const exercise of this.exercisesInput) {
-        console.log("forof exercise: ", exercise);
         let exUnits = [];
         for (const unit of exercise.exercises) {
           exUnits.push({
@@ -208,11 +203,13 @@ export default {
         });
       }
       const program = {
+        id: this.id,
         name: this.name,
         description: this.description,
         programParts,
       };
       console.log("body to send: ", program);
+      console.log("initial exercises: ", this.program.exercises);
       const response = await fetch(
         `http://localhost:8081/api/program/${this.id}`,
         {
@@ -258,11 +255,17 @@ export default {
       }
     },
     saveDayExercises(payload) {
-      this.exercisesInput.push({
-        day: payload.day,
-        exercises: payload.exercises,
-      });
-      console.log("save day exrcise: ", this.exercisesInput);
+      const isExerciseDayExist = this.exercisesInput.find(
+        (el) => el.day === payload.day
+      );
+      if (isExerciseDayExist) {
+        isExerciseDayExist.exercises = payload.exercises;
+      } else {
+        this.exercisesInput.push({
+          day: payload.day,
+          exercises: payload.exercises,
+        });
+      }
     },
   },
 };

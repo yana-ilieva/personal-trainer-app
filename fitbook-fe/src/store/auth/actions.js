@@ -16,7 +16,6 @@ export default {
     const role = localStorage.getItem('userRole');
 
     if (token && userId) {
-      console.log('here');
       context.commit('setUser', {
         token,
         userId,

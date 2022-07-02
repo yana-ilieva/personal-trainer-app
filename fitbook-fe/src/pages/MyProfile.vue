@@ -467,7 +467,6 @@ export default {
       if (res.ok) {
         const resData = await res.blob();
         const imgUrl = URL.createObjectURL(resData);
-        console.log("photo get: ", imgUrl);
         return imgUrl;
       } else {
         return null;
