@@ -183,7 +183,7 @@ public class Mapper {
         Integer height = progress.getClient().getHeight();
         if (height != null && progress.getWeight() != null) {
             double meters = (double) height / 100;
-            double bmi = progressDto.getWeight() / (Math.pow(meters, 2));
+            double bmi = progress.getWeight() / (Math.pow(meters, 2));
             progressDto.setBmi(Math.round(bmi * 100d) / 100d);
         }
         return progressDto;
