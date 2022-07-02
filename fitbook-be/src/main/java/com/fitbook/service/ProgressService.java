@@ -31,13 +31,6 @@ public class ProgressService {
         Progress progress = mapper.map(progressDto);
         progress.setCreatedTimestamp(LocalDateTime.now());
         progress.setClient(clientService.findById(progressDto.getClientId()));
-        Integer height = progress.getClient().getHeight();
-        if (height != null && progress.getWeight() != null) {
-            double meters = (double) height / 100;
-            double bmi = progressDto.getWeight() / (Math.pow(meters, 2));
-            progress.setBmi(Math.round(bmi * 100d) / 100d);
-        }
-
         return mapper.map(progressRepository.save(progress));
     }
 

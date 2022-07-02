@@ -180,7 +180,12 @@ public class Mapper {
         progressDto.setCreatedTimestamp(progress.getCreatedTimestamp());
         progressDto.setWeight(progress.getWeight());
         progressDto.setCaloriesBurned(progress.getCaloriesBurned());
-        progressDto.setBmi(progress.getBmi());
+        Integer height = progress.getClient().getHeight();
+        if (height != null && progress.getWeight() != null) {
+            double meters = (double) height / 100;
+            double bmi = progressDto.getWeight() / (Math.pow(meters, 2));
+            progress.setBmi(Math.round(bmi * 100d) / 100d);
+        }
         return progressDto;
     }
 
