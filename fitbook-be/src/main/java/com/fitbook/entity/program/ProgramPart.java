@@ -22,7 +22,7 @@ public class ProgramPart implements Serializable {
 
     private WeekDay weekDay;
 
-    @OneToMany(mappedBy = "programPart", cascade = {CascadeType.PERSIST, CascadeType.MERGE}, fetch = FetchType.EAGER)
+    @OneToMany(mappedBy = "programPart", cascade = {CascadeType.PERSIST, CascadeType.MERGE, CascadeType.REMOVE, CascadeType.DETACH}, fetch = FetchType.EAGER, orphanRemoval = true)
     private List<ExerciseUnit> exerciseUnits;
 
     @ManyToOne

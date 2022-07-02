@@ -61,9 +61,11 @@ public class ProgramService {
                     if (program.getProgramParts().get(i).getExerciseUnits() != null) {
                         for (int i1 = 0; i1 < program.getProgramParts().get(i).getExerciseUnits().size(); i1++) {
                             if (program.getProgramParts().get(i).getExerciseUnits().get(i1) != null) {
-                                Optional<Exercise> exerciseOpt = exerciseRepository.findByName(program.getProgramParts().get(i).getExerciseUnits().get(i1).getExercise().getName());
-                                if (exerciseOpt.isPresent()) {
-                                    program.getProgramParts().get(i).getExerciseUnits().get(i1).getExercise().setId(exerciseOpt.get().getId());
+                                if (program.getProgramParts().get(i).getExerciseUnits().get(i1).getExercise().getId() == null) {
+                                    Optional<Exercise> exerciseOpt = exerciseRepository.findByName(program.getProgramParts().get(i).getExerciseUnits().get(i1).getExercise().getName());
+                                    if (exerciseOpt.isPresent()) {
+                                        program.getProgramParts().get(i).getExerciseUnits().get(i1).getExercise().setId(exerciseOpt.get().getId());
+                                    }
                                 }
                             }
                         }
@@ -72,12 +74,16 @@ public class ProgramService {
             }
         }
 
-
         List<ProgramPart> programParts = program.getProgramParts();
 
         program.setProgramParts(programPartUtil.transformProgramParts(programParts));
         for (ProgramPart programPart : program.getProgramParts()) {
             programPart.setProgram(program);
+            if (programPart.getExerciseUnits() != null) {
+                for (ExerciseUnit exerciseUnit : programPart.getExerciseUnits()) {
+                    exerciseUnit.setProgramPart(programPart);
+                }
+            }
         }
 
         program = programRepository.save(program);
@@ -114,12 +120,25 @@ public class ProgramService {
                     if (program.getProgramParts().get(i).getExerciseUnits() != null) {
                         for (int i1 = 0; i1 < program.getProgramParts().get(i).getExerciseUnits().size(); i1++) {
                             if (program.getProgramParts().get(i).getExerciseUnits().get(i1) != null) {
-                                Optional<Exercise> exerciseOpt = exerciseRepository.findByName(program.getProgramParts().get(i).getExerciseUnits().get(i1).getExercise().getName());
-                                if (exerciseOpt.isPresent()) {
-                                    program.getProgramParts().get(i).getExerciseUnits().get(i1).getExercise().setId(exerciseOpt.get().getId());
+                                if (program.getProgramParts().get(i).getExerciseUnits().get(i1).getExercise().getId() == null) {
+                                    Optional<Exercise> exerciseOpt = exerciseRepository.findByName(program.getProgramParts().get(i).getExerciseUnits().get(i1).getExercise().getName());
+                                    if (exerciseOpt.isPresent()) {
+                                        program.getProgramParts().get(i).getExerciseUnits().get(i1).getExercise().setId(exerciseOpt.get().getId());
+                                    }
                                 }
                             }
                         }
+                    }
+                }
+            }
+        }
+
+        if (program.getProgramParts() != null) {
+            for (ProgramPart programPart : program.getProgramParts()) {
+                programPart.setProgram(program);
+                if (programPart.getExerciseUnits() != null) {
+                    for (ExerciseUnit exerciseUnit : programPart.getExerciseUnits()) {
+                        exerciseUnit.setProgramPart(programPart);
                     }
                 }
             }

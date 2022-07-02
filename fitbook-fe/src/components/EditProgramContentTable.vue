@@ -221,6 +221,10 @@ export default {
         exercises: exerciseArray,
       });
     } else {
+      this.$emit("saveDayExercises", {
+        day: this.day,
+        exercises: [],
+      });
       console.log("empty training day!");
     }
   },

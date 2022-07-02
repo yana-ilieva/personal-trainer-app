@@ -11,9 +11,11 @@ import com.fitbook.entity.notification.Notification;
 import com.fitbook.entity.program.*;
 import com.fitbook.entity.trainer.Trainer;
 import com.fitbook.entity.user.User;
+import com.fitbook.enums.WeekDay;
 import org.springframework.stereotype.Service;
 
 import java.util.Comparator;
+import java.util.List;
 import java.util.stream.Collectors;
 
 @Service
@@ -101,7 +103,7 @@ public class Mapper {
         programPart.setId(programPartDto.getId());
         programPart.setWeekDay(programPartDto.getWeekDay());
         if (programPartDto.getExerciseUnits() != null) {
-            programPart.setExerciseUnits(programPartDto.getExerciseUnits().stream().map(eu -> map(eu, programPart)).collect(Collectors.toList()));
+            programPart.setExerciseUnits(programPartDto.getExerciseUnits().stream().map(eu -> map(eu)).collect(Collectors.toList()));
             /*for (ExerciseUnit exerciseUnit : programPart.getExerciseUnits()) {
                 exerciseUnit.setProgramPart(programPart);
             }*/
@@ -109,7 +111,7 @@ public class Mapper {
         return programPart;
     }
 
-    private ExerciseUnit map(ExerciseUnitDto exerciseUnitDto, ProgramPart programPart) {
+    private ExerciseUnit map(ExerciseUnitDto exerciseUnitDto/*, ProgramPart programPart*/) {
         ExerciseUnit exerciseUnit = new ExerciseUnit();
         exerciseUnit.setId(exerciseUnitDto.getId());
         exerciseUnit.setRepetitions(exerciseUnitDto.getRepetitions());
@@ -117,7 +119,7 @@ public class Mapper {
         if (exerciseUnitDto.getExercise() != null) {
             exerciseUnit.setExercise(map(exerciseUnitDto.getExercise()));
         }
-        exerciseUnit.setProgramPart(programPart);
+        //exerciseUnit.setProgramPart(programPart);
         return exerciseUnit;
     }
 
@@ -202,7 +204,15 @@ public class Mapper {
         program.setDescription(programDto.getDescription());
         program.setName(programDto.getName());
         if (programDto.getProgramParts() != null) {
-            program.setProgramParts(programDto.getProgramParts().stream().map(this::map).collect(Collectors.toList()));
+            for (ProgramPartDto programPartDto : programDto.getProgramParts()) {
+                for (ProgramPart programPart : program.getProgramParts()) {
+                    if (programPartDto.getWeekDay() == programPart.getWeekDay()) {
+                        List<ExerciseUnit> newExerciseUnits = programPartDto.getExerciseUnits().stream().map(this::map).collect(Collectors.toList());
+                        programPart.getExerciseUnits().clear();
+                        programPart.getExerciseUnits().addAll(newExerciseUnits);
+                    }
+                }
+            }
         }
     }
 

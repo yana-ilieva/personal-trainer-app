@@ -47,6 +47,7 @@ public class ProgramServiceTest {
 
         ProgramPartDto programPartDto = programPartDto(WeekDay.MONDAY, List.of(exerciseUnitDto, exerciseUnitDto2));
         ProgramPartDto programPartDto2 = programPartDto(WeekDay.WEDNESDAY, List.of(exerciseUnitDto3, exerciseUnitDto4));
+
         ProgramDto programDto = programDto("some description", List.of(programPartDto, programPartDto2));
 
         ProgramDto saved = programService.create(programDto, 10000L);
@@ -84,10 +85,12 @@ public class ProgramServiceTest {
         exerciseUnitDtos.add(exerciseUnitDto);
         exerciseUnitDtos.add(exerciseUnitDto2);
         ProgramPartDto programPartDto = programPartDto(WeekDay.MONDAY, exerciseUnitDtos);
+
         List<ExerciseUnitDto> exerciseUnitDtos2 = new ArrayList<>();
         exerciseUnitDtos2.add(exerciseUnitDto3);
         exerciseUnitDtos2.add(exerciseUnitDto4);
         ProgramPartDto programPartDto2 = programPartDto(WeekDay.WEDNESDAY, exerciseUnitDtos2);
+
         List<ProgramPartDto> programPartDtos = new ArrayList<>();
         programPartDtos.add(programPartDto);
         programPartDtos.add(programPartDto2);
@@ -129,10 +132,12 @@ public class ProgramServiceTest {
         exerciseUnitDtos.add(exerciseUnitDto);
         exerciseUnitDtos.add(exerciseUnitDto2);
         ProgramPartDto programPartDto = programPartDto(WeekDay.MONDAY, exerciseUnitDtos);
+
         List<ExerciseUnitDto> exerciseUnitDtos2 = new ArrayList<>();
         exerciseUnitDtos2.add(exerciseUnitDto3);
         exerciseUnitDtos2.add(exerciseUnitDto4);
         ProgramPartDto programPartDto2 = programPartDto(WeekDay.WEDNESDAY, exerciseUnitDtos2);
+
         List<ProgramPartDto> programPartDtos = new ArrayList<>();
         programPartDtos.add(programPartDto);
         programPartDtos.add(programPartDto2);
