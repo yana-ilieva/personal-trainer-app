@@ -34,18 +34,21 @@ public class TrainerController {
     @GetMapping("/user/{user_id}/clients")
     @Secured("ROLE_TRAINER")
     public List<ClientDto> findClientsByTrainer(@PathVariable("user_id") Long userId, Authentication authentication) {
+        validator.checkTrainerAccessRightsByUser(userId, authentication);
         return trainerService.findClientsByTrainerUserId(userId);
     }
 
     @GetMapping("/{id}/programs")
     @Secured("ROLE_TRAINER")
-    public List<ProgramDto> getPrograms(@PathVariable("id") Long id) {
+    public List<ProgramDto> getPrograms(@PathVariable("id") Long id, Authentication authentication) {
+        validator.checkTrainerAccessRightsByUser(id, authentication);
         return trainerService.findProgramsByUserId(id);
     }
 
     @GetMapping("/user/{user_id}")
     @Secured("ROLE_TRAINER")
-    public TrainerDto findTrainerByUserId(@PathVariable("user_id") Long id) {
+    public TrainerDto findTrainerByUserId(@PathVariable("user_id") Long id, Authentication authentication) {
+        validator.checkTrainerAccessRightsByUser(id, authentication);
         return trainerService.findTrainerByUserId(id);
     }
 
@@ -72,7 +75,8 @@ public class TrainerController {
 
     @PutMapping("/{id}")
     @Secured("ROLE_TRAINER")
-    public TrainerDto update(@PathVariable("id") Long id, @RequestBody TrainerDto trainerDto) {
+    public TrainerDto update(@PathVariable("id") Long id, @RequestBody TrainerDto trainerDto, Authentication authentication) {
+        validator.checkTrainerAccessRights(id, authentication);
         return trainerService.update(id, trainerDto);
     }
 
@@ -84,13 +88,15 @@ public class TrainerController {
 
     @DeleteMapping("/client/{client_id}")
     @Secured("ROLE_TRAINER")
-    public boolean removeClientFromList(@PathVariable("client_id") Long clientId) {
+    public boolean removeClientFromList(@PathVariable("client_id") Long clientId, Authentication authentication) {
+        validator.checkTrainerAccessRightsByClient(clientId, authentication);
         return trainerService.removeClientFromList(clientId);
     }
 
     @DeleteMapping("/program/{program_id}")
     @Secured("ROLE_TRAINER")
-    public boolean removeProgramFromList(@PathVariable("program_id") Long clientId, Authentication authentication) {
-        return trainerService.removeProgramFromList(clientId, authentication);
+    public boolean removeProgramFromList(@PathVariable("program_id") Long programId, Authentication authentication) {
+        validator.checkTrainerAccessRightsByProgram(programId, authentication);
+        return trainerService.removeProgramFromList(programId, authentication);
     }
 }

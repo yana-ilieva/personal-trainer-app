@@ -2,7 +2,10 @@ package com.fitbook.controller;
 
 import com.fitbook.dto.ProgramDto;
 import com.fitbook.service.ProgramService;
+import com.fitbook.service.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.annotation.Secured;
+import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -12,18 +15,25 @@ public class ProgramController {
 
     private final ProgramService programService;
 
+    private final Validator validator;
+
     @Autowired
-    public ProgramController(ProgramService programService) {
+    public ProgramController(ProgramService programService, Validator validator) {
         this.programService = programService;
+        this.validator = validator;
     }
 
     @PostMapping("/user/{user_id}")
-    public ProgramDto save(@PathVariable("user_id") Long userId, @RequestBody ProgramDto programDto) {
+    @Secured("ROLE_TRAINER")
+    public ProgramDto save(@PathVariable("user_id") Long userId, @RequestBody ProgramDto programDto, Authentication authentication) {
+        validator.checkTrainerAccessRightsByUser(userId, authentication);
         return programService.create(programDto, userId);
     }
 
     @PutMapping("/{id}")
-    public ProgramDto update(@PathVariable("id") Long id, @RequestBody ProgramDto programDto) {
+    @Secured("ROLE_TRAINER")
+    public ProgramDto update(@PathVariable("id") Long id, @RequestBody ProgramDto programDto, Authentication authentication) {
+        validator.checkTrainerAccessRightsByProgram(id, authentication);
         return programService.update(id, programDto);
     }
 }

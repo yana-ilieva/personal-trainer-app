@@ -9,6 +9,7 @@ import com.fitbook.exception.ResourceNotFoundException;
 import com.fitbook.repository.TrainerRepository;
 import com.fitbook.repository.TrainerSpecification;
 import com.fitbook.repository.UserRepository;
+import com.fitbook.service.validation.Validator;
 import com.fitbook.util.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
@@ -34,15 +35,19 @@ public class TrainerService {
 
     private final UserService userService;
 
+    private final Validator validator;
+
     @Autowired
     public TrainerService(TrainerRepository trainerRepository, Mapper mapper, ClientService clientService,
-                          NotificationService notificationService, UserRepository userRepository, UserService userService) {
+                          NotificationService notificationService, UserRepository userRepository, UserService userService,
+                          Validator validator) {
         this.trainerRepository = trainerRepository;
         this.mapper = mapper;
         this.clientService = clientService;
         this.notificationService = notificationService;
         this.userRepository = userRepository;
         this.userService = userService;
+        this.validator = validator;
     }
 
     public List<ProgramDto> findProgramsByUserId(Long userId) {
