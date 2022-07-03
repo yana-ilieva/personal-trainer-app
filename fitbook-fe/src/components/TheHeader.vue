@@ -257,15 +257,23 @@ export default {
     },
     async getUser() {
       let url = "";
+      let userId = this.$store.getters["auth/userId"];
+      let token = this.$store.getters["auth/token"];
+      if (userId == null) {
+        userId = localStorage.getItem("id");
+      }
+      if (token) {
+        token = localStorage.getItem("token");
+      }
       if (this.$store.getters["auth/role"] === "ROLE_TRAINER") {
-        url = `http://localhost:8081/api/trainer/user/${this.$store.getters["auth/userId"]}`;
+        url = `http://localhost:8081/api/trainer/user/${userId}`;
       } else {
-        url = `http://localhost:8081/api/client/user/${this.$store.getters["auth/userId"]}`;
+        url = `http://localhost:8081/api/client/user/${userId}`;
       }
       const response = await fetch(url, {
         method: "GET",
         headers: {
-          Authorization: `Bearer ${this.$store.getters["auth/token"]}`,
+          Authorization: `Bearer ${token}`,
         },
       });
       if (response.ok) {

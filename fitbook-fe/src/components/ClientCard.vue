@@ -26,7 +26,7 @@
                   {{ gender }}
                 </p>
                 <p class="truncate ml-3">
-                  {{ program.name }}
+                  {{ program ? program.name : "" }}
                 </p>
               </div>
             </div>

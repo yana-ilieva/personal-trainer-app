@@ -37,7 +37,7 @@ export default {
     });
     if (response.ok) {
       const responseData = await response.json();
-      console.log(responseData);
+      console.log('set user after login: ', responseData);
       context.commit('setUser', {
         token: responseData.jwt,
         userId: responseData.userId,
@@ -50,15 +50,6 @@ export default {
     } else {
       return null;
     }
-
-    // if (!response.ok) {
-    //   const error = new Error(
-    //     responseData.message || 'Failed to authenticate.'
-    //   );
-    //   throw error;
-    // } else {
-    //   console.log(responseData);
-    // }
   },
   async signup(context, payload) {
     const response = await fetch('http://localhost:8081/api/registration', {
@@ -71,7 +62,6 @@ export default {
         ...payload,
       }),
     });
-    // const responseData = await response.json();
     if (response.ok) {
       return true;
     }
