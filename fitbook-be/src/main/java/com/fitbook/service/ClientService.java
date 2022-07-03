@@ -3,7 +3,6 @@ package com.fitbook.service;
 import com.fitbook.dto.*;
 import com.fitbook.entity.client.Client;
 import com.fitbook.entity.program.ExerciseUnit;
-import com.fitbook.entity.program.NutritionPlan;
 import com.fitbook.entity.program.Program;
 import com.fitbook.entity.program.ProgramPart;
 import com.fitbook.entity.user.User;
@@ -16,7 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
@@ -34,25 +32,25 @@ public class ClientService {
 
     private final ProgramService programService;
 
-    private final NutritionPlanService nutritionPlanService;
-
     private final UserRepository userRepository;
 
     private final UserService userService;
 
     private final ProgressRepository progressRepository;
 
+    private final AuthService authService;
+
     @Autowired
     public ClientService(ClientRepository clientRepository, Mapper mapper, @Lazy ProgramService programService,
-                         NutritionPlanService nutritionPlanService, UserRepository userRepository, UserService userService,
-                         ProgressRepository progressRepository) {
+                         UserRepository userRepository, UserService userService, ProgressRepository progressRepository,
+                         AuthService authService) {
         this.clientRepository = clientRepository;
         this.mapper = mapper;
         this.programService = programService;
-        this.nutritionPlanService = nutritionPlanService;
         this.userRepository = userRepository;
         this.userService = userService;
         this.progressRepository = progressRepository;
+        this.authService = authService;
     }
 
     public ClientFullDto getFullDto(Long id) {
@@ -68,15 +66,6 @@ public class ClientService {
         try {
             User user = userService.findById(userId);
             return mapper.map(clientRepository.findByUser(user).getProgram());
-        } catch (Exception e) {
-            throw new ResourceNotFoundException(String.format("Client with user id %d not found", userId));
-        }
-    }
-
-    public NutritionPlanDto getNutritionPlan(Long userId) {
-        try {
-            User user = userService.findById(userId);
-            return mapper.map(clientRepository.findByUser(user).getNutritionPlan());
         } catch (Exception e) {
             throw new ResourceNotFoundException(String.format("Client with user id %d not found", userId));
         }
@@ -183,31 +172,15 @@ public class ClientService {
         return units;
     }
 
-    public ClientDto assignNutritionPlanToClient(Long clientId, Long nutritionPlanId) {
-        Optional<Client> clientOpt = clientRepository.findById(clientId);
-        if (clientOpt.isEmpty()) {
-            throw new ResourceNotFoundException(String.format("Client with id %d not found", clientId));
-        }
-
-        NutritionPlan nutritionPlan = nutritionPlanService.findById(nutritionPlanId);
-        NutritionPlan nutritionPlanCopy = nutritionPlan;
-        nutritionPlanCopy = nutritionPlanService.create(nutritionPlanCopy);
-
-        clientOpt.get().setNutritionPlan(nutritionPlanCopy);
-
-        return mapper.map(clientRepository.save(clientOpt.get()));
-    }
-
-
     public List<ProgressDto> getProgress(Long id, int page, int size) {
         Client client = findById(id);
         return progressRepository.findByClient(client, PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "createdTimestamp")))
                 .stream().map(mapper::map).collect(Collectors.toList());
     }
 
-    public List<ChatDto> getChats(Authentication authentication) {
-        String email = (String) authentication.getPrincipal();
-        User user = userService.findByEmail(email);
+    public List<ChatDto> getChats() {
+        Long id = authService.getUserId();
+        User user = userService.findById(id);
         Client client = clientRepository.findByUser(user);
         if (client == null) {
             throw new ResourceNotFoundException(String.format("Client with user id %d not found", user.getId()));

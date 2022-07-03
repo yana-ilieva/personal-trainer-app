@@ -9,11 +9,9 @@ import com.fitbook.exception.ResourceNotFoundException;
 import com.fitbook.repository.TrainerRepository;
 import com.fitbook.repository.TrainerSpecification;
 import com.fitbook.repository.UserRepository;
-import com.fitbook.service.validation.Validator;
 import com.fitbook.util.Mapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.PageRequest;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -35,19 +33,19 @@ public class TrainerService {
 
     private final UserService userService;
 
-    private final Validator validator;
+    private final AuthService authService;
 
     @Autowired
     public TrainerService(TrainerRepository trainerRepository, Mapper mapper, ClientService clientService,
                           NotificationService notificationService, UserRepository userRepository, UserService userService,
-                          Validator validator) {
+                          AuthService authService) {
         this.trainerRepository = trainerRepository;
         this.mapper = mapper;
         this.clientService = clientService;
         this.notificationService = notificationService;
         this.userRepository = userRepository;
         this.userService = userService;
-        this.validator = validator;
+        this.authService = authService;
     }
 
     public List<ProgramDto> findProgramsByUserId(Long userId) {
@@ -154,9 +152,9 @@ public class TrainerService {
         return mapper.map(trainerRepository.save(trainerOpt.get()));
     }
 
-    public List<ChatDto> getChats(Authentication authentication) {
-        String email = (String) authentication.getPrincipal();
-        User user = userService.findByEmail(email);
+    public List<ChatDto> getChats() {
+        Long id = authService.getUserId();
+        User user = userService.findById(id);
         Trainer trainer = trainerRepository.findByUser(user);
         if (trainer == null) {
             throw new ResourceNotFoundException(String.format("Trainer with user id %d not found.", user.getId()));
@@ -190,10 +188,10 @@ public class TrainerService {
         }
     }
 
-    public boolean removeProgramFromList(Long programId, Authentication authentication) {
+    public boolean removeProgramFromList(Long programId) {
         try {
-            String email = (String) authentication.getPrincipal();
-            User user = userService.findByEmail(email);
+            Long id = authService.getUserId();
+            User user = userService.findById(id);
             Trainer trainer = findTrainerByUser(user);
             trainer.getPrograms().removeIf(p -> p.getId().equals(programId));
             trainerRepository.save(trainer);

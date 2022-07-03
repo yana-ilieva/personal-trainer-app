@@ -80,7 +80,6 @@ public class Mapper {
         clientDto.setHeight(client.getHeight());
         clientDto.setDescription(client.getDescription());
         clientDto.setProgramDto(map(client.getProgram()));
-        clientDto.setNutritionPlanDto(map(client.getNutritionPlan()));
         if (client.getUser().getProfilePicture() != null) {
             clientDto.setProfilePictureId(client.getUser().getProfilePicture().getId());
         }
@@ -214,55 +213,6 @@ public class Mapper {
                 }
             }
         }
-    }
-
-    public NutritionPlan map(NutritionPlanDto nutritionPlanDto) {
-        NutritionPlan nutritionPlan = new NutritionPlan();
-        nutritionPlan.setName(nutritionPlanDto.getName());
-        nutritionPlan.setDescription(nutritionPlanDto.getDescription());
-        nutritionPlan.setNutritionPlanParts(nutritionPlanDto.getNutritionPlanPartDtos().stream().map(this::map).collect(Collectors.toList()));
-        return nutritionPlan;
-    }
-
-    private NutritionPlanPart map(NutritionPlanPartDto nutritionPlanPartDto) {
-        NutritionPlanPart nutritionPlanPart = new NutritionPlanPart();
-        nutritionPlanPart.setId(nutritionPlanPartDto.getId());
-        nutritionPlanPart.setWeekDay(nutritionPlanPartDto.getWeekDay());
-        nutritionPlanPart.setContent(nutritionPlanPartDto.getContent());
-        return nutritionPlanPart;
-    }
-
-    public NutritionPlanDto map(NutritionPlan nutritionPlan) {
-        if (nutritionPlan == null) {
-            return null;
-        }
-        NutritionPlanDto nutritionPlanDto = new NutritionPlanDto();
-        nutritionPlanDto.setId(nutritionPlan.getId());
-        nutritionPlanDto.setName(nutritionPlan.getName());
-        nutritionPlanDto.setDescription(nutritionPlan.getDescription());
-        nutritionPlanDto.setNutritionPlanPartDtos(nutritionPlan.getNutritionPlanParts().stream().map(this::map).collect(Collectors.toList()));
-        return nutritionPlanDto;
-    }
-
-    private NutritionPlanPartDto map(NutritionPlanPart nutritionPlanPart) {
-        NutritionPlanPartDto nutritionPlanPartDto = new NutritionPlanPartDto();
-        nutritionPlanPartDto.setId(nutritionPlanPart.getId());
-        nutritionPlanPartDto.setWeekDay(nutritionPlanPart.getWeekDay());
-        nutritionPlanPartDto.setContent(nutritionPlanPart.getContent());
-        return nutritionPlanPartDto;
-    }
-
-    public void map(NutritionPlanDto nutritionPlanDto, NutritionPlan nutritionPlan) {
-        nutritionPlan.setId(nutritionPlanDto.getId());
-        nutritionPlan.setName(nutritionPlanDto.getName());
-        nutritionPlan.setDescription(nutritionPlanDto.getDescription());
-        nutritionPlan.setNutritionPlanParts(nutritionPlanDto.getNutritionPlanPartDtos().stream().map(this::map).collect(Collectors.toList()));
-    }
-
-    public void map(NutritionPlanPartDto nutritionPlanPartDto, NutritionPlanPart nutritionPlanPart) {
-        nutritionPlanPart.setId(nutritionPlanPartDto.getId());
-        nutritionPlanPart.setWeekDay(nutritionPlanPartDto.getWeekDay());
-        nutritionPlanPart.setContent(nutritionPlanPartDto.getContent());
     }
 
     public Chat map(ChatDto chatDto) {

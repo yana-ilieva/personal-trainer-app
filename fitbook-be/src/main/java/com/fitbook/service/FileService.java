@@ -8,7 +8,6 @@ import com.fitbook.exception.ResourceNotFoundException;
 import com.fitbook.repository.FileRepository;
 import com.fitbook.util.Mapper;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 import org.springframework.util.FileCopyUtils;
 import org.springframework.web.multipart.MultipartFile;
@@ -30,13 +29,16 @@ public class FileService {
 
     private final Mapper mapper;
 
+    private final AuthService authService;
+
     @Value("${file.store}")
     private String fileStore;
 
-    public FileService(UserService userService, FileRepository fileRepository, Mapper mapper) {
+    public FileService(UserService userService, FileRepository fileRepository, Mapper mapper, AuthService authService) {
         this.userService = userService;
         this.fileRepository = fileRepository;
         this.mapper = mapper;
+        this.authService = authService;
     }
 
     public FileDto getFileInfo(Long userId) {
@@ -44,8 +46,8 @@ public class FileService {
         return mapper.mapFile(user);
     }
 
-    public FileDto getFileInfo(Authentication authentication) {
-        User user = userService.findByEmail((String) authentication.getPrincipal());
+    public FileDto getFileInfo() {
+        User user = userService.findById(authService.getUserId());
         return mapper.mapFile(user);
     }
 
@@ -78,9 +80,8 @@ public class FileService {
         }
     }
 
-    public boolean save(MultipartFile file, Authentication authentication) {
-        String email = (String) authentication.getPrincipal();
-        User user = userService.findByEmail(email);
+    public boolean save(MultipartFile file) {
+        User user = userService.findById(authService.getUserId());
 
         File oldFile = null;
         if (user.getProfilePicture() != null) {

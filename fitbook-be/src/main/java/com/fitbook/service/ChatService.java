@@ -41,9 +41,12 @@ public class ChatService {
     
     private final UserService userService;
 
+    private final AuthService authService;
+
     @Autowired
     public ChatService(SimpMessagingTemplate simpMessagingTemplate, ChatRepository chatRepository, Mapper mapper,
-                       ClientService clientService, TrainerService trainerService, MessageRepository messageRepository, UserService userService) {
+                       ClientService clientService, TrainerService trainerService, MessageRepository messageRepository,
+                       UserService userService, AuthService authService) {
         this.simpMessagingTemplate = simpMessagingTemplate;
         this.chatRepository = chatRepository;
         this.mapper = mapper;
@@ -51,6 +54,7 @@ public class ChatService {
         this.trainerService = trainerService;
         this.messageRepository = messageRepository;
         this.userService = userService;
+        this.authService = authService;
     }
 
     @Transactional
@@ -69,8 +73,8 @@ public class ChatService {
 
         MessageDto msg = mapper.map(message);
 
-        String senderEmail = (String) authentication.getPrincipal();
-        User sender = userService.findByEmail(senderEmail);
+        Long senderId = authService.getUserId();
+        User sender = userService.findById(senderId);
         User receiver;
 
         if (sender.getRole().getName().equals("ROLE_TRAINER")) {
@@ -79,8 +83,8 @@ public class ChatService {
             receiver = chat.getTrainer().getUser();
         }
 
-        simpMessagingTemplate.convertAndSendToUser(senderEmail, "/queue/messages", msg);
-        simpMessagingTemplate.convertAndSendToUser(receiver.getEmail(), "/queue/messages", msg);
+        simpMessagingTemplate.convertAndSendToUser(senderId.toString(), "/queue/messages", msg);
+        simpMessagingTemplate.convertAndSendToUser(receiver.getId().toString(), "/queue/messages", msg);
     }
 
     public ChatDto initializeChat(ChatDto chatDto) {

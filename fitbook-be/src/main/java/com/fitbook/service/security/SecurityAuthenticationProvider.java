@@ -1,6 +1,7 @@
 package com.fitbook.service.security;
 
 import com.fitbook.entity.user.User;
+import com.fitbook.exception.RequestProcessingException;
 import com.fitbook.service.UserService;
 import org.apache.logging.log4j.util.Strings;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,10 +39,10 @@ public class SecurityAuthenticationProvider implements AuthenticationProvider {
         User user = userService.findByEmail(email);
 
         if (!bCryptPasswordEncoder.matches(password, user.getPassword())) {
-            throw new IllegalArgumentException("Email or password are invalid.");
+            throw new RequestProcessingException("Email or password are invalid.");
         }
 
-        return new UsernamePasswordAuthenticationToken(user.getEmail(), password, Collections.singletonList(user.getRole()));
+        return new UsernamePasswordAuthenticationToken(user.getId(), password, Collections.singletonList(user.getRole()));
     }
 
     public boolean supports(Class<?> authenticationToken) {

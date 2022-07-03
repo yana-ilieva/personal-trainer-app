@@ -4,7 +4,6 @@ import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import com.fitbook.entity.Payment;
 import com.fitbook.entity.chat.Chat;
-import com.fitbook.entity.program.NutritionPlan;
 import com.fitbook.entity.program.Program;
 import com.fitbook.entity.trainer.Trainer;
 import com.fitbook.entity.user.User;
@@ -50,10 +49,6 @@ public class Client {
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "program_id", referencedColumnName = "id")
     private Program program;
-
-    @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "nutrition_plan_id", referencedColumnName = "id")
-    private NutritionPlan nutritionPlan;
 
     @OneToMany(mappedBy = "client")
     private List<Progress> progresses;
@@ -146,14 +141,6 @@ public class Client {
 
     public void setProgram(Program program) {
         this.program = program;
-    }
-
-    public NutritionPlan getNutritionPlan() {
-        return nutritionPlan;
-    }
-
-    public void setNutritionPlan(NutritionPlan nutritionPlan) {
-        this.nutritionPlan = nutritionPlan;
     }
 
     public List<Progress> getProgresses() {

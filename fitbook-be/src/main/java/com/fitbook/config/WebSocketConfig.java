@@ -55,10 +55,10 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
                        String token = ah.get(0);
                        if (token != null) {
                            token = token.substring(7);
-                           String email = jwtTokenUtil.getEmailFromToken(token);
-                           User user = userService.findByEmail(email);
+                           Long id = jwtTokenUtil.getIdFromToken(token);
+                           User user = userService.findById(id);
                            UsernamePasswordAuthenticationToken authentication =
-                                   new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword(), Collections.singletonList(user.getRole()));
+                                   new UsernamePasswordAuthenticationToken(user.getId(), user.getPassword(), Collections.singletonList(user.getRole()));
                            accessor.setUser(authentication);
                        }
                    });

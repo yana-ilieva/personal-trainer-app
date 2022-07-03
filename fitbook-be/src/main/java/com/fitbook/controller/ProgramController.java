@@ -25,15 +25,15 @@ public class ProgramController {
 
     @PostMapping("/user/{user_id}")
     @Secured("ROLE_TRAINER")
-    public ProgramDto save(@PathVariable("user_id") Long userId, @RequestBody ProgramDto programDto, Authentication authentication) {
-        validator.checkTrainerAccessRightsByUser(userId, authentication);
+    public ProgramDto save(@PathVariable("user_id") Long userId, @RequestBody ProgramDto programDto) {
+        validator.checkTrainerAccessRightsByUser(userId);
         return programService.create(programDto, userId);
     }
 
     @PutMapping("/{id}")
     @Secured("ROLE_TRAINER")
-    public ProgramDto update(@PathVariable("id") Long id, @RequestBody ProgramDto programDto, Authentication authentication) {
-        validator.checkTrainerAccessRightsByProgram(id, authentication);
+    public ProgramDto update(@PathVariable("id") Long id, @RequestBody ProgramDto programDto) {
+        validator.checkTrainerAccessRightsByProgram(id);
         return programService.update(id, programDto);
     }
 }

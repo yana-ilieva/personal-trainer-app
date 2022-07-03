@@ -5,7 +5,6 @@ import com.fitbook.service.TrainerService;
 import com.fitbook.service.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.access.annotation.Secured;
-import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -33,22 +32,22 @@ public class TrainerController {
 
     @GetMapping("/user/{user_id}/clients")
     @Secured("ROLE_TRAINER")
-    public List<ClientDto> findClientsByTrainer(@PathVariable("user_id") Long userId, Authentication authentication) {
-        validator.checkTrainerAccessRightsByUser(userId, authentication);
+    public List<ClientDto> findClientsByTrainer(@PathVariable("user_id") Long userId) {
+        validator.checkTrainerAccessRightsByUser(userId);
         return trainerService.findClientsByTrainerUserId(userId);
     }
 
     @GetMapping("/{id}/programs")
     @Secured("ROLE_TRAINER")
-    public List<ProgramDto> getPrograms(@PathVariable("id") Long id, Authentication authentication) {
-        validator.checkTrainerAccessRightsByUser(id, authentication);
+    public List<ProgramDto> getPrograms(@PathVariable("id") Long id) {
+        validator.checkTrainerAccessRightsByUser(id);
         return trainerService.findProgramsByUserId(id);
     }
 
     @GetMapping("/user/{user_id}")
     @Secured("ROLE_TRAINER")
-    public TrainerDto findTrainerByUserId(@PathVariable("user_id") Long id, Authentication authentication) {
-        validator.checkTrainerAccessRightsByUser(id, authentication);
+    public TrainerDto findTrainerByUserId(@PathVariable("user_id") Long id) {
+        validator.checkTrainerAccessRightsByUser(id);
         return trainerService.findTrainerByUserId(id);
     }
 
@@ -75,28 +74,28 @@ public class TrainerController {
 
     @PutMapping("/{id}")
     @Secured("ROLE_TRAINER")
-    public TrainerDto update(@PathVariable("id") Long id, @RequestBody TrainerDto trainerDto, Authentication authentication) {
-        validator.checkTrainerAccessRights(id, authentication);
+    public TrainerDto update(@PathVariable("id") Long id, @RequestBody TrainerDto trainerDto) {
+        validator.checkTrainerAccessRights(id);
         return trainerService.update(id, trainerDto);
     }
 
     @GetMapping("/chat_mates")
     @Secured("ROLE_TRAINER")
-    public List<ChatDto> getChats(Authentication authentication) {
-        return trainerService.getChats(authentication);
+    public List<ChatDto> getChats() {
+        return trainerService.getChats();
     }
 
     @DeleteMapping("/client/{client_id}")
     @Secured("ROLE_TRAINER")
-    public boolean removeClientFromList(@PathVariable("client_id") Long clientId, Authentication authentication) {
-        validator.checkTrainerAccessRightsByClient(clientId, authentication);
+    public boolean removeClientFromList(@PathVariable("client_id") Long clientId) {
+        validator.checkTrainerAccessRightsByClient(clientId);
         return trainerService.removeClientFromList(clientId);
     }
 
     @DeleteMapping("/program/{program_id}")
     @Secured("ROLE_TRAINER")
-    public boolean removeProgramFromList(@PathVariable("program_id") Long programId, Authentication authentication) {
-        validator.checkTrainerAccessRightsByProgram(programId, authentication);
-        return trainerService.removeProgramFromList(programId, authentication);
+    public boolean removeProgramFromList(@PathVariable("program_id") Long programId) {
+        validator.checkTrainerAccessRightsByProgram(programId);
+        return trainerService.removeProgramFromList(programId);
     }
 }

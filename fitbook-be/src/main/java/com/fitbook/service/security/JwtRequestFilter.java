@@ -35,9 +35,9 @@ public class JwtRequestFilter extends OncePerRequestFilter {
         String token = jwtTokenUtil.getTokenFromRequest(httpServletRequest);
         UsernamePasswordAuthenticationToken usernamePasswordAuthenticationToken = null;
         if (Strings.isNotBlank(token)) {
-            String emailFromToken = jwtTokenUtil.getEmailFromToken(token);
-            if (Strings.isNotBlank(emailFromToken)) {
-                User user = userService.findByEmail(emailFromToken);
+            Long idFromToken = jwtTokenUtil.getIdFromToken(token);
+            if (idFromToken != null) {
+                User user = userService.findById(idFromToken);
                 usernamePasswordAuthenticationToken = validateToken(token, user);
             }
         }
@@ -48,7 +48,7 @@ public class JwtRequestFilter extends OncePerRequestFilter {
 
     private UsernamePasswordAuthenticationToken validateToken(String token, User user) {
         if (jwtTokenUtil.validateToken(token, user)) {
-            return new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword(), Collections.singletonList(user.getRole()));
+            return new UsernamePasswordAuthenticationToken(user.getId(), user.getPassword(), Collections.singletonList(user.getRole()));
         }
 
         return null;

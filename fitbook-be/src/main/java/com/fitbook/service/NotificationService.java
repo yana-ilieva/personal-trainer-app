@@ -82,6 +82,6 @@ public class NotificationService {
         if (notificationType == NotificationType.REQUEST_ACCEPTED) {
             resolveNotification(client, trainer);
         }
-        simpMessagingTemplate.convertAndSendToUser(user.getEmail(), "/queue/notifications", notificationDto);
+        simpMessagingTemplate.convertAndSendToUser(user.getId().toString(), "/queue/notifications", notificationDto);
     }
 }

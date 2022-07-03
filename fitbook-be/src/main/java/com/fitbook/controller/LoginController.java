@@ -32,8 +32,8 @@ public class LoginController {
     @PostMapping
     public LoginResponseDto login(@RequestBody LoginDto loginDto) {
         Authentication authenticate = securityAuthenticationProvider.authenticate(new UsernamePasswordAuthenticationToken(loginDto.getEmail(), loginDto.getPassword()));
-        String email = (String) authenticate.getPrincipal();
-        User user = userService.findByEmail(email);
+        Long id = (Long) authenticate.getPrincipal();
+        User user = userService.findById(id);
         LoginResponseDto dto = new LoginResponseDto();
         dto.setJwt(jwtTokenUtil.generateToken(user, user.getRole().getName()));
         dto.setRole(user.getRole().getName());

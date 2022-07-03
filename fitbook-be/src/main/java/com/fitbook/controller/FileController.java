@@ -42,8 +42,8 @@ public class FileController {
     }
 
     @GetMapping
-    public Boolean get(HttpServletResponse response, Authentication authentication) throws IOException {
-        FileDto fileInfo = fileService.getFileInfo(authentication);
+    public Boolean get(HttpServletResponse response) throws IOException {
+        FileDto fileInfo = fileService.getFileInfo();
         if (fileInfo != null) {
             response.setContentType(fileInfo.getMimeType());
             response.setHeader("Content-Disposition", "inline; filename=\"" + fileInfo.getName() + "\"");
@@ -56,8 +56,7 @@ public class FileController {
     }
 
     @GetMapping("/{id}")
-    public Boolean get(HttpServletResponse response, @PathVariable("id") Long id,
-                       Authentication authentication) throws IOException {
+    public Boolean get(HttpServletResponse response, @PathVariable("id") Long id) throws IOException {
         FileDto fileInfo = fileService.getFile(id);
         if (fileInfo != null) {
             response.setContentType(fileInfo.getMimeType());
@@ -71,12 +70,12 @@ public class FileController {
     }
 
     @PostMapping(consumes = {MediaType.MULTIPART_FORM_DATA_VALUE, MediaType.APPLICATION_JSON_VALUE})
-    public ResponseEntity<Boolean> save(@RequestPart("file") MultipartFile file, Authentication authentication) {
+    public ResponseEntity<Boolean> save(@RequestPart("file") MultipartFile file) {
         List<String> imageFormats = List.of(MediaType.IMAGE_JPEG_VALUE, MediaType.IMAGE_PNG_VALUE);
         if (!imageFormats.contains(file.getContentType())) {
             throw new RequestProcessingException("Invalid file format.");
         }
-        Boolean result = fileService.save(file, authentication);
+        Boolean result = fileService.save(file);
         return ResponseEntity.ok().body(result);
     }
 }
