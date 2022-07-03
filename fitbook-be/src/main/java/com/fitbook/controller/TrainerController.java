@@ -68,8 +68,9 @@ public class TrainerController {
     @GetMapping("/user/{user_id}/handle_request/{client_id}")
     @Secured("ROLE_TRAINER")
     public Boolean handleRequest(@PathVariable("user_id") Long userId,
-                                 @PathVariable("client_id") Long clientId) {
-        return trainerService.handleRequest(userId, clientId);
+                                 @PathVariable("client_id") Long clientId,
+                                 @RequestParam("accept") Boolean accept) {
+        return trainerService.handleRequest(userId, clientId, accept);
     }
 
     @PutMapping("/{id}")

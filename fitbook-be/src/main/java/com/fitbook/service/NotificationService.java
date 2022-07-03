@@ -9,6 +9,7 @@ import com.fitbook.enums.NotificationType;
 import com.fitbook.repository.NotificationRepository;
 import com.fitbook.util.DateUtil;
 import com.fitbook.util.Mapper;
+import org.aspectj.weaver.ast.Not;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.data.domain.PageRequest;
@@ -79,7 +80,7 @@ public class NotificationService {
 
     public void sendNotification(User user, NotificationType notificationType, Trainer trainer, Client client) {
         NotificationDto notificationDto = create(notificationType, trainer, client);
-        if (notificationType == NotificationType.REQUEST_ACCEPTED) {
+        if (List.of(NotificationType.REQUEST_ACCEPTED, NotificationType.REQUEST_DECLINED).contains(notificationType)) {
             resolveNotification(client, trainer);
         }
         simpMessagingTemplate.convertAndSendToUser(user.getId().toString(), "/queue/notifications", notificationDto);

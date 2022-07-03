@@ -163,14 +163,18 @@ public class TrainerService {
         return trainer.getChats().stream().map(mapper::map).collect(Collectors.toList());
     }
 
-    public boolean handleRequest(Long userId, Long clientId) {
+    public boolean handleRequest(Long userId, Long clientId, Boolean accept) {
         try {
             User user = userService.findById(userId);
             Trainer trainer = findTrainerByUser(user);
             Client client = clientService.findById(clientId);
-            client.setTrainer(trainer);
-            clientService.update(client);
-            notificationService.sendNotification(client.getUser(), NotificationType.REQUEST_ACCEPTED, trainer, client);
+            if (accept) {
+                client.setTrainer(trainer);
+                clientService.update(client);
+                notificationService.sendNotification(client.getUser(), NotificationType.REQUEST_ACCEPTED, trainer, client);
+                return true;
+            }
+            notificationService.sendNotification(client.getUser(), NotificationType.REQUEST_DECLINED, trainer, client);
             return true;
         } catch (Exception e) {
             return false;
