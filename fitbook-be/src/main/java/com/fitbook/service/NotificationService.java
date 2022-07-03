@@ -6,6 +6,7 @@ import com.fitbook.entity.notification.Notification;
 import com.fitbook.entity.trainer.Trainer;
 import com.fitbook.entity.user.User;
 import com.fitbook.enums.NotificationType;
+import com.fitbook.exception.RequestProcessingException;
 import com.fitbook.repository.NotificationRepository;
 import com.fitbook.util.DateUtil;
 import com.fitbook.util.Mapper;
@@ -79,10 +80,19 @@ public class NotificationService {
     }
 
     public void sendNotification(User user, NotificationType notificationType, Trainer trainer, Client client) {
+        if (notificationType == NotificationType.REQUEST_SENT && notificationExists(trainer, client)) {
+            throw new RequestProcessingException("Notification already is sent");
+        }
         NotificationDto notificationDto = create(notificationType, trainer, client);
         if (List.of(NotificationType.REQUEST_ACCEPTED, NotificationType.REQUEST_DECLINED).contains(notificationType)) {
             resolveNotification(client, trainer);
         }
         simpMessagingTemplate.convertAndSendToUser(user.getId().toString(), "/queue/notifications", notificationDto);
+    }
+
+    private Boolean notificationExists(Trainer trainer, Client client) {
+        List<Notification> notifications = notificationRepository
+                .findByClientAndTrainerAndNotificationTypeAndResolvedFalse(client, trainer, NotificationType.REQUEST_SENT);
+        return !notifications.isEmpty();
     }
 }
