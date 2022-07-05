@@ -5,7 +5,7 @@
       <div class="flex items-center flex-shrink-0 px-4">
         <img
           class="h-8 w-auto"
-          src="https://tailwindui.com/img/logos/workflow-logo-indigo-300-mark-white-text.svg"
+          src="https://tailwindui.com/img/logos/workflow-mark-indigo-300.svg"
           alt="Workflow"
         />
       </div>

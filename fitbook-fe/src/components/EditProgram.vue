@@ -226,6 +226,7 @@ export default {
 
       if (response.ok) {
         console.log("response is ok");
+        location.reload();
       } else {
         console.log("error getting user data");
       }

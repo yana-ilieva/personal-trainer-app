@@ -443,15 +443,16 @@ export default {
       console.log(response);
       if (response.ok) {
         const responseData = await response.json();
-        this.user = responseData;
-        const photoSrc = await this.fetchUserPhoto();
-        this.user.photo = photoSrc
-          ? photoSrc
-          : "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png";
-        this.$refs.profileImage.src = photoSrc
-          ? photoSrc
-          : "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png";
-        this.isBdateChanged = false;
+        location.reload();
+        // this.user = responseData;
+        // const photoSrc = await this.fetchUserPhoto();
+        // this.user.photo = photoSrc
+        //   ? photoSrc
+        //   : "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png";
+        // this.$refs.profileImage.src = photoSrc
+        //   ? photoSrc
+        //   : "https://upload.wikimedia.org/wikipedia/commons/thumb/9/90/Twemoji_1f600.svg/1200px-Twemoji_1f600.svg.png";
+        // this.isBdateChanged = false;
       } else {
         console.log("error editing user");
       }

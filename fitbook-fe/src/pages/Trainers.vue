@@ -110,13 +110,16 @@ export default {
     };
   },
   async mounted() {
+    if (!this.$store.getters["connection/isConnected"]) {
+      this.$emit("initWs");
+    }
     this.trainers = await this.getTrainers();
     this.currentUser = await this.getUser();
   },
   methods: {
     async getTrainers() {
       const response = await fetch(
-        `http://localhost:8081/api/trainer?page=0&size=10`,
+        `http://localhost:8081/api/trainer?page=0&size=20`,
         {
           method: "POST",
           mode: "cors",
@@ -163,7 +166,7 @@ export default {
     },
     async submitSearchForm(e) {
       const response = await fetch(
-        `http://localhost:8081/api/trainer?page=0&size=10`,
+        `http://localhost:8081/api/trainer?page=0&size=20`,
         {
           method: "POST",
           mode: "cors",
@@ -182,7 +185,16 @@ export default {
         }
       );
       if (response.ok) {
-        this.trainers = await response.json();
+        const data = await response.json();
+        for (const trainer of data) {
+          const photo = await this.fetchUserPhoto(trainer.profilePictureId);
+          if (photo) {
+            trainer.photo = photo;
+          } else {
+            trainer.photo = null;
+          }
+        }
+        this.trainers = data;
       } else {
         console.log("error getting trainers data");
         this.trainers = [];

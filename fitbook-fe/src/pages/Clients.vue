@@ -84,6 +84,9 @@ export default {
     };
   },
   async mounted() {
+    if (!this.$store.getters["connection/isConnected"]) {
+      this.$emit("initWs");
+    }
     this.clients = await this.getClients();
     this.user = await this.getUser();
     console.log("clients:", this.clients);

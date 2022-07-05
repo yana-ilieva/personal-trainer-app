@@ -1,16 +1,46 @@
 <template>
-  <Line
-    :chart-options="chartOptions"
-    :chart-data="chartData"
-    :chart-id="chartId"
-    :dataset-id-key="datasetIdKey"
-    :plugins="plugins"
-    :css-classes="cssClasses"
-    :styles="styles"
-    :width="width"
-    :height="height"
-  >
-  </Line>
+  <div>
+    <Line
+      :chart-options="chartOptionsCalories"
+      :chart-data="chartDataCalories"
+      :chart-id="chartId"
+      :dataset-id-key="datasetIdKey"
+      :plugins="plugins"
+      :css-classes="cssClasses"
+      :styles="styles"
+      :width="width"
+      :height="height"
+    >
+    </Line>
+  </div>
+  <div class="mt-10">
+    <Line
+      :chart-options="chartOptionsWeight"
+      :chart-data="chartDataWeight"
+      :chart-id="chartId"
+      :dataset-id-key="datasetIdKey"
+      :plugins="plugins"
+      :css-classes="cssClasses"
+      :styles="styles"
+      :width="width"
+      :height="height"
+    >
+    </Line>
+  </div>
+  <div class="mt-10">
+    <Line
+      :chart-options="chartOptionsBmi"
+      :chart-data="chartDataBmi"
+      :chart-id="chartId"
+      :dataset-id-key="datasetIdKey"
+      :plugins="plugins"
+      :css-classes="cssClasses"
+      :styles="styles"
+      :width="width"
+      :height="height"
+    >
+    </Line>
+  </div>
 </template>
 
 <script>
@@ -24,7 +54,6 @@ import {
   LinearScale,
   PointElement,
   CategoryScale,
-  Plugin,
 } from "chart.js";
 
 ChartJS.register(
@@ -73,7 +102,7 @@ export default {
   },
   data() {
     return {
-      chartData: {
+      chartDataWeight: {
         labels: [],
         datasets: [
           {
@@ -81,11 +110,15 @@ export default {
             backgroundColor: "#84B7F5",
             data: [],
           },
-          {
-            label: "BMI",
-            backgroundColor: "#F584B7",
-            data: [],
-          },
+        ],
+      },
+      chartOptionsWeight: {
+        responsive: true,
+        maintainAspectRatio: false,
+      },
+      chartDataCalories: {
+        labels: [],
+        datasets: [
           {
             label: "Calories",
             backgroundColor: "#B7F584",
@@ -93,9 +126,23 @@ export default {
           },
         ],
       },
-      chartOptions: {
+      chartOptionsCalories: {
         responsive: true,
         maintainAspectRatio: false,
+      },
+      chartOptionsBmi: {
+        responsive: true,
+        maintainAspectRatio: false,
+      },
+      chartDataBmi: {
+        labels: [],
+        datasets: [
+          {
+            label: "BMI",
+            backgroundColor: "#F584B7",
+            data: [],
+          },
+        ],
       },
     };
   },
@@ -150,18 +197,14 @@ export default {
       caloriesArr.push(progress.caloriesBurned);
       labelsArr.push(progress.createdTimestamp.substring(0, 10));
     }
-    for (const data of this.chartData.datasets) {
-      console.log("data: ", data);
-      if (data.label === "Weight") {
-        data.data = weightArr;
-      } else if (data.label === "BMI") {
-        data.data = bmiArr;
-      } else {
-        data.data = caloriesArr;
-      }
-    }
-    this.chartData.labels = labelsArr;
-    console.log("new dashboard dataset: ", this.chartData.datasets);
+    this.chartDataWeight.datasets[0].data = weightArr;
+    this.chartDataCalories.datasets[0].data = caloriesArr;
+    this.chartDataBmi.datasets[0].data = bmiArr;
+
+    labelsArr.reverse();
+    this.chartDataWeight.labels = labelsArr;
+    this.chartDataCalories.labels = labelsArr;
+    this.chartDataBmi.labels = labelsArr;
   },
 };
 </script>
