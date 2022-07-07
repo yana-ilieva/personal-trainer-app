@@ -22,8 +22,8 @@ public class ChatController {
     }
 
     @PostMapping("/message")
-    public void sendSpecific(@RequestBody MessageDto message, Authentication authentication) {
-        chatService.send(message, authentication);
+    public void sendSpecific(@RequestBody MessageDto message) {
+        chatService.send(message);
     }
 
     @PostMapping

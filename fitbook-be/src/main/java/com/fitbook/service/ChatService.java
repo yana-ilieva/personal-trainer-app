@@ -20,6 +20,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import javax.transaction.Transactional;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -58,7 +59,7 @@ public class ChatService {
     }
 
     @Transactional
-    public void send(MessageDto messageDto, Authentication authentication) {
+    public void send(MessageDto messageDto) {
         Message message = mapper.map(messageDto);
         message.setCreatedTime(DateUtil.now());
 
@@ -68,6 +69,9 @@ public class ChatService {
         }
 
         message.setChat(chatOpt.get());
+        if (chatOpt.get().getMessages() == null) {
+            chatOpt.get().setMessages(new ArrayList<>());
+        }
         chatOpt.get().getMessages().add(message);
         Chat chat = chatRepository.save(chatOpt.get());
 

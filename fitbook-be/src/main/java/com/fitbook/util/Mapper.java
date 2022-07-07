@@ -13,6 +13,7 @@ import com.fitbook.entity.trainer.Trainer;
 import com.fitbook.entity.user.User;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -91,7 +92,7 @@ public class Mapper {
         program.setDescription(programDto.getDescription());
         program.setName(programDto.getName());
         if (programDto.getProgramParts() != null) {
-            program.setProgramParts(programDto.getProgramParts().stream().map(this::map).collect(Collectors.toList()));
+            program.setProgramParts(new ArrayList<>(programDto.getProgramParts().stream().map(this::map).collect(Collectors.toList())));
         }
         return program;
     }
@@ -101,7 +102,7 @@ public class Mapper {
         programPart.setId(programPartDto.getId());
         programPart.setWeekDay(programPartDto.getWeekDay());
         if (programPartDto.getExerciseUnits() != null) {
-            programPart.setExerciseUnits(programPartDto.getExerciseUnits().stream().map(this::map).collect(Collectors.toList()));
+            programPart.setExerciseUnits(new ArrayList<>(programPartDto.getExerciseUnits().stream().map(this::map).collect(Collectors.toList())));
         }
         return programPart;
     }
@@ -206,9 +207,19 @@ public class Mapper {
             for (ProgramPartDto programPartDto : programDto.getProgramParts()) {
                 for (ProgramPart programPart : program.getProgramParts()) {
                     if (programPartDto.getWeekDay() == programPart.getWeekDay()) {
-                        List<ExerciseUnit> newExerciseUnits = programPartDto.getExerciseUnits().stream().map(this::map).collect(Collectors.toList());
-                        programPart.getExerciseUnits().clear();
-                        programPart.getExerciseUnits().addAll(newExerciseUnits);
+                        List<ExerciseUnit> newExerciseUnits = new ArrayList<>();
+                        if (programPartDto.getExerciseUnits() != null) {
+                            for (ExerciseUnitDto exerciseUnit : programPartDto.getExerciseUnits()) {
+                                newExerciseUnits.add(map(exerciseUnit));
+                            }
+                            if (programPart.getExerciseUnits() != null) {
+                                programPart.getExerciseUnits().clear();
+                            } else {
+                                programPart.setExerciseUnits(new ArrayList<>());
+                            }
+                            programPart.getExerciseUnits().addAll(newExerciseUnits);
+                        }
+                        break;
                     }
                 }
             }

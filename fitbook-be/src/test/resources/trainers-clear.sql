@@ -1,0 +1,9 @@
+delete from test.notifications;
+delete from test.trainers_programs;
+delete from test.messages;
+delete from test.chats;
+delete from test.programs;
+delete from test.clients;
+delete from test.trainers;
+delete from test.users;
+delete from test.roles;
