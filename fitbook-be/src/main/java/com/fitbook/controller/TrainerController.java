@@ -97,4 +97,10 @@ public class TrainerController {
         validator.checkTrainerAccessRightsByProgram(programId);
         return trainerService.removeProgramFromList(programId);
     }
+
+    @DeleteMapping("/{id}")
+    @Secured("ROLE_ADMIN")
+    public void deleteById(@PathVariable("id") Long id) {
+        trainerService.deleteById(id);
+    }
 }

@@ -31,15 +31,11 @@ public class UserService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    public Set<User> findAll() {
-        return new HashSet<>(userRepository.findAll());
-    }
-
     public User findById(Long id) {
         if (id == null) {
             return null;
         }
-        Optional<User> userOpt = userRepository.findById(id);
+        Optional<User> userOpt = userRepository.findByIdAndDeletedFalse(id);
         if (userOpt.isEmpty()) {
             throw new ResourceNotFoundException(String.format("User with id %d not found", id));
         }
@@ -47,7 +43,7 @@ public class UserService {
     }
 
     public User findByEmail(String email) {
-        return userRepository.findByEmail(email)
+        return userRepository.findByEmailAndDeletedFalse(email)
                 .orElseThrow(() -> new ResourceNotFoundException("User with email: " + email + " does not exist."));
     }
 

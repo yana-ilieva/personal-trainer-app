@@ -5,6 +5,7 @@ import com.fitbook.entity.client.Client;
 import com.fitbook.entity.trainer.Trainer;
 import com.fitbook.entity.user.User;
 import com.fitbook.enums.NotificationType;
+import com.fitbook.exception.RequestProcessingException;
 import com.fitbook.exception.ResourceNotFoundException;
 import com.fitbook.repository.TrainerRepository;
 import com.fitbook.repository.TrainerSpecification;
@@ -72,6 +73,9 @@ public class TrainerService {
             if (trainerOpt.isEmpty()) {
                 return null;
             }
+            if (trainerOpt.get().getUser().getDeleted()) {
+                return null;
+            }
             return mapper.map(trainerOpt.get());
         } catch (Exception e) {
             throw new ResourceNotFoundException(String.format("Failed to find trainer with id %d", id));
@@ -92,7 +96,7 @@ public class TrainerService {
 
     public List<TrainerDto> findTrainers(SearchDto searchDto, int page, int size) {
         if (searchDto == null) {
-            return trainerRepository.findAll(PageRequest.of(page, size)).stream()
+            return trainerRepository.findAllByDeletedFalse(PageRequest.of(page, size)).stream()
                     .map(mapper::map).collect(Collectors.toList());
         }
         return trainerRepository.findAll(TrainerSpecification.findTrainers(searchDto), PageRequest.of(page, size)).stream()
@@ -207,5 +211,19 @@ public class TrainerService {
 
     public Trainer save(Trainer trainer) {
         return trainerRepository.save(trainer);
+    }
+
+    public void deleteById(Long id) {
+        try {
+            Optional<Trainer> trainerOpt = trainerRepository.findById(id);
+            if (trainerOpt.isPresent()) {
+                if (!trainerOpt.get().getUser().getDeleted()) {
+                    trainerOpt.get().getUser().setDeleted(true);
+                    trainerRepository.save(trainerOpt.get());
+                }
+            }
+        } catch (Exception e) {
+            throw new RequestProcessingException("Failed to delete trainer.");
+        }
     }
 }

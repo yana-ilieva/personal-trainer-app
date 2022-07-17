@@ -1,5 +1,9 @@
 insert into roles (id, name)
-values (1000000, 'ROLE_CLIENT'), (1000001, 'ROLE_TRAINER')
+values (1000000, 'ROLE_CLIENT'), (1000001, 'ROLE_TRAINER'), (1000002, 'ROLE_ADMIN')
+on conflict (id) do nothing;
+
+insert into users (id, deleted, email, password, role_id)
+values (1000000000, false, 'admin@mail.com', '$2a$10$GAy6t9gbzGDv39NHH.S.hO5Ugt3fy8qgBoeWMU8PLuRXxXFl7qF9.', 1000002)
 on conflict (id) do nothing;
 
 insert into exercises (id, name)

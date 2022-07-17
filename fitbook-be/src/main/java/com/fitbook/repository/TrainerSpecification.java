@@ -30,6 +30,8 @@ public class TrainerSpecification {
             if (searchDto.getCity() != null && !searchDto.getCity().equals("")) {
                 predicates.add(cb.equal(root.get("city"), searchDto.getCity()));
             }
+
+            predicates.add(cb.isFalse(root.get("user").get("deleted")));
             return cb.and(predicates.toArray(Predicate[]::new));
         };
     }
