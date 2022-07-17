@@ -90,6 +90,13 @@ const routes = [
       requiresAuth: true,
     },
   },
+  {
+    path :'/:catchAll(.*)',
+    component: !store.getters['auth/isAuthenticated'] ? Login : store.getters['auth/role'] === 'ROLE_TRAINER' ? Clients : Trainers,
+    meta: {
+      hideHeader: true,
+    }
+}
 ];
 
 const router = createRouter({

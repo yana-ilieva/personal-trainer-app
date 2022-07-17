@@ -2,6 +2,7 @@ import { createStore } from 'vuex';
 import clientsModule from './clients/index';
 import trainersModule from './trainers/index';
 import programModule from './program/index';
+import connectionModule from './connection/index';
 import authModule from './auth/index';
 
 export default createStore({
@@ -10,5 +11,6 @@ export default createStore({
     program: programModule,
     clients: clientsModule,
     trainers: trainersModule,
+    connection: connectionModule,
   },
 });

@@ -105,7 +105,10 @@
           </div>
         </div>
       </div>
-      <router-view @openNotifications="showNotifications"></router-view>
+      <router-view
+        @initWs="subscribe"
+        @openNotifications="showNotifications"
+      ></router-view>
     </div>
   </div>
 </template>
@@ -169,14 +172,16 @@ export default {
           Authorization: `Bearer ${token}`,
         },
         () => {
-          this.connected = true;
+          this.$store.dispatch("connection/setConnected", true);
           this.stompClient.subscribe("/user/queue/notifications", (tick) => {
             const notification = JSON.parse(tick.body);
             console.log("websocket notification: ", notification);
             this.notification.message =
               notification.notificationType == "REQUEST_SENT"
                 ? `${notification.clientName} send you a request!`
-                : `${notification.trainerName} accepted your request`;
+                : notification.notificationType == "REQUEST_ACCEPTED"
+                ? `${notification.trainerName} accepted your request`
+                : `${notification.trainerName} declined your request`;
             this.notification.id = notification.id;
             this.isNotificationPopupOpen = true;
             setTimeout(() => {
@@ -186,7 +191,7 @@ export default {
         },
         (error) => {
           console.log(error);
-          this.connected = false;
+          this.$store.dispatch("connection/setConnected", false);
         }
       );
     },
