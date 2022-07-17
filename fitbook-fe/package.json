@@ -11,6 +11,7 @@
     "@stripe/stripe-js": "^1.32.0",
     "@ungap/structured-clone": "^1.0.1",
     "autoprefixer": "^9.8.8",
+    "chart.js": "^3.8.0",
     "chartjs": "^0.3.24",
     "core-js": "^3.6.5",
     "flowbite": "^1.4.7",

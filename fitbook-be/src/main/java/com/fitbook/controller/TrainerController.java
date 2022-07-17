@@ -87,9 +87,7 @@ public class TrainerController {
     }
 
     @DeleteMapping("/client/{client_id}")
-    @Secured("ROLE_TRAINER")
     public boolean removeClientFromList(@PathVariable("client_id") Long clientId) {
-        validator.checkTrainerAccessRightsByClient(clientId);
         return trainerService.removeClientFromList(clientId);
     }
 
